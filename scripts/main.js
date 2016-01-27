@@ -74,7 +74,7 @@ function Player(game) {
 
     this.animations = {};
 
-    this.animation/*s.hgunIdle*/ = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 1, 1, 258, 220, 0.2, 1, true, false);
+    this.animation = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
 
     //this.animation = this.animations.hgunIdle;
 
@@ -87,12 +87,20 @@ Player.prototype = new Entity();
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
-
+    //console.log("updating player");
     Entity.prototype.update.call(this);
 };
 
 Player.prototype.draw = function(ctx) {
-    this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+    //console.log("drawing player");
+    //this.rotateAndCache(this.animation.spriteSheet, 45);
+    //this.animation.drawFrame(this.game.clockTick, ctx, 400, 400, 0.5);
+    //this.rotateAndCache(this.animation.spriteSheet, 45);
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(180);
+    ctx.drawImage(this.animation.spriteSheet, 100, 100);
+    ctx.restore();
     Entity.prototype.draw.call(this);
 };
 
