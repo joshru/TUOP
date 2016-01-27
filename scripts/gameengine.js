@@ -26,7 +26,7 @@ Timer.prototype.tick = function () {
     var gameDelta = Math.min(wallDelta, this.maxStep);
     this.gameTime += gameDelta;
     return gameDelta;
-}
+};
 
 function GameEngine() {
     this.entities = [];
@@ -46,7 +46,7 @@ GameEngine.prototype.init = function (ctx) {
     this.startInput();
     this.timer = new Timer();
     console.log('game initialized');
-}
+};
 
 GameEngine.prototype.start = function () {
     console.log("starting game");
@@ -55,7 +55,7 @@ GameEngine.prototype.start = function () {
         that.loop();
         requestAnimFrame(gameLoop, that.ctx.canvas);
     })();
-}
+};
 
 GameEngine.prototype.startInput = function () {
     console.log('Starting input');
@@ -68,12 +68,12 @@ GameEngine.prototype.startInput = function () {
     }, false);
 
     console.log('Input started');
-}
+};
 
 GameEngine.prototype.addEntity = function (entity) {
     console.log('added entity');
     this.entities.push(entity);
-}
+};
 
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -82,7 +82,7 @@ GameEngine.prototype.draw = function () {
         this.entities[i].draw(this.ctx);
     }
     this.ctx.restore();
-}
+};
 
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
@@ -100,14 +100,16 @@ GameEngine.prototype.update = function () {
             this.entities.splice(i, 1);
         }
     }
-}
+};
 
 GameEngine.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     this.update();
     this.draw();
     this.space = null;
-}
+};
+
+
 
 function Entity(game, x, y) {
     this.game = game;
@@ -117,7 +119,7 @@ function Entity(game, x, y) {
 }
 
 Entity.prototype.update = function () {
-}
+};
 
 Entity.prototype.draw = function (ctx) {
     if (this.game.showOutlines && this.radius) {
@@ -127,7 +129,7 @@ Entity.prototype.draw = function (ctx) {
         this.game.ctx.stroke();
         this.game.ctx.closePath();
     }
-}
+};
 
 Entity.prototype.rotateAndCache = function (image, angle) {
     var offscreenCanvas = document.createElement('canvas');
@@ -144,4 +146,4 @@ Entity.prototype.rotateAndCache = function (image, angle) {
     //offscreenCtx.strokeStyle = "red";
     //offscreenCtx.strokeRect(0,0,size,size);
     return offscreenCanvas;
-}
+};

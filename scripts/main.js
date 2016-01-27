@@ -12,7 +12,7 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
     this.reverse = reverse;
 }
 
-Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
+Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy, angle) {
     var scaleBy = scaleBy || 1;
     this.elapsedTime += tick;
     if (this.loop) {
@@ -36,12 +36,20 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var locX = x;
     var locY = y;
     var offset = vindex === 0 ? this.startX : 0;
+    ctx.save();
+    ctx.translate(locX, locY);
+    ctx.rotate(angle * (Math.PI / 180));
+    //ctx.rotate(0.17);
+
     ctx.drawImage(this.spriteSheet,
                   index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
                   this.frameWidth, this.frameHeight,
                   locX, locY,
                   this.frameWidth * scaleBy,
                   this.frameHeight * scaleBy);
+    //ctx.rotate((Math.PI / 2.0) - angle);
+    ////ctx.translate(-(locX * this.frameWidth), -(locY * this.frameHeight));
+    //ctx.restore();
 };
 
 Animation.prototype.currentFrame = function () {
@@ -69,12 +77,15 @@ Animation.prototype.isDone = function () {
 //    Entity.prototype.draw.call(this);
 //};
 
-function Player(game) {
+function Player(game, player) {
     this.game = game;
+    this.player = player;
 
     this.animations = {};
 
     this.animation = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
+
+
 
     //this.animation = this.animations.hgunIdle;
 
@@ -94,13 +105,14 @@ Player.prototype.update = function() {
 Player.prototype.draw = function(ctx) {
     //console.log("drawing player");
     //this.rotateAndCache(this.animation.spriteSheet, 45);
-    //this.animation.drawFrame(this.game.clockTick, ctx, 400, 400, 0.5);
+    this.animation.drawFrame(this.game.clockTick, ctx, 400, 400, 0.5, 90);
     //this.rotateAndCache(this.animation.spriteSheet, 45);
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(180);
-    ctx.drawImage(this.animation.spriteSheet, 100, 100);
-    ctx.restore();
+    //ctx.save();
+    //ctx.translate(this.x, this.y);
+    //ctx.rotate(180);
+    //ctx.drawImage(this.animation.spriteSheet, 100, 100);
+    //ctx.restore();
+
     Entity.prototype.draw.call(this);
 };
 
@@ -132,8 +144,8 @@ window.addEventListener('keydown', function(event) { Key.onKeyDown(event); }, fa
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
-//ASSET_MANAGER.queueDownload("./img/hgun_move.png");
-//ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
+ASSET_MANAGER.queueDownload("./img/hgun_move.png");
+ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -142,12 +154,14 @@ ASSET_MANAGER.downloadAll(function () {
 
     var gameEngine = new GameEngine();
     var player = new Player(gameEngine);
+    var player2 = new Player(gameEngine);
     //var bg = new Background(gameEngine);
     //var unicorn = new Unicorn(gameEngine);
 
     //gameEngine.addEntity(bg);
     //gameEngine.addEntity(unicorn);
-    gameEngine.addEntity(player);
+    gameEngine.addEntity(player, 1);
+    gameEngine.addEntity(player2, 2);
 
     gameEngine.init(ctx);
     gameEngine.start();
