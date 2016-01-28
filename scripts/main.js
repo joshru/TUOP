@@ -1,3 +1,5 @@
+
+
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
     this.spriteSheet = spriteSheet;
     this.startX = startX;
@@ -12,7 +14,7 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
     this.reverse = reverse;
 }
 
-Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy, angle) {
+Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var scaleBy = scaleBy || 1;
     this.elapsedTime += tick;
     if (this.loop) {
@@ -36,17 +38,25 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy, angle) {
     var locX = x;
     var locY = y;
     var offset = vindex === 0 ? this.startX : 0;
-    ctx.save();
-    ctx.translate(locX, locY);
-    ctx.rotate(angle * (Math.PI / 180));
+    //ctx.translate(locX, locY);
+    //ctx.rotate(angle * (Math.PI / 180));
     //ctx.rotate(0.17);
+    console.log("Mouse X: " + mousePosition.x + " | Mouse Y: " + mousePosition.y);
+    var rotation = Math.atan2(locY - mousePosition.y, locX - mousePosition.x);
+    ctx.save();
 
+    ctx.translate(locX + (this.frameWidth / 2), locY + (this.frameHeight / 2));
+    ctx.rotate(rotation);
+    ctx.translate(-(locX + this.frameWidth / 2), -(locY + this.frameHeight / 2));
+    //ctx.translate(0, 0);
     ctx.drawImage(this.spriteSheet,
                   index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
                   this.frameWidth, this.frameHeight,
                   locX, locY,
                   this.frameWidth * scaleBy,
                   this.frameHeight * scaleBy);
+
+    ctx.restore();
     //ctx.rotate((Math.PI / 2.0) - angle);
     ////ctx.translate(-(locX * this.frameWidth), -(locY * this.frameHeight));
     //ctx.restore();
@@ -105,7 +115,7 @@ Player.prototype.update = function() {
 Player.prototype.draw = function(ctx) {
     //console.log("drawing player");
     //this.rotateAndCache(this.animation.spriteSheet, 45);
-    this.animation.drawFrame(this.game.clockTick, ctx, 400, 400, 0.5, 90);
+    this.animation.drawFrame(this.game.clockTick, ctx, 400, 400, 0.5);
     //this.rotateAndCache(this.animation.spriteSheet, 45);
     //ctx.save();
     //ctx.translate(this.x, this.y);
@@ -136,8 +146,16 @@ var Key = {
 
 };
 
+function getMousePos(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    return { x: Math.round(event.clientX - rect.left), y: Math.round(event.clientY - rect.top) };
+}
+
+var mousePosition;
+
 window.addEventListener('keyup', function(event) { Key.onKeyUp(event); }, false);
 window.addEventListener('keydown', function(event) { Key.onKeyDown(event); }, false);
+window.addEventListener('mousemove', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
 
 // the "main" code begins here
 
