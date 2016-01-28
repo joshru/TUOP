@@ -70,26 +70,27 @@ Animation.prototype.isDone = function () {
     return (this.elapsedTime >= this.totalTime);
 };
 
-//function Background(game) {
-//    Entity.call(this, game, 0, 400);
-//    this.radius = 200;
-//}
-//
-//Background.prototype = new Entity();
-//Background.prototype.constructor = Background;
-//
-//Background.prototype.update = function () {
-//};
-//
-//Background.prototype.draw = function (ctx) {
-//    ctx.fillStyle = "SaddleBrown";
-//    ctx.fillRect(0,500,800,300);
-//    Entity.prototype.draw.call(this);
-//};
+function Background(game) {
+    Entity.call(this, game, 0, 400);
+    this.radius = 200;
+    this.bg = ASSET_MANAGER.getAsset("./img/terrain/grass.png");
+}
 
-function Player(game, player) {
+Background.prototype = new Entity();
+Background.prototype.constructor = Background;
+
+Background.prototype.update = function () {
+};
+
+Background.prototype.draw = function (ctx) {
+    //ctx.fillStyle = "SaddleBrown";
+    //ctx.fillRect(0,500,800,300);
+    ctx.drawImage(this.bg, 0, 0);
+    Entity.prototype.draw.call(this);
+};
+
+function Player(game) {
     this.game = game;
-    this.player = player;
 
     this.animations = {};
 
@@ -161,6 +162,8 @@ window.addEventListener('mousemove', function(event) { mousePosition = getMouseP
 
 var ASSET_MANAGER = new AssetManager();
 
+ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
+
 ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
@@ -172,14 +175,12 @@ ASSET_MANAGER.downloadAll(function () {
 
     var gameEngine = new GameEngine();
     var player = new Player(gameEngine);
-    var player2 = new Player(gameEngine);
-    //var bg = new Background(gameEngine);
+    var bg = new Background(gameEngine);
     //var unicorn = new Unicorn(gameEngine);
 
-    //gameEngine.addEntity(bg);
+    gameEngine.addEntity(bg);
     //gameEngine.addEntity(unicorn);
-    gameEngine.addEntity(player, 1);
-    gameEngine.addEntity(player2, 2);
+    gameEngine.addEntity(player);
 
     gameEngine.init(ctx);
     gameEngine.start();
