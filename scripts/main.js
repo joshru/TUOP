@@ -46,6 +46,13 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     ctx.save();
 
     ctx.translate(locX + (this.frameWidth / 2), locY + (this.frameHeight / 2));
+
+    //ctx.beginPath();
+    //ctx.arc(locX + (this.frameWidth / 2), locY + (this.frameHeight / 2), 50, 0, 2*Math.PI, false);
+    //ctx.fillStyle = "red";
+    //ctx.closePath();
+    //ctx.stroke();
+
     ctx.rotate(rotation);
     ctx.translate(-(locX + this.frameWidth / 2), -(locY + this.frameHeight / 2));
     //ctx.translate(0, 0);
@@ -156,7 +163,9 @@ var mousePosition;
 
 window.addEventListener('keyup', function(event) { Key.onKeyUp(event); }, false);
 window.addEventListener('keydown', function(event) { Key.onKeyDown(event); }, false);
+//window.addEventListener('mouseover', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
 window.addEventListener('mousemove', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
+
 
 // the "main" code begins here
 
