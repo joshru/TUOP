@@ -58,7 +58,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     //ctx.stroke();
 
     ctx.rotate(rotation);
-    ctx.translate(-(locX + this.frameWidth / 2), -(locY + this.frameHeight / 2));
+    ctx.translate(-(locX + (this.frameWidth * scaleBy) / 2)  , -(locY + (this.frameHeight * scaleBy) / 2));
     //ctx.translate(0, 0);
     ctx.drawImage(this.spriteSheet,
                   index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
@@ -105,7 +105,7 @@ function Player(game) {
 
     this.animations = {};
 
-    this.animation = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
+    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
 
 
 
@@ -121,13 +121,20 @@ Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
     //console.log("updating player");
+
+    if (Key.isDown(Key.RIGHT)) {
+
+    }
+
+
+
     Entity.prototype.update.call(this);
 };
 
 Player.prototype.draw = function(ctx) {
     //console.log("drawing player");
     //this.rotateAndCache(this.animation.spriteSheet, 45);
-    this.animation.drawFrame(this.game.clockTick, ctx, 400, 400, 0.5);
+    this.animations.idle.drawFrame(this.game.clockTick, ctx, 400, 400, 0.5);
     //this.rotateAndCache(this.animation.spriteSheet, 45);
     //ctx.save();
     //ctx.translate(this.x, this.y);
