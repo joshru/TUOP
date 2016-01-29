@@ -113,7 +113,7 @@ function Player(game) {
 
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260 , 230, .15, 16, true, false);
-
+    this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 17, 25, 271, 184, true, false);
 
     //this.animation = this.animations.hgunIdle;
 
@@ -191,10 +191,10 @@ var Key = {
 
     //keyPressed: false,
 
-    UP: 87,
-    RIGHT: 68,
-    DOWN: 83,
-    LEFT: 65,
+    UP: 87, //w
+    RIGHT: 68, //d
+    DOWN: 83, //s
+    LEFT: 65, //a
 
     isDown: function(keyCode) {
         return this._pressed[keyCode];
