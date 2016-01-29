@@ -102,11 +102,17 @@ Background.prototype.draw = function (ctx) {
 
 function Player(game) {
     this.game = game;
-
+    this.stepDistance = 5;
+    this.states = {
+        IDLE:0,
+        MOVING:1,
+        SHOOTING:2
+    };
+    this.state = this.states.IDLE;
     this.animations = {};
 
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
-
+    this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260 , 230, .15, 16, true, false);
 
 
     //this.animation = this.animations.hgunIdle;
@@ -116,15 +122,44 @@ function Player(game) {
     Entity.call(this, game, 0, this.ground);
 }
 
+
+
+
 Player.prototype = new Entity();
 Player.prototype.constructor = Player;
+
+/*
+   * Moves the player.
+   * @param xTrans distance to move left or right
+   * @param yTrans distance to move up or down
+ */
+Player.prototype.move = function(xTrans, yTrans) {
+    this.x += xTrans;
+    this.y += yTrans;
+};
+
 
 Player.prototype.update = function() {
     //console.log("updating player");
 
     if (Key.isDown(Key.RIGHT)) {
-
+        this.state = this.states.MOVING;
+        this.move(5, 0);
     }
+    if (Key.isDown(Key.LEFT)) {
+        this.state = this.states.MOVING;
+        this.move(-5, 0);
+    }
+    if (Key.isDown(Key.UP)) {
+        this.state = this.states.MOVING;
+        this.move(0, -5);
+    }
+    if (Key.isDown(Key.DOWN)) {
+        this.state = this.states.MOVING;
+        this.move(0, 5);
+    }
+    //} else this.state = this.states.idle;
+    if (!Key.keyPressed()) this.state = this.states.IDLE;
 
 
 
@@ -134,13 +169,15 @@ Player.prototype.update = function() {
 Player.prototype.draw = function(ctx) {
     //console.log("drawing player");
     //this.rotateAndCache(this.animation.spriteSheet, 45);
-    this.animations.idle.drawFrame(this.game.clockTick, ctx, 400, 400, 0.5);
-    //this.rotateAndCache(this.animation.spriteSheet, 45);
-    //ctx.save();
-    //ctx.translate(this.x, this.y);
-    //ctx.rotate(180);
-    //ctx.drawImage(this.animation.spriteSheet, 100, 100);
-    //ctx.restore();
+    if (this.state === this.states.IDLE) {
+        this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
+    }
+
+
+
+    if (this.state === this.states.MOVING) {
+        this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
+    }
 
     Entity.prototype.draw.call(this);
 };
@@ -148,20 +185,34 @@ Player.prototype.draw = function(ctx) {
 var Key = {
     _pressed: {},
 
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    LEFT: 37,
+    //keyPressed: false,
+
+    UP: 87,
+    RIGHT: 68,
+    DOWN: 83,
+    LEFT: 65,
 
     isDown: function(keyCode) {
         return this._pressed[keyCode];
     },
     onKeyDown: function(event) {
+
         this._pressed[event.keyCode] = true;
     },
     onKeyUp: function(event) {
-        delete this._pressed[event.keyCode];
+       this._pressed[event.keyCode] = false;
+        // delete this._pressed[event.keyCode];
+       // var index = this._pressed.indexOf(event.keyCode);
+       // this._pressed.splice(index, 1);
+    },
+    keyPressed: function() {
+        for (var i = 0; i < this._pressed.length; i++) {
+            if (this._pressed[i] === true) return true;
+        }
+        return false;
+
     }
+
 
 };
 
