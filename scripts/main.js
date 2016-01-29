@@ -138,10 +138,7 @@ Player.prototype.move = function(xTrans, yTrans) {
     this.y += yTrans;
 };
 
-
-Player.prototype.update = function() {
-    //console.log("updating player");
-
+Player.prototype.handleMovementInput = function() {
     if (Key.isDown(Key.RIGHT)) {
         this.state = this.states.MOVING;
         this.move(5, 0);
@@ -158,6 +155,13 @@ Player.prototype.update = function() {
         this.state = this.states.MOVING;
         this.move(0, 5);
     }
+}
+
+
+Player.prototype.update = function() {
+    //console.log("updating player");
+    this.handleMovementInput();
+
     //} else this.state = this.states.idle;
     if (!Key.keyPressed()) this.state = this.states.IDLE;
 
