@@ -42,10 +42,14 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     //ctx.rotate(angle * (Math.PI / 180));
     //ctx.rotate(0.17);
     console.log("Mouse X: " + mousePosition.x + " | Mouse Y: " + mousePosition.y);
-    var rotation = Math.atan2(locY - mousePosition.y, locX - mousePosition.x);
+
+    //ROTATION HANDLED HERE
+
+    //Negating these arguments makes him face the mouse instead of the opposite direction.
+    var rotation = Math.atan2(-(locY - mousePosition.y), -(locX - mousePosition.x));
     ctx.save();
 
-    ctx.translate(locX + (this.frameWidth / 2), locY + (this.frameHeight / 2));
+    ctx.translate((locX + (this.frameWidth / 2)), (locY + (this.frameHeight / 2)));
 
     //ctx.beginPath();
     //ctx.arc(locX + (this.frameWidth / 2), locY + (this.frameHeight / 2), 50, 0, 2*Math.PI, false);
