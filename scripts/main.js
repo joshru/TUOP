@@ -149,8 +149,8 @@ Bullet.prototype.update = function() {
 
         }*/
 
-        this.x += that.xVelocity;
-        this.y += that.yVelocity;
+        this.x += that.xVelocity * this.speed;
+        this.y += that.yVelocity * this.speed;
 
     }
 
@@ -213,8 +213,8 @@ Player.prototype.shoot = function(endX, endY) {
 
     //5 is a magic number representing the speed of the bullet.
     //TODO need a way to get speed for each specific gun
-    var xVelocity = (dx / mag) * 5;
-    var yVelocity = (dy / mag) * 5;
+    var xVelocity = (dx / mag); // * 5;
+    var yVelocity = (dy / mag); //* 5;
 
 
     //TODO change hard coded direction to take a mouse position instead
