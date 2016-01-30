@@ -103,18 +103,21 @@ Background.prototype.draw = function (ctx) {
 };
 
 
-function Bullet(x, y, dir, src, game) {
+function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.x = x;
     this.y = y;
-    this.dir = dir;
+    //this.dir = dir;
+    this.xVelocity = xVelocity;
+    this.yVelocity = yVelocity;
     this.src = src;
     this.game = game;
-
+    this.speed = 0;
     this.animation = null;
     //TODO make bullets colorful circles instead
     //Determine which bullet to use based on the gun that fired it
     switch(this.src) {
         case 'pistol':
+            this.speed = 5;
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
             break;
         default:
@@ -137,14 +140,18 @@ Bullet.prototype.update = function() {
     } else {
         //handle moving the bullet
         //TODO make bullets move based off mouse position at the time of creation
-        switch(this.dir) {
+        /*switch(this.dir) {
             case "up":
                 this.y -= 5;
                 break;
             default:
                 return;
 
-        }
+        }*/
+
+        this.x += that.xVelocity;
+        this.y += that.yVelocity;
+
     }
 
 
@@ -193,11 +200,25 @@ Player.prototype.constructor = Player;
 /**
  * creates a bullet and adds it to the game's bullet data structure
  */
-Player.prototype.shoot = function() {
+Player.prototype.shoot = function(endX, endY) {
     var bulletX = this.x + this.animations.idle.frameWidth / 2;
     var bulletY = this.y + this.animations.idle.frameWidth / 2;
+
+
+    var dx = (endX - bulletX);
+    var dy = (endY - bulletY);
+
+    var mag = Math.sqrt(dx * dx + dy * dy);
+
+
+    //5 is a magic number representing the speed of the bullet.
+    //TODO need a way to get speed for each specific gun
+    var xVelocity = (dx / mag) * 5;
+    var yVelocity = (dy / mag) * 5;
+
+
     //TODO change hard coded direction to take a mouse position instead
-    this.game.bullets.push(new Bullet(bulletX, bulletY, "up", this.states.CURRENT_GUN, this.game));
+    this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
 }
 /*
    * Moves the player.
@@ -237,7 +258,7 @@ Player.prototype.update = function() {
 
 
     if (this.game.leftClick) {
-        this.shoot();
+        this.shoot(globals.mousePosition.x, globals.mousePosition.y);
         this.game.leftClick = false;
     }
 
