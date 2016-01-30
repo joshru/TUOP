@@ -1,6 +1,5 @@
 var globals = {
-    bullets: [],
-    enemies: []
+    mousePosition: {x:0, y:0}
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -44,12 +43,12 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     //ctx.translate(locX, locY);
     //ctx.rotate(angle * (Math.PI / 180));
     //ctx.rotate(0.17);
-    console.log("Mouse X: " + mousePosition.x + " | Mouse Y: " + mousePosition.y);
+    console.log("Mouse X: " + globals.mousePosition.x + " | Mouse Y: " + globals.mousePosition.y);
 
     //ROTATION HANDLED HERE
 
     //Negating these arguments makes him face the mouse instead of the opposite direction.
-    var rotation = Math.atan2(-(locY - mousePosition.y), -(locX - mousePosition.x));
+    var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x));
     ctx.save();
 
     ctx.translate((locX + (this.frameWidth / 2)), (locY + (this.frameHeight / 2)));
@@ -112,6 +111,8 @@ function Bullet(x, y, dir, src, game) {
     this.game = game;
 
     this.animation = null;
+    //TODO make bullets colorful circles instead
+    //Determine which bullet to use based on the gun that fired it
     switch(this.src) {
         case 'pistol':
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
@@ -135,6 +136,7 @@ Bullet.prototype.update = function() {
 
     } else {
         //handle moving the bullet
+        //TODO make bullets move based off mouse position at the time of creation
         switch(this.dir) {
             case "up":
                 this.y -= 5;
@@ -150,7 +152,7 @@ Bullet.prototype.update = function() {
 
 Bullet.prototype.draw = function(ctx) {
 
-    this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+    this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
 
 }
 
@@ -159,12 +161,14 @@ Bullet.prototype.draw = function(ctx) {
 function Player(game) {
     this.game = game;
     this.stepDistance = 5;
+
     this.states = {
         IDLE:0,
         MOVING:1,
         SHOOTING:2,
         CURRENT_GUN:'pistol'
     };
+
     this.state = this.states.IDLE;
     this.animations = {};
 
@@ -301,12 +305,12 @@ function getMousePos(canvas, event) {
     return { x: Math.round(event.clientX - rect.left), y: Math.round(event.clientY - rect.top) };
 }
 
-var mousePosition;
+
 
 window.addEventListener('keyup', function(event) { Key.onKeyUp(event); }, false);
 window.addEventListener('keydown', function(event) { Key.onKeyDown(event); }, false);
 //window.addEventListener('mouseover', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
-window.addEventListener('mousemove', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
+window.addEventListener('mousemove', function(event) { globals.mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
 
 
 // the "main" code begins here
