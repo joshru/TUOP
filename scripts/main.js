@@ -1,4 +1,7 @@
-
+var globals = {
+    bullets: [],
+    enemies: []
+};
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
     this.spriteSheet = spriteSheet;
@@ -84,7 +87,7 @@ Animation.prototype.isDone = function () {
 function Background(game) {
     Entity.call(this, game, 0, 400);
     this.radius = 200;
-    this.bg = ASSET_MANAGER.getAsset("./img/terrain/grass.png");
+    this.bg = ASSET_MANAGER.getAsset("./img/terrain/Test lab.png");
 }
 
 Background.prototype = new Entity();
@@ -100,13 +103,67 @@ Background.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 };
 
+
+function Bullet(x, y, dir, src, game) {
+    this.x = x;
+    this.y = y;
+    this.dir = dir;
+    this.src = src;
+    this.game = game;
+
+    this.animation = null;
+    switch(this.src) {
+        case 'pistol':
+            this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
+            break;
+        default:
+            return;
+
+    }
+}
+
+Bullet.prototype = new Entity();
+Bullet.prototype.constructor = Bullet;
+
+Bullet.prototype.update = function() {
+    var canvas = document.getElementById('gameWorld');
+    var that = this;
+    if (this.x < 0 || this.y < 0 || this.x > canvas.width || this.y > canvas.height) {
+
+        that.removeFromWorld = true; //don't think I need a that variable here
+
+
+    } else {
+        //handle moving the bullet
+        switch(this.dir) {
+            case "up":
+                this.y -= 5;
+                break;
+            default:
+                return;
+
+        }
+    }
+
+
+}
+
+Bullet.prototype.draw = function(ctx) {
+
+    this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+
+}
+
+
+
 function Player(game) {
     this.game = game;
     this.stepDistance = 5;
     this.states = {
         IDLE:0,
         MOVING:1,
-        SHOOTING:2
+        SHOOTING:2,
+        CURRENT_GUN:'pistol'
     };
     this.state = this.states.IDLE;
     this.animations = {};
@@ -128,6 +185,16 @@ function Player(game) {
 Player.prototype = new Entity();
 Player.prototype.constructor = Player;
 
+
+/**
+ * creates a bullet and adds it to the game's bullet data structure
+ */
+Player.prototype.shoot = function() {
+    var bulletX = this.x + this.animations.idle.frameWidth / 2;
+    var bulletY = this.y + this.animations.idle.frameWidth / 2;
+    //TODO change hard coded direction to take a mouse position instead
+    this.game.bullets.push(new Bullet(bulletX, bulletY, "up", this.states.CURRENT_GUN, this.game));
+}
 /*
    * Moves the player.
    * @param xTrans distance to move left or right
@@ -158,9 +225,17 @@ Player.prototype.handleMovementInput = function() {
 }
 
 
+
+
 Player.prototype.update = function() {
     //console.log("updating player");
     this.handleMovementInput();
+
+
+    if (this.game.leftClick) {
+        this.shoot();
+        this.game.leftClick = false;
+    }
 
     //} else this.state = this.states.idle;
     if (!Key.keyPressed()) this.state = this.states.IDLE;
@@ -210,10 +285,11 @@ var Key = {
        // this._pressed.splice(index, 1);
     },
     keyPressed: function() {
-        for (var i = 0; i < this._pressed.length; i++) {
-            if (this._pressed[i] === true) return true;
+        /*for (var i = 0; i < this._pressed.length; i++) {
+            if (this._pressed[i]) return true;
         }
-        return false;
+        return false;*/
+        return this._pressed.length === 0;
 
     }
 
@@ -238,10 +314,14 @@ window.addEventListener('mousemove', function(event) { mousePosition = getMouseP
 var ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
+ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
+
+
 
 ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
+ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");

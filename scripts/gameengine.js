@@ -30,6 +30,7 @@ Timer.prototype.tick = function () {
 
 function GameEngine() {
     this.entities = [];
+    this.bullets = [];//testing best place to put this
     this.showOutlines = false;
     this.ctx = null;
     this.click = null;
@@ -67,6 +68,20 @@ GameEngine.prototype.startInput = function () {
         e.preventDefault();
     }, false);
 
+
+    this.ctx.canvas.addEventListener("click", function(e) {
+        if (e.button == 0) that.leftClick = true;
+
+    }, false);
+
+
+    //stop context menu from opening
+    this.ctx.canvas.addEventListener("contextmenu", function(e) {
+        if (e.button == 0) that.rightClick = true;
+        e.preventDefault();
+
+    }, false);
+
     console.log('Input started');
 };
 
@@ -81,12 +96,17 @@ GameEngine.prototype.draw = function () {
     for (var i = 0; i < this.entities.length; i++) {
         this.entities[i].draw(this.ctx);
     }
+    //draw bullets
+    for (var j = 0; j < this.bullets.length; j++) {
+        this.bullets[j].draw(this.ctx);
+    }
+
     this.ctx.restore();
 };
 
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
-
+    //update entities
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
 
@@ -95,11 +115,26 @@ GameEngine.prototype.update = function () {
         }
     }
 
+    //update bullets
+
+    for (var j = 0; j < this.bullets.length; j++) {
+        var currBullet = this.bullets[j];
+
+        if (!currBullet.removeFromWorld) currBullet.update();
+    }
+
+
+    //remove entities that are donezo
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
             this.entities.splice(i, 1);
         }
     }
+    //remove bullets that are off screen
+    for (var j = this.bullets.length - 1; j >= 0; --j) {
+        if (this.bullets[j].removeFromWorld) this.bullets.splice(j, 1);
+    }
+
 };
 
 GameEngine.prototype.loop = function () {
