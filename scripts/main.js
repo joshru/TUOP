@@ -15,6 +15,20 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
     this.loop = loop;
     this.reverse = reverse;
 }
+/**
+ * Determines the distance between 2 entities
+ * @param a first entity
+ * @param b second entity
+ * @shoutout Marriot
+ */
+function distance(a, b) {
+    console.log("Received parameters: (" + a.x + "," + a.y + ") , (" + b.x + "," + b.y + ")");
+
+    var dx = Math.abs(a.x - b.x);
+    var dy = Math.abs(a.y - b.y);
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
 
 Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var scaleBy = scaleBy || 1;
@@ -40,10 +54,8 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var locX = x;
     var locY = y;
     var offset = vindex === 0 ? this.startX : 0;
-    //ctx.translate(locX, locY);
-    //ctx.rotate(angle * (Math.PI / 180));
-    //ctx.rotate(0.17);
-    console.log("Mouse X: " + globals.mousePosition.x + " | Mouse Y: " + globals.mousePosition.y);
+
+  //  console.log("Mouse X: " + globals.mousePosition.x + " | Mouse Y: " + globals.mousePosition.y);
 
     //ROTATION HANDLED HERE
 
@@ -53,11 +65,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
 
     ctx.translate((locX + (this.frameWidth / 2)), (locY + (this.frameHeight / 2)));
 
-    //ctx.beginPath();
-    //ctx.arc(locX + (this.frameWidth / 2), locY + (this.frameHeight / 2), 50, 0, 2*Math.PI, false);
-    //ctx.fillStyle = "red";
-    //ctx.closePath();
-    //ctx.stroke();
+
 
     ctx.rotate(rotation);
     ctx.translate(-(locX + (this.frameWidth * scaleBy) / 2)  , -(locY + (this.frameHeight * scaleBy) / 2));
@@ -70,9 +78,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
                   this.frameHeight * scaleBy);
 
     ctx.restore();
-    //ctx.rotate((Math.PI / 2.0) - angle);
-    ////ctx.translate(-(locX * this.frameWidth), -(locY * this.frameHeight));
-    //ctx.restore();
+
 };
 
 Animation.prototype.currentFrame = function () {
@@ -109,8 +115,8 @@ function Zombie(game) {
     this.states = {};
     this.health = 100;
 
-    this.radius = 100;
-    this.ground = 600;
+    this.radius = 70;
+    this.ground = 500;
     this.x = 500; //hardcoded for prototype zombie
     this.y = 300; //TODO come up with a zombie spawning system using timers or something
 
@@ -124,19 +130,42 @@ function Zombie(game) {
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/Enemies/citizenzombieFlip4.png"),0,0,71,71,.15, 1, true, false);
     this.currAnim = this.animations.idle;
 
-    Entity.call(this, game, 0, this.ground);
+    Entity.call(this, game, this.x, this.y);
 }
 
 Zombie.prototype = new Entity();
 Zombie.prototype.constructor = Zombie;
 
 Zombie.prototype.update = function() {
+    //handle movement and stuff
+
+    //check if getting shot the F up
+    for (var i = 0; i < this.game.bullets.length; i++) {
+        var bullet = this.game.bullets[i];
+        console.log("Distance From Bullet: " + distance(this, bullet));
+        if (this.isCollidingWith(bullet)) {
+            this.health -= bullet.damage;
+            console.log("You shot me!");
+        }
+    }
+
+
+    //TODO create dying animation and stuff
+    if (this.health <= 0) this.removeFromWorld = true;
+
 
 };
 
 Zombie.prototype.draw = function(ctx) {
     this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y,1);
+    //console.log("Zombie position (" + this.x + "," + this.y + ")");
+
 };
+
+Zombie.prototype.isCollidingWith = function(bullet) {
+    return distance(this, bullet) < this.radius + bullet.radius;
+}
+
 
 
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
@@ -154,7 +183,7 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
     //Determine which bullet to use based on the gun that fired it
     switch(this.src) {
         case 'pistol':
-            this.speed = 5;
+            this.speed = 10;
             this.damage = 15;
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
             break;
@@ -162,6 +191,9 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
             break;
 
     }
+    this.radius = 200;
+
+    Entity.call(this, game, this.x, this.y);
 }
 
 Bullet.prototype = new Entity();
@@ -177,6 +209,9 @@ Bullet.prototype.update = function() {
         //Change its position otherwise
         this.x += that.xVelocity * this.speed;
         this.y += that.yVelocity * this.speed;
+
+        //console.log("Bullet position (" + this.x + "," + this.y + ")");
+
     }
 
 };
@@ -256,19 +291,19 @@ Player.prototype.move = function(xTrans, yTrans) {
 Player.prototype.handleMovementInput = function() {
     if (Key.isDown(Key.RIGHT)) {
         this.state = this.states.MOVING;
-        this.move(5, 0);
+        this.move(this.stepDistance, 0);
     }
     if (Key.isDown(Key.LEFT)) {
         this.state = this.states.MOVING;
-        this.move(-5, 0);
+        this.move(-this.stepDistance, 0);
     }
     if (Key.isDown(Key.UP)) {
         this.state = this.states.MOVING;
-        this.move(0, -5);
+        this.move(0, -this.stepDistance);
     }
     if (Key.isDown(Key.DOWN)) {
         this.state = this.states.MOVING;
-        this.move(0, 5);
+        this.move(0, this.stepDistance);
     }
 };
 

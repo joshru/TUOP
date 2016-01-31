@@ -82,7 +82,7 @@ GameEngine.prototype.startInput = function () {
     }, false);
 
 
-    //stop context menu from opening
+    //stop context menu from opening when user right clicks
     this.ctx.canvas.addEventListener("contextmenu", function(e) {
         if (e.button == 0) that.rightClick = true;
         e.preventDefault();
@@ -139,7 +139,7 @@ GameEngine.prototype.removeFinishedFrom = function(array) {
  * Calls every entities' update method
  */
 GameEngine.prototype.update = function () {
-    var entitiesCount = this.entities.length;
+
     //update entities
 
     this.updateEntitiesIn(this.entities);
@@ -162,7 +162,7 @@ GameEngine.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     this.update();
     this.draw();
-    this.space = null;
+    //this.space = null;
 };
 
 
