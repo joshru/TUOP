@@ -93,47 +93,58 @@ GameEngine.prototype.addEntity = function (entity) {
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
-    for (var i = 0; i < this.entities.length; i++) {
-        this.entities[i].draw(this.ctx);
-    }
-    //draw bullets
-    for (var j = 0; j < this.bullets.length; j++) {
-        this.bullets[j].draw(this.ctx);
-    }
+    //Draw entities
+    this.drawEntitiesIn(this.entities);
+    //Draw bullets
+    this.drawEntitiesIn(this.bullets);
 
     this.ctx.restore();
 };
 
+/**
+ * Calls draw on all elements of a given array
+ * @param array of entities
+ */
+GameEngine.prototype.drawEntitiesIn = function(array) { for (var i = 0; i < array.length; i++) array[i].draw(this.ctx); };
+/**
+ * Calls update on all elements in a given array
+ * @param array of entities
+ */
+GameEngine.prototype.updateEntitiesIn = function(array) {
+    for (var i = 0; i < array.length; i++) {
+        if (!array[i].removeFromWorld) array[i].update();
+    }
+};
+/**
+ * Removes entities that have their 'removeFromWorld' flag set
+ * @param array of entities to trim
+ */
+GameEngine.prototype.removeFinishedFrom = function(array) {
+    for (var i = array.length-1; i >= 0; i--) {
+        if (array[i].removeFromWorld) array.splice(i, 1);
+    }
+};
+
+/**
+ * Calls every entities' update method
+ */
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
     //update entities
-    for (var i = 0; i < entitiesCount; i++) {
-        var entity = this.entities[i];
 
-        if (!entity.removeFromWorld) {
-            entity.update();
-        }
-    }
+    this.updateEntitiesIn(this.entities);
 
     //update bullets
 
-    for (var j = 0; j < this.bullets.length; j++) {
-        var currBullet = this.bullets[j];
-
-        if (!currBullet.removeFromWorld) currBullet.update();
-    }
+    this.updateEntitiesIn(this.bullets);
 
 
-    //remove entities that are donezo
-    for (var i = this.entities.length - 1; i >= 0; --i) {
-        if (this.entities[i].removeFromWorld) {
-            this.entities.splice(i, 1);
-        }
-    }
-    //remove bullets that are off screen
-    for (var j = this.bullets.length - 1; j >= 0; --j) {
-        if (this.bullets[j].removeFromWorld) this.bullets.splice(j, 1);
-    }
+    //remove entities and bullets that are donezo
+
+    this.removeFinishedFrom(this.entities);
+    this.removeFinishedFrom(this.bullets);
+
+
 
 };
 
