@@ -103,8 +103,44 @@ Background.prototype.draw = function (ctx) {
 };
 
 
+
+function Zombie(game) {
+    this.game = game;
+    this.states = {};
+    this.health = 100;
+
+    this.radius = 100;
+    this.ground = 600;
+    this.x = 500; //hardcoded for prototype zombie
+    this.y = 300; //TODO come up with a zombie spawning system using timers or something
+
+    this.states = {
+        IDLE:0,
+        MOVING:1
+    };
+
+
+    this.animations = {};
+    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/Enemies/citizenzombieFlip4.png"),0,0,71,71,.15, 1, true, false);
+    this.currAnim = this.animations.idle;
+
+    Entity.call(this, game, 0, this.ground);
+}
+
+Zombie.prototype = new Entity();
+Zombie.prototype.constructor = Zombie;
+
+Zombie.prototype.update = function() {
+
+};
+
+Zombie.prototype.draw = function(ctx) {
+    this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y,1);
+};
+
+
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
-    this.x = x;
+    this.x = x; // probably doesn't need to be here
     this.y = y;
     //this.dir = dir;
     this.xVelocity = xVelocity;
@@ -113,15 +149,17 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.game = game;
     this.speed = 0;
     this.animation = null;
+    this.damage = 0;
     //TODO make bullets colorful circles instead
     //Determine which bullet to use based on the gun that fired it
     switch(this.src) {
         case 'pistol':
             this.speed = 5;
+            this.damage = 15;
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
             break;
         default:
-            return;
+            break;
 
     }
 }
@@ -132,37 +170,22 @@ Bullet.prototype.constructor = Bullet;
 Bullet.prototype.update = function() {
     var canvas = document.getElementById('gameWorld');
     var that = this;
+    //Remove bullet if offscreen
     if (this.x < 0 || this.y < 0 || this.x > canvas.width || this.y > canvas.height) {
-
-        that.removeFromWorld = true; //don't think I need a that variable here
-
-
+        that.removeFromWorld = true;
     } else {
-        //handle moving the bullet
-        //TODO make bullets move based off mouse position at the time of creation
-        /*switch(this.dir) {
-            case "up":
-                this.y -= 5;
-                break;
-            default:
-                return;
-
-        }*/
-
+        //Change its position otherwise
         this.x += that.xVelocity * this.speed;
         this.y += that.yVelocity * this.speed;
-
     }
 
-
-}
+};
 
 Bullet.prototype.draw = function(ctx) {
 
     this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
 
-}
-
+};
 
 
 function Player(game) {
@@ -219,7 +242,7 @@ Player.prototype.shoot = function(endX, endY) {
 
     //TODO change hard coded direction to take a mouse position instead
     this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
-}
+};
 /*
    * Moves the player.
    * @param xTrans distance to move left or right
@@ -247,7 +270,7 @@ Player.prototype.handleMovementInput = function() {
         this.state = this.states.MOVING;
         this.move(0, 5);
     }
-}
+};
 
 
 
@@ -347,6 +370,9 @@ ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
+ASSET_MANAGER.queueDownload("./img/Enemies/citizenzombieFlip4.png");
+
+
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -356,9 +382,11 @@ ASSET_MANAGER.downloadAll(function () {
     var gameEngine = new GameEngine();
     var player = new Player(gameEngine);
     var bg = new Background(gameEngine);
+    var zombie = new Zombie(gameEngine);
     //var unicorn = new Unicorn(gameEngine);
 
     gameEngine.addEntity(bg);
+    gameEngine.addEntity(zombie);
     //gameEngine.addEntity(unicorn);
     gameEngine.addEntity(player);
 

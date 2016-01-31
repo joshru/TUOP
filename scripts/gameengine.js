@@ -71,6 +71,13 @@ GameEngine.prototype.startInput = function () {
 
     this.ctx.canvas.addEventListener("click", function(e) {
         if (e.button == 0) that.leftClick = true;
+        e.preventDefault();
+
+    }, false);
+
+    this.ctx.canvas.addEventListener("mousedown", function(e) {
+      //  if (e.button == 0) that.leftClick = true;
+        e.preventDefault();
 
     }, false);
 
@@ -89,6 +96,9 @@ GameEngine.prototype.addEntity = function (entity) {
     console.log('added entity');
     this.entities.push(entity);
 };
+
+//TODO consider making a function 'addBullet'
+//This approach may end up getting redundant if we end up with more arrays of different entity types
 
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
