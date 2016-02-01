@@ -147,6 +147,7 @@ Zombie.prototype.update = function() {
         if (!bullet.spent && this.isCollidingWith(bullet)) {
             this.health -= bullet.damage;
             bullet.spent = true;
+            bullet.removeFromWorld = true;
             console.log("You shot me!");
         }
     }
