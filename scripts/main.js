@@ -92,7 +92,7 @@ Animation.prototype.isDone = function () {
 function Background(game) {
     Entity.call(this, game, 0, 400);
     this.radius = 200;
-    this.bg = ASSET_MANAGER.getAsset("./img/terrain/Test lab.png");
+    this.bg = ASSET_MANAGER.getAsset("./img/terrain/grass.png");
 }
 
 Background.prototype = new Entity();
@@ -348,6 +348,186 @@ Player.prototype.draw = function(ctx) {
     Entity.prototype.draw.call(this);
 };
 
+function distance(a, b) {
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+function randomInt(n) {
+    return Math.floor(Math.random() * n);
+}
+
+function Zombie(game) {
+    this.player = 1;
+    this.radius = 10;
+    this.visualRadius = 500;
+    this.name = "Zombie";
+    this.color = "Red";
+    this.friction = 1;
+    var minSpeed = 5;
+    var maxSpeed = 100;
+    this.maxSpeed = minSpeed + (maxSpeed - minSpeed) * Math.random();
+
+    //if (!clone) {
+        Entity.call(this, game, this.radius + Math.random() * (800 - this.radius * 2), this.radius + Math.random() * (800 - this.radius * 2));
+    //}
+//else {
+//        if (clone.x < 0) clone.x = 0;
+//        if (clone.y < 0) clone.y = 0;
+//        if (clone.x > 800) clone.x = 800;
+//        if (clone.y > 800) clone.y = 800;
+//        if (clone.x > 0 && clone.y > 0 && clone.x < 800 && clone.y < 800) {
+//            Entity.call(this, game, clone.x, clone.y);
+//        } else {
+//            Entity.call(this, game, 400, 400);
+//        }
+    //}
+    this.velocity = { x: Math.random() * 1000, y: Math.random() * 1000 };
+    var speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+    if (speed > this.maxSpeed) {
+        var ratio = this.maxSpeed / speed;
+        this.velocity.x *= ratio;
+        this.velocity.y *= ratio;
+    }
+};
+
+
+Zombie.prototype = new Entity();
+Zombie.prototype.constructor = Zombie;
+
+Zombie.prototype.collide = function (other) {
+    return distance(this, other) < this.radius + other.radius;
+};
+
+Zombie.prototype.collideLeft = function () {
+    return (this.x - this.radius) < 0;
+};
+
+Zombie.prototype.collideRight = function () {
+    return (this.x + this.radius) > 800;
+};
+
+Zombie.prototype.collideTop = function () {
+    return (this.y - this.radius) < 0;
+};
+
+Zombie.prototype.collideBottom = function () {
+    return (this.y + this.radius) > 800;
+};
+
+Zombie.prototype.update = function () {
+    Entity.prototype.update.call(this);
+    //  console.log(this.velocity);
+
+    this.x += this.velocity.x * this.game.clockTick;
+    this.y += this.velocity.y * this.game.clockTick;
+
+    if (this.collideLeft() || this.collideRight()) {
+        this.velocity.x = -this.velocity.x * this.friction;
+        if (this.collideLeft()) this.x = this.radius;
+        if (this.collideRight()) this.x = 800 - this.radius;
+        this.x += this.velocity.x * this.game.clockTick;
+        this.y += this.velocity.y * this.game.clockTick;
+    }
+
+    if (this.collideTop() || this.collideBottom()) {
+        this.velocity.y = -this.velocity.y * this.friction;
+        if (this.collideTop()) this.y = this.radius;
+        if (this.collideBottom()) this.y = 800 - this.radius;
+        this.x += this.velocity.x * this.game.clockTick;
+        this.y += this.velocity.y * this.game.clockTick;
+    }
+
+    var chasing = false;
+    for (var i = 0; i < this.game.entities.length; i++) {
+        var ent = this.game.entities[i];
+        if (ent !== this && this.collide(ent)) {
+            if (ent.name === "Zombie") {
+                var temp = { x: this.velocity.x, y: this.velocity.y };
+
+                var dist = distance(this, ent);
+                var delta = this.radius + ent.radius - dist;
+                var difX = (this.x - ent.x) / dist;
+                var difY = (this.y - ent.y) / dist;
+
+                this.x += difX * delta / 2;
+                this.y += difY * delta / 2;
+                ent.x -= difX * delta / 2;
+                ent.y -= difY * delta / 2;
+
+                this.velocity.x = ent.velocity.x * this.friction;
+                this.velocity.y = ent.velocity.y * this.friction;
+                ent.velocity.x = temp.x * this.friction;
+                ent.velocity.y = temp.y * this.friction;
+                this.x += this.velocity.x * this.game.clockTick;
+                this.y += this.velocity.y * this.game.clockTick;
+                ent.x += ent.velocity.x * this.game.clockTick;
+                ent.y += ent.velocity.y * this.game.clockTick;
+            }
+            if (ent.name !== "Zombie" && ent.name !== "Rock" && !ent.removeFromWorld) {
+                ent.removeFromWorld = true;
+                console.log(ent.name + " kills: " + ent.kills);
+                var newZombie = new Zombie(this.game, ent);
+                this.game.addEntity(newZombie);
+            }
+            if (ent.name === "Rock" && ent.thrown) {
+                this.removeFromWorld = true;
+                ent.thrown = false;
+                ent.velocity.x = 0;
+                ent.velocity.y = 0;
+                ent.thrower.kills++;
+            }
+        }
+        var acceleration = 1000000;
+
+        if (ent.name !== "Zombie" && ent.name !== "Rock" && this.collide({ x: ent.x, y: ent.y, radius: this.visualRadius })) {
+            var dist = distance(this, ent);
+              if (dist > this.radius + ent.radius + 2) {
+                var difX = (ent.x - this.x)/dist;
+                var difY = (ent.y - this.y)/dist;
+                this.velocity.x += difX * acceleration / (dist * dist);
+                this.velocity.y += difY * acceleration / (dist * dist);
+            }
+            chasing = true;
+        }
+
+
+    }
+
+    //if (!chasing) {
+    //    ent = this.game.zombies[randomInt(this.game.zombies.length)];
+    //    var dist = distance(this, ent);
+    //    if (dist > this.radius + ent.radius + 2) {
+    //        var difX = (ent.x - this.x) / dist;
+    //        var difY = (ent.y - this.y) / dist;
+    //        this.velocity.x += difX * acceleration / (dist * dist);
+    //        this.velocity.y += difY * acceleration / (dist * dist);
+    //    }
+    //
+    //}
+
+    var speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+    if (speed > this.maxSpeed) {
+        var ratio = this.maxSpeed / speed;
+        this.velocity.x *= ratio;
+        this.velocity.y *= ratio;
+    }
+
+    this.velocity.x -= (1 - this.friction) * this.game.clockTick * this.velocity.x;
+    this.velocity.y -= (1 - this.friction) * this.game.clockTick * this.velocity.y;
+};
+
+Zombie.prototype.draw = function (ctx) {
+    //ctx.beginPath();
+    //ctx.fillStyle = this.color;
+    //ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    //ctx.fill();
+    //ctx.closePath();
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
+
+};
+
 var Key = {
     _pressed: {},
 
@@ -388,11 +568,19 @@ function getMousePos(canvas, event) {
     return { x: Math.round(event.clientX - rect.left), y: Math.round(event.clientY - rect.top) };
 }
 
+function click(canvas, event) {
+
+}
+
+var mousePosition;
+var clickPosition;
 
 
 window.addEventListener('keyup', function(event) { Key.onKeyUp(event); }, false);
 window.addEventListener('keydown', function(event) { Key.onKeyDown(event); }, false);
 //window.addEventListener('mouseover', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
+window.addEventListener('mousemove', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event); }, false);
+window.addEventListener('mouseclick', function (event) { clickPosition = click(document.getElementById('gameworld'), event); }, false);
 window.addEventListener('mousemove', function(event) { globals.mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
 
 
@@ -413,19 +601,31 @@ ASSET_MANAGER.queueDownload("./img/Enemies/citizenzombieFlip4.png");
 
 
 
+ASSET_MANAGER.queueDownload("./img/zombie.png");
+
+var player;
+
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
 
     var gameEngine = new GameEngine();
-    var player = new Player(gameEngine);
+    player = new Player(gameEngine);
     var bg = new Background(gameEngine);
-    var zombie = new Zombie(gameEngine);
+
+    //var zombie;
+    //for (var i = 0; i < 10; i++) {
+    //    zombie = new Zombie(gameEngine);
+    //    gameEngine.addEntity(zombie);
+    //}
+    var zombie1 = new Zombie(gameEngine);
+    var zombie2 = new Zombie(gameEngine);
     //var unicorn = new Unicorn(gameEngine);
 
     gameEngine.addEntity(bg);
-    gameEngine.addEntity(zombie);
+    gameEngine.addEntity(zombie1);
+    gameEngine.addEntity(zombie2);
     //gameEngine.addEntity(unicorn);
     gameEngine.addEntity(player);
 
