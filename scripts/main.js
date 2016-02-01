@@ -22,7 +22,7 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
  * @shoutout Marriot
  */
 function distance(a, b) {
-    console.log("Received parameters: (" + a.x + "," + a.y + ") , (" + b.x + "," + b.y + ")");
+   // console.log("Received parameters: (" + a.x + "," + a.y + ") , (" + b.x + "," + b.y + ")");
 
     var dx = Math.abs(a.x - b.x);
     var dy = Math.abs(a.y - b.y);
@@ -142,10 +142,11 @@ Zombie.prototype.update = function() {
     //check if getting shot the F up
     for (var i = 0; i < this.game.bullets.length; i++) {
         var bullet = this.game.bullets[i];
-        console.log("Distance From Bullet: " + distance(this, bullet));
+        //console.log("Distance From Bullet: " + distance(this, bullet));
         //TODO make it so bullets can only do damage once
-        if (this.isCollidingWith(bullet)) {
+        if (!bullet.spent && this.isCollidingWith(bullet)) {
             this.health -= bullet.damage;
+            bullet.spent = true;
             console.log("You shot me!");
         }
     }
@@ -165,7 +166,7 @@ Zombie.prototype.draw = function(ctx) {
 
 Zombie.prototype.isCollidingWith = function(bullet) {
     return distance(this, bullet) < this.radius + bullet.radius;
-}
+};
 
 
 
@@ -180,6 +181,7 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.speed = 0;
     this.animation = null;
     this.damage = 0;
+    this.spent = false;
     //TODO make bullets colorful circles instead
     //Determine which bullet to use based on the gun that fired it
     switch(this.src) {
@@ -270,13 +272,13 @@ Player.prototype.shoot = function(endX, endY) {
     var mag = Math.sqrt(dx * dx + dy * dy);
 
 
-    //5 is a magic number representing the speed of the bullet.
-    //TODO need a way to get speed for each specific gun
+
+
     var xVelocity = (dx / mag); // * 5;
     var yVelocity = (dy / mag); //* 5;
 
 
-    //TODO change hard coded direction to take a mouse position instead
+
     this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
 };
 /*
