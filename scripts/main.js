@@ -115,7 +115,7 @@ function Zombie(game) {
     this.states = {};
     this.health = 100;
 
-    this.radius = 70;
+    this.radius = 30;
     this.ground = 500;
     this.x = 500; //hardcoded for prototype zombie
     this.y = 300; //TODO come up with a zombie spawning system using timers or something
@@ -143,6 +143,7 @@ Zombie.prototype.update = function() {
     for (var i = 0; i < this.game.bullets.length; i++) {
         var bullet = this.game.bullets[i];
         console.log("Distance From Bullet: " + distance(this, bullet));
+        //TODO make it so bullets can only do damage once
         if (this.isCollidingWith(bullet)) {
             this.health -= bullet.damage;
             console.log("You shot me!");
@@ -191,7 +192,7 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
             break;
 
     }
-    this.radius = 200;
+    this.radius = 70;
 
     Entity.call(this, game, this.x, this.y);
 }
