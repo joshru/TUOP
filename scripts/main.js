@@ -1,3 +1,5 @@
+// test showing github integration
+
 var globals = {
     mousePosition: {x:0, y:0}
 };
