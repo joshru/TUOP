@@ -90,6 +90,7 @@ Animation.prototype.isDone = function () {
 };
 
 function Background(game) {
+    this.name = "Background";
     Entity.call(this, game, 0, 400);
     this.radius = 200;
     this.bg = ASSET_MANAGER.getAsset("./img/terrain/grass.png");
@@ -112,6 +113,7 @@ Background.prototype.draw = function (ctx) {
 
 function Zombie(game) {
     this.game = game;
+    this.name = "Zombie";
     this.states = {};
     this.health = 100;
 
@@ -174,6 +176,7 @@ Zombie.prototype.isCollidingWith = function(bullet) {
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.x = x; // probably doesn't need to be here
     this.y = y;
+    this.name = "Bullet";
     //this.dir = dir;
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
@@ -189,13 +192,14 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
         case 'pistol':
             this.speed = 10;
             this.damage = 15;
+            this.radius = 10;
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
             break;
         default:
             break;
 
     }
-    this.radius = 70;
+    //this.radius = 70;
 
     Entity.call(this, game, this.x, this.y);
 }
@@ -221,14 +225,19 @@ Bullet.prototype.update = function() {
 };
 
 Bullet.prototype.draw = function(ctx) {
-
-    this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
+    ctx.beginPath();
+    ctx.fillStyle = "Yellow";
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fill();
+    ctx.closePath();
+    //this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
 
 };
 
 
 function Player(game) {
     this.game = game;
+    this.name = "Player";
     this.stepDistance = 5;
 
     this.states = {
@@ -442,6 +451,7 @@ Zombie.prototype.update = function () {
     var chasing = false;
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
+        console.log("current entity: " + ent.name);
         if (ent !== this && this.collide(ent)) {
             if (ent.name === "Zombie") {
                 var temp = { x: this.velocity.x, y: this.velocity.y };
@@ -465,13 +475,13 @@ Zombie.prototype.update = function () {
                 ent.x += ent.velocity.x * this.game.clockTick;
                 ent.y += ent.velocity.y * this.game.clockTick;
             }
-            if (ent.name !== "Zombie" && ent.name !== "Rock" && !ent.removeFromWorld) {
+            if (ent.name !== "Zombie" && ent.name !== "Bullet" && !ent.removeFromWorld) {
                 ent.removeFromWorld = true;
                 console.log(ent.name + " kills: " + ent.kills);
                 var newZombie = new Zombie(this.game, ent);
                 this.game.addEntity(newZombie);
             }
-            if (ent.name === "Rock" && ent.thrown) {
+            if (ent.name === "Bullet"/* && ent.thrown*/) {
                 this.removeFromWorld = true;
                 ent.thrown = false;
                 ent.velocity.x = 0;
@@ -481,7 +491,7 @@ Zombie.prototype.update = function () {
         }
         var acceleration = 1000000;
 
-        if (ent.name !== "Zombie" && ent.name !== "Rock" && this.collide({ x: ent.x, y: ent.y, radius: this.visualRadius })) {
+        if (ent.name !== "Zombie" && ent.name !== "Bullet" && this.collide({ x: ent.x, y: ent.y, radius: this.visualRadius })) {
             var dist = distance(this, ent);
               if (dist > this.radius + ent.radius + 2) {
                 var difX = (ent.x - this.x)/dist;
