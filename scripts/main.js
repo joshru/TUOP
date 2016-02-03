@@ -63,7 +63,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     //ROTATION HANDLED HERE
 
     //Negating these arguments makes him face the mouse instead of the opposite direction.
-    var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x));
+    var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x) - 50);
     ctx.save();
 
     ctx.translate((locX + (this.frameWidth / 2)), (locY + (this.frameHeight / 2)));
@@ -238,7 +238,7 @@ Bullet.prototype.update = function() {
 
 Bullet.prototype.draw = function(ctx) {
     ctx.beginPath();
-    ctx.fillStyle = "Yellow";
+    ctx.fillStyle = "#E3612F";
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fill();
     ctx.moveTo(this.x, this.y);
@@ -251,9 +251,10 @@ Bullet.prototype.draw = function(ctx) {
 };
 
 
-function Player(game) {
+function Player(game, scale) {
     this.game = game;
     this.name = "Player";
+    this.scale = scale || 1;
     this.stepDistance = 5;
 
     this.states = {
@@ -272,7 +273,7 @@ function Player(game) {
 
     //this.animation = this.animations.hgunIdle;
 
-    this.radius = 100;
+    this.radius = 100 * this.scale;
     this.ground = 500;
     Entity.call(this, game, 0, this.ground);
 }
@@ -359,13 +360,13 @@ Player.prototype.draw = function(ctx) {
     //console.log("drawing player");
     //this.rotateAndCache(this.animation.spriteSheet, 45);
     if (this.state === this.states.IDLE) {
-        this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y/*, 0.5*/);
+        this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
 
 
     if (this.state === this.states.MOVING) {
-        this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y/*, 0.5*/);
+        this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
     Entity.prototype.draw.call(this);
@@ -646,7 +647,7 @@ ASSET_MANAGER.downloadAll(function () {
     var ctx = canvas.getContext('2d');
 
     var gameEngine = new GameEngine();
-    player = new Player(gameEngine);
+    player = new Player(gameEngine, 0.5);
     var bg = new Background(gameEngine);
 
     //var zombie;
