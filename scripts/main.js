@@ -245,7 +245,7 @@ Bullet.prototype.draw = function(ctx) {
     ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
     ctx.stroke();
     ctx.closePath();
-    console.log("click x: " + globals.clickPosition.x + " | click y: " + globals.clickPosition.y);
+    //console.log("click x: " + globals.clickPosition.x + " | click y: " + globals.clickPosition.y);
     //this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
 
 };
@@ -269,7 +269,7 @@ function Player(game, scale) {
 
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260 , 230, .15, 16, true, false);
-    this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 17, 25, 271, 184, true, false);
+    this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 0, 0, 300, 238, 0.2, 6, true, false);
 
     //this.animation = this.animations.hgunIdle;
 
@@ -292,17 +292,13 @@ Player.prototype.shoot = function(endX, endY) {
     var bulletX = this.x + (this.animations.idle.frameWidth * this.scale) / 2;
     var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
 
-
     var dx = (endX - bulletX);
     var dy = (endY - bulletY);
 
     var mag = Math.sqrt(dx * dx + dy * dy);
 
-
     var xVelocity = (dx / mag); // * 5;
     var yVelocity = (dy / mag); //* 5;
-
-
 
     this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
 };
@@ -342,14 +338,17 @@ Player.prototype.update = function() {
     //console.log("updating player");
     this.handleMovementInput();
 
+    if (!Key.keyPressed()) this.state = this.states.IDLE;
 
     if (this.game.leftClick) {
+        console.log("shooting");
+        this.state = this.states.SHOOTING;
         this.shoot(globals.mousePosition.x, globals.mousePosition.y);
         this.game.leftClick = false;
     }
 
     //} else this.state = this.states.idle;
-    if (!Key.keyPressed()) this.state = this.states.IDLE;
+
 
 
 
@@ -363,7 +362,10 @@ Player.prototype.draw = function(ctx) {
         this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
-
+    if (this.state === this.states.SHOOTING) {
+        console.log("shooting animation");
+        this.animations.shootPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+    }
 
     if (this.state === this.states.MOVING) {
         this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
@@ -381,6 +383,8 @@ function distance(a, b) {
 function randomInt(n) {
     return Math.floor(Math.random() * n);
 }
+
+//zombie stuff swiped from AI last quarter. Commented out because I think brandon's implementation is better
 
 //function Zombie(game) {
 //    this.player = 1;
@@ -543,6 +547,7 @@ function randomInt(n) {
 //    this.velocity.y -= (1 - this.friction) * this.game.clockTick * this.velocity.y;
 //};
 //
+
 Zombie.prototype.draw = function (ctx) {
     //ctx.beginPath();
     //ctx.fillStyle = this.color;
@@ -595,18 +600,17 @@ function getMousePos(canvas, event) {
 }
 
 function click(canvas, event) {
-    console.log("clicked");
     var rect = canvas.getBoundingClientRect();
     var ctx = canvas.getContext('2d');
     //globals.clickPosition.x = Math.round(event.offsetX - rect.left);
     //globals.clickPosition.y = Math.round(event.offsetY - rect.top);
 
     //return { x: Math.round(event.clientX - rect.left), y: Math.round(event.clientY - rect.top) };
-    ctx.beginPath();
-    ctx.fillStyle = "Red";
-    ctx.arc(Math.round(event.clientX - canvas.offsetLeft), Math.round(event.clientY - canvas.offsetTop), 10, 0, Math.PI * 2, false);
-    ctx.fill();
-    ctx.closePath();
+    //ctx.beginPath();
+    //ctx.fillStyle = "Red";
+    //ctx.arc(Math.round(event.clientX - canvas.offsetLeft), Math.round(event.clientY - canvas.offsetTop), 10, 0, Math.PI * 2, false);
+    //ctx.fill();
+    //ctx.closePath();
     return { x: Math.round(event.clientX - canvas.offsetLeft), y: Math.round(event.clientY - canvas.offsetTop) };
 }
 
@@ -632,6 +636,7 @@ ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
 ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
+ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/Enemies/citizenzombieFlip4.png");
 
