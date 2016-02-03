@@ -603,10 +603,10 @@ function click(canvas, event) {
     //return { x: Math.round(event.clientX - rect.left), y: Math.round(event.clientY - rect.top) };
     ctx.beginPath();
     ctx.fillStyle = "Red";
-    ctx.arc(Math.round(event.pageX - canvas.offsetLeft), Math.round(event.pageY - canvas.offsetTop), 10, 0, Math.PI * 2, false);
+    ctx.arc(Math.round(event.clientX - canvas.offsetLeft), Math.round(event.clientY - canvas.offsetTop), 10, 0, Math.PI * 2, false);
     ctx.fill();
     ctx.closePath();
-    return { x: Math.round(event.pageX - canvas.offsetLeft), y: Math.round(event.pageY - canvas.offsetTop) };
+    return { x: Math.round(event.clientX - canvas.offsetLeft), y: Math.round(event.clientY - canvas.offsetTop) };
 }
 
 
