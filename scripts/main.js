@@ -66,7 +66,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x) - 50);
     ctx.save();
 
-    ctx.translate((locX + (this.frameWidth / 2)), (locY + (this.frameHeight / 2)));
+    ctx.translate((locX + ((this.frameWidth * scaleBy) / 2)), (locY + ((this.frameHeight * scaleBy) / 2)));
 
 
 
@@ -289,8 +289,8 @@ Player.prototype.constructor = Player;
  * creates a bullet and adds it to the game's bullet data structure
  */
 Player.prototype.shoot = function(endX, endY) {
-    var bulletX = this.x + this.animations.idle.frameWidth / 2;
-    var bulletY = this.y + this.animations.idle.frameWidth / 2;
+    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale) / 2;
+    var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
 
 
     var dx = (endX - bulletX);
