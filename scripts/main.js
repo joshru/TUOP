@@ -253,7 +253,7 @@ function Player(game, scale) {
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 100 * this.scale;
-    this.ground = 500;
+    this.ground = 400;
     Entity.call(this, game, 0, this.ground);
 }
 
