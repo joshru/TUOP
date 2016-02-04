@@ -159,77 +159,82 @@ Hitbox.prototype.update = function () {
 
     console.log("hb update");
 
-    // TODO: edit to work with zombie touching player
-    if (this.collideLeft() || this.collideRight()) {
-        if (this.collideLeft()) this.x = this.radius;
-        if (this.collideRight()) this.x = 800 - this.radius;
-        this.x += this.velocity.x * this.game.clockTick;
-        this.y += this.velocity.y * this.game.clockTick;
-    }
-
-    // TODO: edit to work with zombie touching player
-    if (this.collideTop() || this.collideBottom()) {
-        if (this.collideTop()) this.y = this.radius;
-        if (this.collideBottom()) this.y = 800 - this.radius;
-        this.x += this.velocity.x * this.game.clockTick;
-        this.y += this.velocity.y * this.game.clockTick;
-    }
-
-
-    for (var i = 0; i < this.game.entities.length; i++) {
-        var ent = this.game.entities[i];
-        if (ent !== this && this.collide(ent)) {
-            var temp = { x: this.velocity.x, y: this.velocity.y };
-
-            var dist = distance(this, ent);
-            var delta = this.radius + ent.radius - dist;
-            var difX = (this.x - ent.x)/dist;
-            var difY = (this.y - ent.y)/dist;
-
-            this.x += difX * delta / 2;
-            this.y += difY * delta / 2;
-            ent.x -= difX * delta / 2;
-            ent.y -= difY * delta / 2;
-
-            this.velocity.x = ent.velocity.x * friction;
-            this.velocity.y = ent.velocity.y * friction;
-            ent.velocity.x = temp.x * friction;
-            ent.velocity.y = temp.y * friction;
-            this.x += this.velocity.x * this.game.clockTick;
-            this.y += this.velocity.y * this.game.clockTick;
-            ent.x += ent.velocity.x * this.game.clockTick;
-            ent.y += ent.velocity.y * this.game.clockTick;
-        }
-
-        if (ent != this && this.collide({ x: ent.x, y: ent.y, radius: this.visualRadius })) {
-            var dist = distance(this, ent);
-            if (this.it && dist > this.radius + ent.radius + 10) {
-                var difX = (ent.x - this.x)/dist;
-                var difY = (ent.y - this.y)/dist;
-                this.velocity.x += difX * acceleration / (dist*dist);
-                this.velocity.y += difY * acceleration / (dist * dist);
-                var speed = Math.sqrt(this.velocity.x*this.velocity.x + this.velocity.y*this.velocity.y);
-                if (speed > maxSpeed) {
-                    var ratio = maxSpeed / speed;
-                    this.velocity.x *= ratio;
-                    this.velocity.y *= ratio;
-                }
-            }
-            if (ent.it && dist > this.radius + ent.radius) {
-                var difX = (ent.x - this.x) / dist;
-                var difY = (ent.y - this.y) / dist;
-                this.velocity.x -= difX * acceleration / (dist * dist);
-                this.velocity.y -= difY * acceleration / (dist * dist);
-                var speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
-                if (speed > maxSpeed) {
-                    var ratio = maxSpeed / speed;
-                    this.velocity.x *= ratio;
-                    this.velocity.y *= ratio;
-                }
-            }
-        }
-    }
+    //// TODO: edit to work with zombie touching player
+    //if (this.collideLeft() || this.collideRight()) {
+    //    if (this.collideLeft()) this.x = this.radius;
+    //    if (this.collideRight()) this.x = 800 - this.radius;
+    //    this.x += this.velocity.x * this.game.clockTick;
+    //    this.y += this.velocity.y * this.game.clockTick;
+    //}
+    //
+    //// TODO: edit to work with zombie touching player
+    //if (this.collideTop() || this.collideBottom()) {
+    //    if (this.collideTop()) this.y = this.radius;
+    //    if (this.collideBottom()) this.y = 800 - this.radius;
+    //    this.x += this.velocity.x * this.game.clockTick;
+    //    this.y += this.velocity.y * this.game.clockTick;
+    //}
+    //
+    //
+    //for (var i = 0; i < this.game.entities.length; i++) {
+    //    var ent = this.game.entities[i];
+    //    if (ent !== this && this.collide(ent)) {
+    //        var temp = { x: this.velocity.x, y: this.velocity.y };
+    //
+    //        var dist = distance(this, ent);
+    //        var delta = this.radius + ent.radius - dist;
+    //        var difX = (this.x - ent.x)/dist;
+    //        var difY = (this.y - ent.y)/dist;
+    //
+    //        this.x += difX * delta / 2;
+    //        this.y += difY * delta / 2;
+    //        ent.x -= difX * delta / 2;
+    //        ent.y -= difY * delta / 2;
+    //
+    //        this.velocity.x = ent.velocity.x * friction;
+    //        this.velocity.y = ent.velocity.y * friction;
+    //        ent.velocity.x = temp.x * friction;
+    //        ent.velocity.y = temp.y * friction;
+    //        this.x += this.velocity.x * this.game.clockTick;
+    //        this.y += this.velocity.y * this.game.clockTick;
+    //        ent.x += ent.velocity.x * this.game.clockTick;
+    //        ent.y += ent.velocity.y * this.game.clockTick;
+    //    }
+    //
+    //    if (ent != this && this.collide({ x: ent.x, y: ent.y, radius: this.visualRadius })) {
+    //        var dist = distance(this, ent);
+    //        if (this.it && dist > this.radius + ent.radius + 10) {
+    //            var difX = (ent.x - this.x)/dist;
+    //            var difY = (ent.y - this.y)/dist;
+    //            this.velocity.x += difX * acceleration / (dist*dist);
+    //            this.velocity.y += difY * acceleration / (dist * dist);
+    //            var speed = Math.sqrt(this.velocity.x*this.velocity.x + this.velocity.y*this.velocity.y);
+    //            if (speed > maxSpeed) {
+    //                var ratio = maxSpeed / speed;
+    //                this.velocity.x *= ratio;
+    //                this.velocity.y *= ratio;
+    //            }
+    //        }
+    //        if (ent.it && dist > this.radius + ent.radius) {
+    //            var difX = (ent.x - this.x) / dist;
+    //            var difY = (ent.y - this.y) / dist;
+    //            this.velocity.x -= difX * acceleration / (dist * dist);
+    //            this.velocity.y -= difY * acceleration / (dist * dist);
+    //            var speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+    //            if (speed > maxSpeed) {
+    //                var ratio = maxSpeed / speed;
+    //                this.velocity.x *= ratio;
+    //                this.velocity.y *= ratio;
+    //            }
+    //        }
+    //    }
+    //}
     Entity.prototype.update.call(this);
+};
+
+Hitbox.prototype.updateXY = function (x, y) {
+    this.x = x;
+    this.y = y;
 };
 
 Hitbox.prototype.draw = function(ctx) {
@@ -258,12 +263,15 @@ function Zombie(game) {
 
     this.radius = 20;
     this.ground = 500;
-    this.x = 500; //hardcoded for prototype zombie
-    this.y = 300; //TODO come up with a zombie spawning system using timers or something
+    this.x = randomInt(750); //hardcoded for prototype zombie
+    this.y = randomInt(750); //TODO come up with a zombie spawning system using timers or something
+
+    this.velocity = {x: Math.random() * 1000, y: Math.random() * 1000};
+
 
     this.states = {
-        IDLE:0,
-        MOVING:1
+        IDLE: 0,
+        MOVING: 1
     };
 
     this.animations = {};
@@ -282,10 +290,38 @@ Zombie.prototype = new Entity();
 Zombie.prototype.constructor = Zombie;
 
 Zombie.prototype.update = function() {
+    var friction = 1;
+    var maxSpeed = 100;
+    var minSpeed = 5;
+
     //handle movement and stuff
 
+    this.x += this.velocity.x * this.game.clockTick;
+    this.y += this.velocity.y * this.game.clockTick;
+
+    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2), this.y + (this.animations.idle.frameHeight / 2));
+
+    if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+        this.velocity.x = -this.velocity.x * friction;
+        if (this.hitbox.collideLeft()) this.x = this.radius;
+        if (this.hitbox.collideRight()) this.x = 800 - this.radius;
+        this.x += this.velocity.x * this.game.clockTick;
+        this.y += this.velocity.y * this.game.clockTick;
+        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2), this.y + (this.animations.idle.frameHeight / 2));
+    }
+
+    if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
+        this.velocity.y = -this.velocity.y * friction;
+        if (this.hitbox.collideTop()) this.y = this.radius;
+        if (this.hitbox.collideBottom()) this.y = 800 - this.radius;
+        this.x += this.velocity.x * this.game.clockTick;
+        this.y += this.velocity.y * this.game.clockTick;
+        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2), this.y + (this.animations.idle.frameHeight / 2));
+    }
+
+    var i;
     //check if getting shot the F up
-    for (var i = 0; i < this.game.bullets.length; i++) {
+    for (i = 0; i < this.game.bullets.length; i++) {
         var bullet = this.game.bullets[i];
         //console.log("Distance From Bullet: " + distance(this, bullet));
         //TODO make it so bullets can only do damage once
@@ -297,12 +333,33 @@ Zombie.prototype.update = function() {
         }
     }
 
+    var acceleration = 1000;
+    for (i = 0; i < this.game.entities.length; i++) {
+        var ent = this.game.entities[i];
+        if (ent.name === "Player") {
+            var dist = distance(this, ent);
+            if (dist > this.radius + ent.radius + 2) {
+                var difX = (ent.x - this.x) / dist;
+                var difY = (ent.y - this.y) / dist;
+                this.velocity.x += difX * acceleration / (dist * dist);
+                this.velocity.y += difY * acceleration / (dist * dist);
+            }
+        }
+    }
+
     //TODO create dying animation and stuff
     if (this.health <= 0) this.removeFromWorld = true;
 };
 
 Zombie.prototype.draw = function(ctx) {
+    var rotation = Math.atan2(-(this.y - globals.player.x), -(this.x - globals.player.x));
+
+    ctx.save();
+    ctx.translate((this.x + (71 / 2)), this.y + (71 / 2));
+    ctx.rotate(rotation);
+    ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
+    ctx.restore();
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
 
@@ -367,10 +424,13 @@ Bullet.prototype.draw = function(ctx) {
     ctx.fillStyle = "#E3612F";
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fill();
-    ctx.strokeStyle = "Pink";
-    ctx.moveTo(this.x, this.y);
-    ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
-    ctx.stroke();
+    if (globals.debug) {
+        ctx.strokeStyle = "Pink";
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
+        ctx.stroke();
+    }
+
     ctx.closePath();
     //console.log("click x: " + globals.clickPosition.x + " | click y: " + globals.clickPosition.y);
     //this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
@@ -839,15 +899,28 @@ ASSET_MANAGER.downloadAll(function () {
 
     //var zombie;
     //for (var i = 0; i < 10; i++) {
-    //    zombie = new Zombie(gameEngine);
+    //    var zombie = new Zombie(gameEngine);
     //    gameEngine.addEntity(zombie);
     //}
-    var zombie = new Zombie(gameEngine);
+    //var zombie1 = new Zombie(gameEngine);
+    //var zombie2 = new Zombie(gameEngine);
+    //var zombie3 = new Zombie(gameEngine);
+    //var zombie4 = new Zombie(gameEngine);
+    //var zombie5 = new Zombie(gameEngine);
     //var unicorn = new Unicorn(gameEngine);
 
     gameEngine.addEntity(bg);
-    gameEngine.addEntity(zombie);
+    //gameEngine.addEntity(zombie1);
+    //gameEngine.addEntity(zombie2);
+    //gameEngine.addEntity(zombie3);
+    //gameEngine.addEntity(zombie4);
+    //gameEngine.addEntity(zombie5);
     //gameEngine.addEntity(unicorn);
+    var zombie;
+    for (var i = 0; i < 10; i++) {
+        var zombie = new Zombie(gameEngine);
+        gameEngine.addEntity(zombie);
+    }
     gameEngine.addEntity(globals.player);
 
     gameEngine.init(ctx);
