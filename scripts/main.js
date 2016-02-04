@@ -69,6 +69,8 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     ctx.save();
     ctx.translate((locX + ((this.frameWidth * scaleBy) / 2)), (locY + ((this.frameHeight * scaleBy) / 2)));
     ctx.rotate(rotation);
+    globals.player.hitbox.x = locX + ((this.frameWidth * scaleBy) / 2);
+    globals.player.hitbox.y = locY + ((this.frameHeight * scaleBy) / 2);
     ctx.translate(-(locX + (this.frameWidth * scaleBy) / 2)  , -(locY + (this.frameHeight * scaleBy) / 2));
 
     ctx.drawImage(this.spriteSheet,
@@ -110,9 +112,14 @@ Background.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 };
 
-function Hitbox(game) {
-    this.radius = 0;
+function Hitbox(x, y, radius, game) {
     this.name = "Hitbox";
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.game = game;
+
+    //Entity.call(this, game, this.x, this.y);
 }
 
 Hitbox.prototype = new Entity();
@@ -139,7 +146,8 @@ Hitbox.prototype.collideBottom = function () {
 };
 
 Hitbox.prototype.update = function () {
-    Entity.prototype.update.call(this);
+
+    console.log("hb update");
 
     // TODO: edit to work with zombie touching player
     if (this.collideLeft() || this.collideRight()) {
@@ -211,6 +219,25 @@ Hitbox.prototype.update = function () {
             }
         }
     }
+    Entity.prototype.update.call(this);
+};
+
+Hitbox.prototype.draw = function(ctx) {
+    //console.log("hb x: " + this.x + " | hb y: " + this.y);
+    ctx.beginPath();
+    ctx.strokeStyle = "Red";
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.strokeStyle = "Green";
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(this.x + this.radius, this.y + this.radius);
+    ctx.stroke();
+    ctx.closePath();
+
+    //Entity.prototype.draw.call(ctx);
 };
 
 function Zombie(game) {
@@ -232,6 +259,11 @@ function Zombie(game) {
     this.animations = {};
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, .15, 1, true, false);
     this.currAnim = this.animations.idle;
+
+    var hbX = this.x + (this.animations.idle.frameWidth / 2);
+    var hbY = this.y + (this.animations.idle.frameHeight / 2);
+
+    this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
     Entity.call(this, game, this.x, this.y);
 }
@@ -263,12 +295,13 @@ Zombie.prototype.draw = function(ctx) {
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
+    this.hitbox.draw(ctx);
     Entity.prototype.draw.call(this);
 
 };
 
 Zombie.prototype.isCollidingWith = function(bullet) {
-    return distance(this, bullet) < this.radius + bullet.radius;
+    return distance(this.hitbox, bullet) < this.hitbox.radius + bullet.radius;
 };
 
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
@@ -322,6 +355,7 @@ Bullet.prototype.draw = function(ctx) {
     ctx.fillStyle = "#E3612F";
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fill();
+    ctx.strokeStyle = "Pink";
     ctx.moveTo(this.x, this.y);
     ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
     ctx.stroke();
@@ -337,6 +371,7 @@ function Player(game, scale) {
     this.name = "Player";
     this.scale = scale || 1;
     this.stepDistance = 5;
+
 
     this.states = {
         IDLE: 0,
@@ -354,7 +389,10 @@ function Player(game, scale) {
 
     //this.animation = this.animations.hgunIdle;
 
-    this.radius = 100 * this.scale;
+    this.radius = 200 * this.scale;
+
+    this.hitbox = new Hitbox(this.x, this.y, this.radius * this.scale, game);
+
     this.ground = 400;
     Entity.call(this, game, 0, this.ground);
 }
@@ -442,6 +480,8 @@ Player.prototype.draw = function(ctx) {
     if (this.state === this.states.MOVING) {
         this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
+
+    this.hitbox.draw(ctx);
 
     Entity.prototype.draw.call(this);
 };
