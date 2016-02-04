@@ -2,7 +2,8 @@ var globals = {
     player: null,
     mousePosition: {x: 0, y: 0},
     clickPosition: {x: 0, y: 0},
-    clickHoldPosition: {x: 0, y: 0}
+    clickHoldPosition: {x: 0, y: 0},
+    debug: true
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -108,7 +109,16 @@ Background.prototype.update = function () {
 Background.prototype.draw = function (ctx) {
     //ctx.fillStyle = "SaddleBrown";
     //ctx.fillRect(0,500,800,300);
+    //ctx.font
+
     ctx.drawImage(this.bg, 0, 0);
+    this.game.ctx.fillStyle = "White";
+    if (globals.player.health > 0) {
+        this.game.ctx.fillText("Player Health: " + globals.player.health, 10, 40);
+    } else {
+        this.game.ctx.fillText("Player Health: YOU DEAD HOMIE rip", 10, 40);
+    }
+
     Entity.prototype.draw.call(this);
 };
 
@@ -295,7 +305,9 @@ Zombie.prototype.draw = function(ctx) {
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
-    this.hitbox.draw(ctx);
+
+    if (globals.debug) this.hitbox.draw(ctx);
+
     Entity.prototype.draw.call(this);
 
 };
@@ -371,6 +383,7 @@ function Player(game, scale) {
     this.name = "Player";
     this.scale = scale || 1;
     this.stepDistance = 5;
+    this.health = 100;
 
 
     this.states = {
@@ -454,7 +467,8 @@ Player.prototype.update = function() {
     if (!Key.keyPressed()) this.state = this.states.IDLE;
 
     if (this.game.leftClick) {
-        console.log("shooting");
+        if (globals.debug) console.log("shooting");
+
         this.state = this.states.SHOOTING;
         this.shoot(globals.mousePosition.x, globals.mousePosition.y);
         this.game.leftClick = false;
@@ -473,7 +487,6 @@ Player.prototype.draw = function(ctx) {
     }
 
     if (this.state === this.states.SHOOTING) {
-        console.log("shooting animation");
         this.animations.shootPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
@@ -481,9 +494,57 @@ Player.prototype.draw = function(ctx) {
         this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
-    this.hitbox.draw(ctx);
+    for (var i = 0; i < this.game.entities.length; i++) {
+        var ent = this.game.entities[i];
+        if (ent.name === "Zombie") {
+            var current = this.isCollidingWith(ent);
+            if (current.hit) {
+                if (globals.debug) console.log("Bit by a zombie!");
+
+
+                //console.log("hit top: " + current.dirs.top);
+                //console.log("hit right: " + current.dirs.right);
+                //console.log("hit down: " + current.dirs.down);
+                //console.log("hit left: " + current.dirs.left);
+
+                var knockback = 20;
+
+                if (current.dirs.top) {
+                    this.y -= knockback;
+                }
+                if (current.dirs.right) {
+                    this.x += knockback;
+                }
+                if (current.dirs.down) {
+                    this.y += knockback;
+                }
+                if (current.dirs.left) {
+                     this.x -= knockback;
+                }
+
+                this.health -= 5;
+
+
+                if (this.health <= 0) {
+                    this.removeFromWorld = true;
+                }
+            }
+        }
+    }
+
+    if (globals.debug) this.hitbox.draw(ctx);
 
     Entity.prototype.draw.call(this);
+};
+
+Player.prototype.isCollidingWith = function(enemy) {
+    var collisions = { top:   this.hitbox.y < enemy.hitbox.y,
+                       right: this.hitbox.x > enemy.hitbox.x,
+                       down:  this.hitbox.y > enemy.hitbox.y,
+                       left:  this.hitbox.x < enemy.hitbox.x };
+
+
+    return {hit: distance(this.hitbox, enemy.hitbox) < this.hitbox.radius + enemy.hitbox.radius, dirs: collisions};
 };
 
 //function distance(a, b) {
@@ -760,6 +821,7 @@ ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
+    ctx.font = "48px serif";
 
     var gameEngine = new GameEngine();
     globals.player = new Player(gameEngine, 0.5);
