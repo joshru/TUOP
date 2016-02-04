@@ -1,8 +1,8 @@
-// test showing github integration
-
 var globals = {
+    player: null,
     mousePosition: {x: 0, y: 0},
-    clickPosition: {x: 0, y: 0}
+    clickPosition: {x: 0, y: 0},
+    clickHoldPosition: {x: 0, y: 0}
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -58,21 +58,18 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     var locY = y;
     var offset = vindex === 0 ? this.startX : 0;
 
-  //  console.log("Mouse X: " + globals.mousePosition.x + " | Mouse Y: " + globals.mousePosition.y);
+    //console.log("Mouse X: " + globals.mousePosition.x + " | Mouse Y: " + globals.mousePosition.y);
 
     //ROTATION HANDLED HERE
 
     //Negating these arguments makes him face the mouse instead of the opposite direction.
     var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x) - 50);
+
     ctx.save();
-
     ctx.translate((locX + ((this.frameWidth * scaleBy) / 2)), (locY + ((this.frameHeight * scaleBy) / 2)));
-
-
-
     ctx.rotate(rotation);
     ctx.translate(-(locX + (this.frameWidth * scaleBy) / 2)  , -(locY + (this.frameHeight * scaleBy) / 2));
-    //ctx.translate(0, 0);
+
     ctx.drawImage(this.spriteSheet,
                   index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
                   this.frameWidth, this.frameHeight,
@@ -120,8 +117,7 @@ function Zombie(game) {
     this.states = {};
     this.health = 100;
 
-    this.radius = 80;
-    this.radius = 80;
+    this.radius = 20;
     this.ground = 500;
     this.x = 500; //hardcoded for prototype zombie
     this.y = 300; //TODO come up with a zombie spawning system using timers or something
@@ -131,9 +127,8 @@ function Zombie(game) {
         MOVING:1
     };
 
-
     this.animations = {};
-    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"),0,0,71,71,.15, 1, true, false);
+    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, .15, 1, true, false);
     this.currAnim = this.animations.idle;
 
     Entity.call(this, game, this.x, this.y);
@@ -158,24 +153,21 @@ Zombie.prototype.update = function() {
         }
     }
 
-
     //TODO create dying animation and stuff
     if (this.health <= 0) this.removeFromWorld = true;
-
-
 };
 
 Zombie.prototype.draw = function(ctx) {
-    this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
+    //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
+    Entity.prototype.draw.call(this);
 
 };
 
 Zombie.prototype.isCollidingWith = function(bullet) {
     return distance(this, bullet) < this.radius + bullet.radius;
 };
-
-
 
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.x = x; // probably doesn't need to be here
@@ -190,7 +182,6 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.animation = null;
     this.damage = 0;
     this.spent = false;
-    //TODO make bullets colorful circles instead
     //Determine which bullet to use based on the gun that fired it
     switch(this.src) {
         case 'pistol':
@@ -221,19 +212,7 @@ Bullet.prototype.update = function() {
         //Change its position otherwise
         this.x += that.xVelocity * this.speed;
         this.y += that.yVelocity * this.speed;
-
-        //var dist = distance(that, globals.clickPosition);
-        //var diffX = (that.x - globals.clickPosition.x) / dist;
-        //var diffY = (that.y - globals.clickPosition.y) / dist;
-        //this.x += diffX;
-        //this.y += diffY;
-
-
-
-        //console.log("Bullet position (" + this.x + "," + this.y + ")");
-
     }
-
 };
 
 Bullet.prototype.draw = function(ctx) {
@@ -258,10 +237,10 @@ function Player(game, scale) {
     this.stepDistance = 5;
 
     this.states = {
-        IDLE:0,
-        MOVING:1,
-        SHOOTING:2,
-        CURRENT_GUN:'pistol'
+        IDLE: 0,
+        MOVING: 1,
+        SHOOTING: 2,
+        CURRENT_GUN: 'pistol'
     };
 
     this.state = this.states.IDLE;
@@ -278,12 +257,8 @@ function Player(game, scale) {
     Entity.call(this, game, 0, this.ground);
 }
 
-
-
-
 Player.prototype = new Entity();
 Player.prototype.constructor = Player;
-
 
 /**
  * creates a bullet and adds it to the game's bullet data structure
@@ -302,7 +277,8 @@ Player.prototype.shoot = function(endX, endY) {
 
     this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
 };
-/*
+
+/**
    * Moves the player.
    * @param xTrans distance to move left or right
    * @param yTrans distance to move up or down
@@ -331,9 +307,6 @@ Player.prototype.handleMovementInput = function() {
     }
 };
 
-
-
-
 Player.prototype.update = function() {
     //console.log("updating player");
     this.handleMovementInput();
@@ -348,9 +321,6 @@ Player.prototype.update = function() {
     }
 
     //} else this.state = this.states.idle;
-
-
-
 
     Entity.prototype.update.call(this);
 };
@@ -374,11 +344,11 @@ Player.prototype.draw = function(ctx) {
     Entity.prototype.draw.call(this);
 };
 
-function distance(a, b) {
-    var dx = a.x - b.x;
-    var dy = a.y - b.y;
-    return Math.sqrt(dx * dx + dy * dy);
-}
+//function distance(a, b) {
+//    var dx = a.x - b.x;
+//    var dy = a.y - b.y;
+//    return Math.sqrt(dx * dx + dy * dy);
+//}
 
 function randomInt(n) {
     return Math.floor(Math.random() * n);
@@ -548,15 +518,15 @@ function randomInt(n) {
 //};
 //
 
-Zombie.prototype.draw = function (ctx) {
-    //ctx.beginPath();
-    //ctx.fillStyle = this.color;
-    //ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    //ctx.fill();
-    //ctx.closePath();
-    ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
-
-};
+//Zombie.prototype.draw = function (ctx) {
+//    //ctx.beginPath();
+//    //ctx.fillStyle = this.color;
+//    //ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+//    //ctx.fill();
+//    //ctx.closePath();
+//    ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
+//
+//};
 
 var Key = {
     _pressed: {},
@@ -631,8 +601,6 @@ var ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
 
-
-
 ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
@@ -644,7 +612,7 @@ ASSET_MANAGER.queueDownload("./img/Enemies/citizenzombieFlip4.png");
 
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 
-var player;
+//var player;
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -652,7 +620,7 @@ ASSET_MANAGER.downloadAll(function () {
     var ctx = canvas.getContext('2d');
 
     var gameEngine = new GameEngine();
-    player = new Player(gameEngine, 0.5);
+    globals.player = new Player(gameEngine, 0.5);
     var bg = new Background(gameEngine);
 
     //var zombie;
@@ -660,15 +628,13 @@ ASSET_MANAGER.downloadAll(function () {
     //    zombie = new Zombie(gameEngine);
     //    gameEngine.addEntity(zombie);
     //}
-    var zombie1 = new Zombie(gameEngine);
-    var zombie2 = new Zombie(gameEngine);
+    var zombie = new Zombie(gameEngine);
     //var unicorn = new Unicorn(gameEngine);
 
     gameEngine.addEntity(bg);
-    gameEngine.addEntity(zombie1);
-    gameEngine.addEntity(zombie2);
+    gameEngine.addEntity(zombie);
     //gameEngine.addEntity(unicorn);
-    gameEngine.addEntity(player);
+    gameEngine.addEntity(globals.player);
 
     gameEngine.init(ctx);
     gameEngine.start();
