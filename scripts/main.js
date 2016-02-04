@@ -385,6 +385,8 @@ function Player(game, scale) {
     this.stepDistance = 5;
     this.health = 100;
 
+    this.audio = document.getElementById('soundFX');
+
 
     this.states = {
         IDLE: 0,
@@ -471,6 +473,9 @@ Player.prototype.update = function() {
 
         this.state = this.states.SHOOTING;
         this.shoot(globals.mousePosition.x, globals.mousePosition.y);
+        //globals.sound.src = "./sound/m9.mp3";
+        this.audio.src = "./sound/m9.wav";
+        this.audio.play();
         this.game.leftClick = false;
     }
 
@@ -811,7 +816,7 @@ ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/Enemies/citizenzombieFlip4.png");
 
-
+ASSET_MANAGER.queueDownload("./sound/m9.wav");
 
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 
@@ -820,6 +825,7 @@ ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
+
     var ctx = canvas.getContext('2d');
     ctx.font = "48px serif";
 
