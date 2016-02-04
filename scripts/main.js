@@ -527,10 +527,14 @@ Player.prototype.draw = function(ctx) {
                      this.x -= knockback;
                 }
 
+                if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
+                this.audio.play();
                 this.health -= 5;
 
 
                 if (this.health <= 0) {
+                    this.audio.src = "./sound/death.wav";
+                    this.audio.play();
                     this.removeFromWorld = true;
                 }
             }
