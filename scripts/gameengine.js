@@ -25,6 +25,7 @@ Timer.prototype.tick = function () {
 
     var gameDelta = Math.min(wallDelta, this.maxStep);
     this.gameTime += gameDelta;
+   // console.log("Current Game Time: " + this.gameTime);
     return gameDelta;
 };
 
@@ -140,7 +141,14 @@ GameEngine.prototype.removeFinishedFrom = function(array) {
  */
 GameEngine.prototype.update = function () {
 
-    //update entities
+
+    //Spawn zombie every 20 seconds
+   /* if (Math.floor(this.timer.gameTime % 20) == 0) {
+        var zombie = new Zombie(this);
+        this.addEntity(zombie);
+    }*/
+
+    //update entitiesaaa
 
     this.updateEntitiesIn(this.entities);
 

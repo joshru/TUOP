@@ -3,6 +3,8 @@ var globals = {
     mousePosition: {x: 0, y: 0},
     clickPosition: {x: 0, y: 0},
     clickHoldPosition: {x: 0, y: 0},
+    fibs: {fib1: 0, fib2: 1, currFib:1},
+    zombieDeathCount:0,
     debug: true
 };
 
@@ -352,9 +354,6 @@ Zombie.prototype.update = function() {
     }
 
 
-
-
-
     var acceleration = 1000;//TODO add comments explaining this?
 
 
@@ -372,7 +371,7 @@ Zombie.prototype.update = function() {
     //TODO create dying animation and stuff
     //Do this by setting dying=true; then have a conditional that checks for dying and changes the animation
     //accordingly
-    if (this.health <= 0) this.removeFromWorld = true;
+    if (this.health <= 0) this.die();
 };
 
 Zombie.prototype.draw = function(ctx) {
@@ -398,6 +397,31 @@ Zombie.prototype.isCollidingWith = function(bullet) {
     return distance(this.hitbox, bullet) < this.hitbox.radius + bullet.radius;
 };
 
+Zombie.prototype.die = function() {
+    //TODO switch to death animation
+    this.removeFromWorld = true;
+    ++globals.zombieDeathCount;
+
+   // var currentFib = globals.fib1 + globals.fib2;
+    console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
+    if (globals.zombieDeathCount === globals.fibs.currFib) {
+
+        console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+        globals.fibs.fib1 = globals.fibs.fib2;
+        globals.fibs.fib2 = globals.fibs.currFib;
+        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2; //maybe move lower
+
+        for (var i = 0; i < globals.fibs.currFib; i++) {
+            this.game.addEntity(new Zombie(this.game));
+        }
+        globals.zombieDeathCount = 0;
+
+    }
+    //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
+
+
+}
+
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.x = x; // probably doesn't need to be here
     this.y = y;
@@ -415,7 +439,7 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
     switch(this.src) {
         case 'pistol':
             this.speed = 10;
-            this.damage = 15;
+            this.damage = 34;
             this.radius = 5;
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
             break;
@@ -587,8 +611,8 @@ Player.prototype.draw = function(ctx) {
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
         if (ent.name === "Zombie") {
-            var current = this.isCollidingWith(ent);
-            if (current.hit) {
+            var currentZombie = this.isCollidingWith(ent);
+            if (currentZombie.hit) {
                 if (globals.debug) console.log("Bit by a zombie!");
 
 
@@ -599,16 +623,16 @@ Player.prototype.draw = function(ctx) {
 
                 var knockback = 20;
 
-                if (current.dirs.top) {
+                if (currentZombie.dirs.top) {
                     this.y -= knockback;
                 }
-                if (current.dirs.right) {
+                if (currentZombie.dirs.right) {
                     this.x += knockback;
                 }
-                if (current.dirs.down) {
+                if (currentZombie.dirs.down) {
                     this.y += knockback;
                 }
-                if (current.dirs.left) {
+                if (currentZombie.dirs.left) {
                      this.x -= knockback;
                 }
 
@@ -941,11 +965,12 @@ ASSET_MANAGER.downloadAll(function () {
     //gameEngine.addEntity(zombie4);
     //gameEngine.addEntity(zombie5);
     //gameEngine.addEntity(unicorn);
-    var zombie;
-    for (var i = 0; i < 10; i++) {
-        var zombie = new Zombie(gameEngine);
-        gameEngine.addEntity(zombie);
-    }
+   // var zombie;
+    //for (var i = 0; i < 10; i++) {
+    //    var zombie = new Zombie(gameEngine);
+   //     gameEngine.addEntity(zombie);
+   // }
+    gameEngine.addEntity(new Zombie(gameEngine));
     gameEngine.addEntity(globals.player);
 
     gameEngine.init(ctx);
