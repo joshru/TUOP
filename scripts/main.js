@@ -347,6 +347,9 @@ Zombie.prototype.die = function() {
     this.removeFromWorld = true;
     ++globals.zombieDeathCount;
 
+    // TODO random chance HP drops when zombie dies
+    // rip
+
    // var currentFib = globals.fib1 + globals.fib2;
     console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
     if (globals.zombieDeathCount === globals.fibs.currFib) {
