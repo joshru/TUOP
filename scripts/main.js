@@ -124,10 +124,7 @@ Background.prototype.draw = function (ctx) {
     ctx.fillStyle = "white";
 
     ctx.fillText("Wave: " + globals.wave, 10, 55);
-    ctx.fillStyle = "white";
-    ctx.shadowBlur = 0;
 
-    //this.game.ctx.fillStyle = "White";
     if (globals.player.health > 0) {
         ctx.fillText("Player Health: " + globals.player.health, 10, 30);
         // for blood - we don't need this if you guys don't like it
