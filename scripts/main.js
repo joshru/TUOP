@@ -273,7 +273,10 @@ function Zombie(game) {
 
     //TODO create speedScale variable so zombies of different types can have different speeds
     //EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.
-    this.velocity = {x: Math.random() * 100, y: Math.random() * 100};
+
+     this.speedScale = 100;
+
+    this.velocity = {x: Math.random() * this.speedScale, y: Math.random() * this.speedScale};
 
 
     this.states = {
@@ -303,30 +306,33 @@ Zombie.prototype.update = function() {
 
     //handle movement and stuff
 
+
     this.x += this.velocity.x * this.game.clockTick;
     this.y += this.velocity.y * this.game.clockTick;
 
-    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2), this.y + (this.animations.idle.frameHeight / 2));
+    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+        this.y + (this.animations.idle.frameHeight / 2));
 
-    if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+    //TODO finish this
+    if (globals.player.health > 0) { //player is alive
+        var dx = globals.player.x - this.x;
+        var dy = globals.player.y - this.y;
+        var pointDistance = Math.sqrt(dx * dx + dy * dy);
+
+        this.velocity.x  = (dx / pointDistance) * friction * this.speedScale;
+        this.velocity.y  = (dy / pointDistance) * friction * this.speedScale;
+
+    }
+    //player dead, bounce off walls
+     else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
         this.velocity.x = -this.velocity.x * friction;
 
-        //TODO delete all of this stuff
-
-       // if (this.hitbox.collideLeft()) this.x = this.radius;
-       // if (this.hitbox.collideRight()) this.x = 800 - this.radius;
-      //  this.x += this.velocity.x * this.game.clockTick;
-      //  this.y += this.velocity.y * this.game.clockTick;
         this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
             this.y + (this.animations.idle.frameHeight / 2));
     }
-
-    if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
+     else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
         this.velocity.y = -this.velocity.y * friction;
-       // if (this.hitbox.collideTop()) this.y = this.radius;
-      //  if (this.hitbox.collideBottom()) this.y = 800 - this.radius;
-       // this.x += this.velocity.x * this.game.clockTick;
-      //  this.y += this.velocity.y * this.game.clockTick;
+
         this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
             this.y + (this.animations.idle.frameHeight / 2));
     }
@@ -345,20 +351,22 @@ Zombie.prototype.update = function() {
         }
     }
 
-    var acceleration = 1000;
-    //TODO just check against the player global
-    //There's no point in looking over all of the entities when there is a global reference
-    for (i = 0; i < this.game.entities.length; i++) {
-        var ent = this.game.entities[i];
-        if (ent.name === "Player") {
-            var dist = distance(this, ent);
-            if (dist > this.radius + ent.radius + 2) {
-                var difX = (ent.x - this.x) / dist;
-                var difY = (ent.y - this.y) / dist;
-                this.velocity.x += difX * acceleration / (dist * dist);
-                this.velocity.y += difY * acceleration / (dist * dist);
-            }
-        }
+
+
+
+
+    var acceleration = 1000;//TODO add comments explaining this?
+
+
+    //Handle collision with the player
+    var playerX = globals.player.x;
+    var playerY = globals.player.y;
+    var dist = distance(this, globals.player);
+    if (dist > this.radius + globals.player.radius + 2) {
+        var difX = (playerX - this.x) / dist;
+        var difY = (playerY - this.y) / dist;
+        this.velocity.x += difX * acceleration / (dist * dist);
+        this.velocity.y += difY * acceleration / (dist * dist);
     }
 
     //TODO create dying animation and stuff
@@ -368,6 +376,7 @@ Zombie.prototype.update = function() {
 };
 
 Zombie.prototype.draw = function(ctx) {
+    //TODO adjust to look at player hitbox
     var rotation = Math.atan2(-(this.y - globals.player.x), -(this.x - globals.player.x));
 
     ctx.save();
@@ -496,7 +505,7 @@ Player.prototype.constructor = Player;
  */
 Player.prototype.shoot = function(endX, endY) {
     var bulletX = this.x + (this.animations.idle.frameWidth * this.scale);
-    var bulletY = this.y+ (this.animations.idle.frameWidth * this.scale) / 2;
+    var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
 
     var dx = (endX - bulletX);
     var dy = (endY - bulletY);
