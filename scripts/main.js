@@ -4,6 +4,7 @@ var globals = {
     clickPosition: {x: 0, y: 0},
     clickHoldPosition: {x: 0, y: 0},
     fibs: {fib1: 0, fib2: 1, currFib:1},
+    wave: 0,
     zombieDeathCount:0,
     debug: true
 };
@@ -112,13 +113,33 @@ Background.prototype.draw = function (ctx) {
     //ctx.fillStyle = "SaddleBrown";
     //ctx.fillRect(0,500,800,300);
     //ctx.font
+    var canvas = document.getElementById('gameWorld');
 
     ctx.drawImage(this.bg, 0, 0);
-    this.game.ctx.fillStyle = "White";
+    var opacity = 0;
+
+    // for wave counter
+
+    ctx.font="30px Courier New";
+    ctx.fillStyle = "white";
+
+    ctx.fillText("Wave: " + globals.wave, 10, 55);
+
     if (globals.player.health > 0) {
-        this.game.ctx.fillText("Player Health: " + globals.player.health, 10, 40);
+        ctx.fillText("Player Health: " + globals.player.health, 10, 30);
+        // for blood - we don't need this if you guys don't like it
+        // decrease the first hardcoded number to lower threshold
+        opacity += .3 - (globals.player.health / 100);
+        // for testing numbers:
+        // this.game.ctx.fillText(opacity, 10, 100);
+        ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
+        ctx.fillRect(0,0, canvas.width, canvas.height);
     } else {
-        this.game.ctx.fillText("Player Health: YOU DEAD HOMIE rip", 10, 40);
+        ctx.fillStyle = "rgba(195, 0, 0, " + .5 + ")";
+        ctx.fillRect(0,0, canvas.width, canvas.height);
+        ctx.fillStyle = "white"
+        ctx.font="50px Courier New";
+        ctx.fillText("YOU DEAD HOMIE rip", 125, canvas.height / 2);
     }
 
     Entity.prototype.draw.call(this);
@@ -137,10 +158,6 @@ function Hitbox(x, y, radius, game) {
 Hitbox.prototype = new Entity();
 Hitbox.prototype.constructor = Hitbox;
 
-Hitbox.prototype.collide = function (other) {
-    return distance(this, other) < this.radius + other.radius;
-};
-
 Hitbox.prototype.collideLeft = function () {
     return (this.x - this.radius) < 0;
 };
@@ -158,79 +175,7 @@ Hitbox.prototype.collideBottom = function () {
 };
 
 Hitbox.prototype.update = function () {
-
     console.log("hb update");
-
-    //// TODO: edit to work with zombie touching player
-    //if (this.collideLeft() || this.collideRight()) {
-    //    if (this.collideLeft()) this.x = this.radius;
-    //    if (this.collideRight()) this.x = 800 - this.radius;
-    //    this.x += this.velocity.x * this.game.clockTick;
-    //    this.y += this.velocity.y * this.game.clockTick;
-    //}
-    //
-    //// TODO: edit to work with zombie touching player
-    //if (this.collideTop() || this.collideBottom()) {
-    //    if (this.collideTop()) this.y = this.radius;
-    //    if (this.collideBottom()) this.y = 800 - this.radius;
-    //    this.x += this.velocity.x * this.game.clockTick;
-    //    this.y += this.velocity.y * this.game.clockTick;
-    //}
-    //
-    //
-    //for (var i = 0; i < this.game.entities.length; i++) {
-    //    var ent = this.game.entities[i];
-    //    if (ent !== this && this.collide(ent)) {
-    //        var temp = { x: this.velocity.x, y: this.velocity.y };
-    //
-    //        var dist = distance(this, ent);
-    //        var delta = this.radius + ent.radius - dist;
-    //        var difX = (this.x - ent.x)/dist;
-    //        var difY = (this.y - ent.y)/dist;
-    //
-    //        this.x += difX * delta / 2;
-    //        this.y += difY * delta / 2;
-    //        ent.x -= difX * delta / 2;
-    //        ent.y -= difY * delta / 2;
-    //
-    //        this.velocity.x = ent.velocity.x * friction;
-    //        this.velocity.y = ent.velocity.y * friction;
-    //        ent.velocity.x = temp.x * friction;
-    //        ent.velocity.y = temp.y * friction;
-    //        this.x += this.velocity.x * this.game.clockTick;
-    //        this.y += this.velocity.y * this.game.clockTick;
-    //        ent.x += ent.velocity.x * this.game.clockTick;
-    //        ent.y += ent.velocity.y * this.game.clockTick;
-    //    }
-    //
-    //    if (ent != this && this.collide({ x: ent.x, y: ent.y, radius: this.visualRadius })) {
-    //        var dist = distance(this, ent);
-    //        if (this.it && dist > this.radius + ent.radius + 10) {
-    //            var difX = (ent.x - this.x)/dist;
-    //            var difY = (ent.y - this.y)/dist;
-    //            this.velocity.x += difX * acceleration / (dist*dist);
-    //            this.velocity.y += difY * acceleration / (dist * dist);
-    //            var speed = Math.sqrt(this.velocity.x*this.velocity.x + this.velocity.y*this.velocity.y);
-    //            if (speed > maxSpeed) {
-    //                var ratio = maxSpeed / speed;
-    //                this.velocity.x *= ratio;
-    //                this.velocity.y *= ratio;
-    //            }
-    //        }
-    //        if (ent.it && dist > this.radius + ent.radius) {
-    //            var difX = (ent.x - this.x) / dist;
-    //            var difY = (ent.y - this.y) / dist;
-    //            this.velocity.x -= difX * acceleration / (dist * dist);
-    //            this.velocity.y -= difY * acceleration / (dist * dist);
-    //            var speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
-    //            if (speed > maxSpeed) {
-    //                var ratio = maxSpeed / speed;
-    //                this.velocity.x *= ratio;
-    //                this.velocity.y *= ratio;
-    //            }
-    //        }
-    //    }
-    //}
     Entity.prototype.update.call(this);
 };
 
@@ -405,8 +350,11 @@ Zombie.prototype.die = function() {
    // var currentFib = globals.fib1 + globals.fib2;
     console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
     if (globals.zombieDeathCount === globals.fibs.currFib) {
+        // see in Background.prototype.draw for wave counter
+        globals.wave++;
 
         console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+
         globals.fibs.fib1 = globals.fibs.fib2;
         globals.fibs.fib2 = globals.fibs.currFib;
         globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2; //maybe move lower
@@ -583,7 +531,7 @@ Player.prototype.update = function() {
         this.state = this.states.SHOOTING;
         this.shoot(globals.mousePosition.x, globals.mousePosition.y);
         //globals.sound.src = "./sound/m9.mp3";
-        this.audio.src = "./sound/m9.wav";
+        this.audio.src = "./sound/usp.wav";
         this.audio.play();
         this.game.leftClick = false;
     }
@@ -929,7 +877,7 @@ ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/Enemies/citizenzombieFlip4.png");
 
-ASSET_MANAGER.queueDownload("./sound/m9.wav");
+ASSET_MANAGER.queueDownload("./sound/usp.wav");
 
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 
