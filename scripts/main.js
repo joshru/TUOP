@@ -24,7 +24,7 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
  * @param a first entity
  * @param b second entity
  * @shoutout Marriot
- * tru
+ *
  */
 function distance(a, b) {
     // console.log("Received parameters: (" + a.x + "," + a.y + ") , (" + b.x + "," + b.y + ")");
@@ -261,12 +261,19 @@ function Zombie(game) {
     this.states = {};
     this.health = 100;
 
+    this.speed = 5;
+
+
     this.radius = 20;
     this.ground = 500;
     this.x = randomInt(750); //hardcoded for prototype zombie
     this.y = randomInt(750); //TODO come up with a zombie spawning system using timers or something
 
-    this.velocity = {x: Math.random() * 1000, y: Math.random() * 1000};
+
+
+    //TODO create speedScale variable so zombies of different types can have different speeds
+    //EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.
+    this.velocity = {x: Math.random() * 100, y: Math.random() * 100};
 
 
     this.states = {
@@ -303,20 +310,25 @@ Zombie.prototype.update = function() {
 
     if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
         this.velocity.x = -this.velocity.x * friction;
-        if (this.hitbox.collideLeft()) this.x = this.radius;
-        if (this.hitbox.collideRight()) this.x = 800 - this.radius;
-        this.x += this.velocity.x * this.game.clockTick;
-        this.y += this.velocity.y * this.game.clockTick;
-        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2), this.y + (this.animations.idle.frameHeight / 2));
+
+        //TODO delete all of this stuff
+
+       // if (this.hitbox.collideLeft()) this.x = this.radius;
+       // if (this.hitbox.collideRight()) this.x = 800 - this.radius;
+      //  this.x += this.velocity.x * this.game.clockTick;
+      //  this.y += this.velocity.y * this.game.clockTick;
+        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+            this.y + (this.animations.idle.frameHeight / 2));
     }
 
     if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
         this.velocity.y = -this.velocity.y * friction;
-        if (this.hitbox.collideTop()) this.y = this.radius;
-        if (this.hitbox.collideBottom()) this.y = 800 - this.radius;
-        this.x += this.velocity.x * this.game.clockTick;
-        this.y += this.velocity.y * this.game.clockTick;
-        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2), this.y + (this.animations.idle.frameHeight / 2));
+       // if (this.hitbox.collideTop()) this.y = this.radius;
+      //  if (this.hitbox.collideBottom()) this.y = 800 - this.radius;
+       // this.x += this.velocity.x * this.game.clockTick;
+      //  this.y += this.velocity.y * this.game.clockTick;
+        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+            this.y + (this.animations.idle.frameHeight / 2));
     }
 
     var i;
@@ -324,7 +336,7 @@ Zombie.prototype.update = function() {
     for (i = 0; i < this.game.bullets.length; i++) {
         var bullet = this.game.bullets[i];
         //console.log("Distance From Bullet: " + distance(this, bullet));
-        //TODO make it so bullets can only do damage once
+
         if (!bullet.spent && this.isCollidingWith(bullet)) {
             this.health -= bullet.damage;
             bullet.spent = true;
@@ -334,6 +346,8 @@ Zombie.prototype.update = function() {
     }
 
     var acceleration = 1000;
+    //TODO just check against the player global
+    //There's no point in looking over all of the entities when there is a global reference
     for (i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
         if (ent.name === "Player") {
@@ -348,6 +362,8 @@ Zombie.prototype.update = function() {
     }
 
     //TODO create dying animation and stuff
+    //Do this by setting dying=true; then have a conditional that checks for dying and changes the animation
+    //accordingly
     if (this.health <= 0) this.removeFromWorld = true;
 };
 
@@ -479,8 +495,8 @@ Player.prototype.constructor = Player;
  * creates a bullet and adds it to the game's bullet data structure
  */
 Player.prototype.shoot = function(endX, endY) {
-    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale) / 2;
-    var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
+    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale);
+    var bulletY = this.y+ (this.animations.idle.frameWidth * this.scale) / 2;
 
     var dx = (endX - bulletX);
     var dy = (endY - bulletY);
