@@ -376,8 +376,8 @@ Zombie.prototype.update = function() {
 };
 
 Zombie.prototype.draw = function(ctx) {
-    //TODO adjust to look at player hitbox
-    var rotation = Math.atan2(-(this.y - globals.player.x), -(this.x - globals.player.x));
+
+    var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
 
     ctx.save();
     ctx.translate((this.x + (71 / 2)), this.y + (71 / 2));
