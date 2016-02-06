@@ -4,8 +4,9 @@ var globals = {
     clickPosition: {x: 0, y: 0},
     clickHoldPosition: {x: 0, y: 0},
     fibs: {fib1: 0, fib2: 1, currFib:1},
+    wave: 0,
     zombieDeathCount:0,
-    debug: false
+    debug: true
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -117,17 +118,28 @@ Background.prototype.draw = function (ctx) {
     ctx.drawImage(this.bg, 0, 0);
     var opacity = 0;
 
-    this.game.ctx.fillStyle = "White";
+    // for wave counter
+
+    ctx.font="30px Courier New";
+    ctx.fillStyle = "white";
+
+    ctx.fillText("Wave: " + globals.wave, 10, 55);
+
     if (globals.player.health > 0) {
-        this.game.ctx.fillText("Player Health: " + globals.player.health, 10, 40);
+        ctx.fillText("Player Health: " + globals.player.health, 10, 30);
         // for blood - we don't need this if you guys don't like it
         // decrease the first hardcoded number to lower threshold
         opacity += .3 - (globals.player.health / 100);
-        //this.game.ctx.fillText(opacity, 10, 100); for testing numbers
+        // for testing numbers:
+        // this.game.ctx.fillText(opacity, 10, 100);
         ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
         ctx.fillRect(0,0, canvas.width, canvas.height);
     } else {
-        this.game.ctx.fillText("Player Health: YOU DEAD HOMIE rip", 10, 40);
+        ctx.fillStyle = "rgba(195, 0, 0, " + .5 + ")";
+        ctx.fillRect(0,0, canvas.width, canvas.height);
+        ctx.fillStyle = "white"
+        ctx.font="50px Courier New";
+        ctx.fillText("YOU DEAD HOMIE rip", 125, canvas.height / 2);
     }
 
     Entity.prototype.draw.call(this);
@@ -266,9 +278,6 @@ Zombie.prototype.update = function() {
     this.x += this.velocity.x * this.game.clockTick;
     this.y += this.velocity.y * this.game.clockTick;
 
-
-
-
     this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
         this.y + (this.animations.idle.frameHeight / 2));
 
@@ -301,9 +310,6 @@ Zombie.prototype.update = function() {
         this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
             this.y + (this.animations.idle.frameHeight / 2));
     }
-
-
-
 
     var i;
     //check if getting shot the F up
@@ -371,6 +377,8 @@ Zombie.prototype.die = function() {
    // var currentFib = globals.fib1 + globals.fib2;
     console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
     if (globals.zombieDeathCount === globals.fibs.currFib) {
+        // see in Background.prototype.draw for wave counter
+        globals.wave++;
 
         console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
         //update previous and current fibonacci numbers
