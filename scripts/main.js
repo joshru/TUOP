@@ -27,8 +27,11 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
  * @param a first entity
  * @param b second entity
  * @shoutout Marriot
+ *
  */
 function distance(a, b) {
+    // console.log("Received parameters: (" + a.x + "," + a.y + ") , (" + b.x + "," + b.y + ")");
+
     var dx = Math.abs(a.x - b.x);
     var dy = Math.abs(a.y - b.y);
     return Math.sqrt(dx * dx + dy * dy);
@@ -63,6 +66,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     //console.log("Mouse X: " + globals.mousePosition.x + " | Mouse Y: " + globals.mousePosition.y);
 
     //ROTATION HANDLED HERE
+
     //Negating these arguments makes him face the mouse instead of the opposite direction.
     var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x) - 50);
 
@@ -106,12 +110,16 @@ Background.prototype.update = function () {
 };
 
 Background.prototype.draw = function (ctx) {
+    //ctx.fillStyle = "SaddleBrown";
+    //ctx.fillRect(0,500,800,300);
+    //ctx.font
     var canvas = document.getElementById('gameWorld');
     var opacity = 0;
 
     ctx.drawImage(this.bg, 0, 0);
 
     // for wave counter
+
     ctx.font = "30px Courier New";
     ctx.fillStyle = "white";
 
@@ -131,7 +139,7 @@ Background.prototype.draw = function (ctx) {
     if (globals.player.health === 0) {
         ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "white"
         ctx.font = "50px Courier New";
         ctx.fillText("YOU DEAD HOMIE rip", 125, canvas.height / 2);
     }
@@ -139,13 +147,6 @@ Background.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 };
 
-/**
- * A hitbox entity for each super entity, will be used for handling all collisions
- * @param x coordinate
- * @param y coordinate
- * @param radius
- * @param game game engine
- */
 function Hitbox(x, y, radius, game) {
     this.name = "Hitbox";
     this.x = x;
@@ -176,6 +177,7 @@ Hitbox.prototype.collideBottom = function () {
 };
 
 Hitbox.prototype.update = function () {
+    console.log("hb update");
     Entity.prototype.update.call(this);
 };
 
@@ -185,6 +187,7 @@ Hitbox.prototype.updateXY = function (x, y) {
 };
 
 Hitbox.prototype.draw = function (ctx) {
+    //console.log("hb x: " + this.x + " | hb y: " + this.y);
     ctx.beginPath();
     ctx.strokeStyle = "Red";
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
@@ -202,18 +205,21 @@ Hitbox.prototype.draw = function (ctx) {
 };
 /**
  * Determines whether or not this hitbox is colliding with the other hit box
- * and which direction the collision is in.
- * Note: can collide with multiple directions
+ * and which directio the collision is in.
+ *  Note: can collide with multiple directions
  * @param other hitbox to collide with
  * @returns {{hit: boolean, dirs: {top: boolean, right: boolean, down: boolean, left: boolean}}}
  *
  */
-Hitbox.prototype.getCollisionDirection = function(other) {
+Hitbox.prototype.getCollisionDirection = function (other) {
 
-    var collisions = { top:   this.y < other.hitbox.y,
+    var collisions = {
+        top: this.y < other.hitbox.y,
         right: this.x > other.hitbox.x,
-        down:  this.y > other.hitbox.y,
-        left:  this.x < other.hitbox.x };
+        down: this.y > other.hitbox.y,
+        left: this.x < other.hitbox.x
+    };
+
 
     return {hit: distance(this, other.hitbox) < this.radius + other.hitbox.radius, dirs: collisions};
 };
@@ -229,7 +235,7 @@ function PowerUp(game, other, type) {
     this.audio = document.getElementById('soundFX');
 
     this.animations = {};
-    switch(type) {
+    switch (type) {
         case "hp":
             this.sprite = ASSET_MANAGER.getAsset("./img/hp-heart.png");
             break;
@@ -243,13 +249,13 @@ function PowerUp(game, other, type) {
     Entity.call(this, game, this.x, this.y);
 }
 
-PowerUp.prototype.update = function() {
+PowerUp.prototype.update = function () {
     // drops HP accordingly
-    this.hitbox.updateXY(this.x + this.sprite.width / 2,  this.y + this.sprite.height / 2);
+    this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
 
     // Player picks up HP
     if (this.isCollidingWith(globals.player)) {
-        switch(this.type) {
+        switch (this.type) {
             case "hp":
                 globals.player.health += 10;
                 this.audio.src = "./sound/hpup.wav";
@@ -277,7 +283,6 @@ function Zombie(game) {
     this.name = "Zombie";
     this.states = {};
     this.health = 100;
-    this.isDead = false;
 
     this.speed = 5;
 
@@ -301,13 +306,11 @@ function Zombie(game) {
     };
 
     this.animations = {};
-    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, .15, 1, true, false);
-    this.animations.Zdead = new Animation(ASSET_MANAGER.getAsset("./img/Death animation/deathsprite sheet.png"), 0, 0, 75, 75, .15, 20, false, false);
-    //this.currAnim = this.animations.idle;
+    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
+    this.animations.Zdead = new Animation(ASSET_MANAGER.getAsset("./img/Death animation/zombie_death.png"), 0, 0, 75, 75, 0.15, 20, false, false);
 
     var hbX = this.x + (this.animations.idle.frameWidth / 2);
     var hbY = this.y + (this.animations.idle.frameHeight / 2);
-
 
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
@@ -321,7 +324,7 @@ Zombie.prototype.update = function () {
     var friction = 1;
     var maxSpeed = 100;
     var minSpeed = 5;
-    var isDead =  false;
+    var isDead = false;
 
     //handle movement and stuff
     //TODO iron this out
@@ -373,7 +376,7 @@ Zombie.prototype.update = function () {
             this.health -= bullet.damage;
             bullet.spent = true;
             bullet.removeFromWorld = true;
-            if (globals.debug) console.log("You shot me!");
+            console.log("You shot me!");
         }
     }
 
@@ -406,7 +409,7 @@ Zombie.prototype.draw = function (ctx) {
     ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
     if (this.isDead === true)
-        ctx.Zdead.drawFrame(this.game.clockTick, ctx, this.x, this.y,1);
+        this.animations.Zdead.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     ctx.restore();
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
@@ -423,42 +426,43 @@ Zombie.prototype.isCollidingWith = function (bullet) {
 
 Zombie.prototype.die = function () {
     this.isDead = true;
-    if(Zdead.isDone()) {
+    if (this.animations.Zdead.isDone()) {
         this.removeFromWorld = true;
         ++globals.zombieDeathCount;
-    }
 
-    // TODO random chance HP drops when zombie dies
-    var chance = randomInt(10) + 1;
-    if (chance < 9) {
-        // TODO this will turn into a switch at some point to change types
-        this.game.addEntity(new PowerUp(this.game, this, "hp"));
-    }
 
-    // var currentFib = globals.fib1 + globals.fib2;
-    if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
-    if (globals.zombieDeathCount === globals.fibs.currFib) {
-        // see in Background.prototype.draw for wave counter
-        globals.wave++;
-
-        if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
-        //update previous and current fibonacci numbers
-        globals.fibs.fib1 = globals.fibs.fib2;
-        globals.fibs.fib2 = globals.fibs.currFib;
-        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
-        //Spawn current fib amount of zombies
-        for (var i = 0; i < globals.fibs.currFib; i++) {
-            this.game.addEntity(new Zombie(this.game));
+        // TODO add more features for drops
+        var chance = randomInt(10) + 1;
+        if (chance > 9) {
+            // TODO this will turn into a switch at some point to change types
+            this.game.addEntity(new PowerUp(this.game, this, "hp"));
         }
-        globals.zombieDeathCount = 0;
 
+        // var currentFib = globals.fib1 + globals.fib2;
+        console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
+        if (globals.zombieDeathCount === globals.fibs.currFib) {
+            // see in Background.prototype.draw for wave counter
+            globals.wave++;
+
+            console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+            //update previous and current fibonacci numbers
+            globals.fibs.fib1 = globals.fibs.fib2;
+            globals.fibs.fib2 = globals.fibs.currFib;
+            globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
+            //Spawn current fib amount of zombies
+            for (var i = 0; i < globals.fibs.currFib; i++) {
+                this.game.addEntity(new Zombie(this.game));
+            }
+            globals.zombieDeathCount = 0;
+        }
+        //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
+        //
     }
-
 };
 /**
  * Handles collision between zombies. At the moment tries to teleport zombies over 60 pixels
  */
-Zombie.prototype.collideOtherZombies = function() {
+Zombie.prototype.collideOtherZombies = function () {
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
         if (ent.name === 'Zombie') {
@@ -481,10 +485,10 @@ Zombie.prototype.collideOtherZombies = function() {
                     this.y += bounceDist;
                 }
                 if (collisionInfo.dirs.bottom && collisionInfo.dirs.left) {
-                    this.y +=bounceDist;
-                    this.x +=bounceDist;
+                    this.y += bounceDist;
+                    this.x += bounceDist;
                 } else if (collisionInfo.dirs.bottom && collisionInfo.dirs.right) {
-                    this.y +=bounceDist;
+                    this.y += bounceDist;
                     this.x -= bounceDist;
                 } else if (collisionInfo.dirs.bottom) {
                     this.y += bounceDist;
@@ -497,7 +501,6 @@ Zombie.prototype.collideOtherZombies = function() {
 
 
             }
-
 
 
         }
@@ -593,7 +596,7 @@ function Player(game, scale) {
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260, 230, .15, 16, true, false);
     this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 0, 0, 300, 238, 0.2, 6, true, false);
-    this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241,.13, 15, false, false);
+    this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241, .13, 15, false, false);
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 200 * this.scale;
@@ -663,7 +666,7 @@ Player.prototype.update = function () {
 
     if (this.game.RELOAD) {
         this.state = this.states.RELOADING;
-        if (globals.debug) console.log("Starting reload");
+        console.log("Starting reload");
     }
 
     if (this.game.leftClick) {
@@ -708,12 +711,19 @@ Player.prototype.draw = function (ctx) {
         this.animations.reloadPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
+
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
         if (ent.name === "Zombie") {
             var currentZombie = this.isCollidingWith(ent);
             if (currentZombie.hit) {
                 if (globals.debug) console.log("Bit by a zombie!");
+
+
+                //console.log("hit top: " + current.dirs.top);
+                //console.log("hit right: " + current.dirs.right);
+                //console.log("hit down: " + current.dirs.down);
+                //console.log("hit left: " + current.dirs.left);
 
                 var knockback = 20;
 
@@ -733,6 +743,7 @@ Player.prototype.draw = function (ctx) {
                 if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
                 this.audio.play();
                 this.health -= 5;
+
 
                 if (this.health <= 0) {
                     this.audio.src = "./sound/death.wav";
@@ -756,6 +767,7 @@ Player.prototype.isCollidingWith = function (entity) {
         left: this.hitbox.x < entity.hitbox.x
     };
 
+
     return {hit: distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius, dirs: collisions};
 };
 
@@ -769,17 +781,18 @@ var Key = {
 
     //keyPressed: false,
 
-    UP:    87, //w
+    UP: 87, //w
     RIGHT: 68, //d
-    DOWN:  83, //s
-    LEFT:  65, //a
-    R:     82, //R
-    H:     72, //H
+    DOWN: 83, //s
+    LEFT: 65, //a
+    R: 82, //R
+    H: 72, //H
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];
     },
     onKeyDown: function (event) {
+
         this._pressed[event.keyCode] = true;
     },
     onKeyUp: function (event) {
@@ -807,6 +820,17 @@ function getMousePos(canvas, event) {
 }
 
 function click(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    var ctx = canvas.getContext('2d');
+    //globals.clickPosition.x = Math.round(event.offsetX - rect.left);
+    //globals.clickPosition.y = Math.round(event.offsetY - rect.top);
+
+    //return { x: Math.round(event.clientX - rect.left), y: Math.round(event.clientY - rect.top) };
+    //ctx.beginPath();
+    //ctx.fillStyle = "Red";
+    //ctx.arc(Math.round(event.clientX - canvas.offsetLeft), Math.round(event.clientY - canvas.offsetTop), 10, 0, Math.PI * 2, false);
+    //ctx.fill();
+    //ctx.closePath();
     return {x: Math.round(event.clientX - canvas.offsetLeft), y: Math.round(event.clientY - canvas.offsetTop)};
 }
 
@@ -840,24 +864,27 @@ window.addEventListener('mousemove', function (event) {
 
 var ASSET_MANAGER = new AssetManager();
 
-//terrain
 ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
 
-//animations
 ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
 ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/Enemies/citizenzombieFlip4.png");
+
+ASSET_MANAGER.queueDownload("./sound/usp.wav");
+
 ASSET_MANAGER.queueDownload("./img/zombie.png");
-ASSET_MANAGER.queueDownload("./img/Death animation/deathsprite sheet.png");
-ASSET_MANAGER.queueDownload("./img/hp-heart.png");
+
+ASSET_MANAGER.queueDownload("./img/Death animation/zombie_death.png");
+ASSET_MANAGER.queueDownload("./img/hp-heart.png")
+
 ASSET_MANAGER.queueDownload("./img/hp-heart.png");
 
-//sound
-ASSET_MANAGER.queueDownload("./sound/usp.wav");
+
+//var player;
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -870,7 +897,30 @@ ASSET_MANAGER.downloadAll(function () {
     globals.player = new Player(gameEngine, 0.5);
     var bg = new Background(gameEngine);
 
+    //var zombie;
+    //for (var i = 0; i < 10; i++) {
+    //    var zombie = new Zombie(gameEngine);
+    //    gameEngine.addEntity(zombie);
+    //}
+    //var zombie1 = new Zombie(gameEngine);
+    //var zombie2 = new Zombie(gameEngine);
+    //var zombie3 = new Zombie(gameEngine);
+    //var zombie4 = new Zombie(gameEngine);
+    //var zombie5 = new Zombie(gameEngine);
+    //var unicorn = new Unicorn(gameEngine);
+
     gameEngine.addEntity(bg);
+    //gameEngine.addEntity(zombie1);
+    //gameEngine.addEntity(zombie2);
+    //gameEngine.addEntity(zombie3);
+    //gameEngine.addEntity(zombie4);
+    //gameEngine.addEntity(zombie5);
+    //gameEngine.addEntity(unicorn);
+    // var zombie;
+    //for (var i = 0; i < 10; i++) {
+    //    var zombie = new Zombie(gameEngine);
+    //     gameEngine.addEntity(zombie);
+    // }
     gameEngine.addEntity(new Zombie(gameEngine));
     gameEngine.addEntity(globals.player);
 
