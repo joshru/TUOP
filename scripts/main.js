@@ -281,7 +281,6 @@ function Zombie(game) {
     this.name = "Zombie";
     this.states = {};
     this.health = 100;
-    this.isDead = false;
 
     this.speed = 5;
 
@@ -306,12 +305,10 @@ function Zombie(game) {
 
     this.animations = {};
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, .15, 1, true, false);
-    this.animations.Zdead = new Animation(ASSET_MANAGER.getAsset("./img/Death animation/deathsprite sheet.png"), 0, 0, 75, 75, .15, 20, false, false);
-    //this.currAnim = this.animations.idle;
+    this.animations.Zdead = new Animation(ASSET_MANAGER.getAsset("./img/Death animation/zombie_death.png"), 0, 0, 75, 75, 0.15, 20, false, false);
 
     var hbX = this.x + (this.animations.idle.frameWidth / 2);
     var hbY = this.y + (this.animations.idle.frameHeight / 2);
-
 
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
@@ -410,7 +407,7 @@ Zombie.prototype.draw = function (ctx) {
     ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
     if (this.isDead === true)
-        ctx.Zdead.drawFrame(this.game.clockTick, ctx, this.x, this.y,1);
+        this.animations.Zdead.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     ctx.restore();
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
@@ -427,12 +424,12 @@ Zombie.prototype.isCollidingWith = function (bullet) {
 
 Zombie.prototype.die = function () {
     this.isDead = true;
-    if(Zdead.isDone()) {
+    if(this.animations.Zdead.isDone()) {
         this.removeFromWorld = true;
         ++globals.zombieDeathCount;
     }
 
-    // TODO random chance HP drops when zombie dies
+    // TODO add more features for drops
     var chance = randomInt(10) + 1;
     if (chance < 9) {
         // TODO this will turn into a switch at some point to change types
@@ -882,7 +879,7 @@ ASSET_MANAGER.queueDownload("./sound/usp.wav");
 
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 
-ASSET_MANAGER.queueDownload("./img/Death animation/deathsprite sheet.png");
+ASSET_MANAGER.queueDownload("./img/Death animation/zombie_death.png");
 ASSET_MANAGER.queueDownload("./img/hp-heart.png")
 
 ASSET_MANAGER.queueDownload("./img/hp-heart.png");
