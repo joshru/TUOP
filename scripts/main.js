@@ -431,7 +431,7 @@ Zombie.prototype.die = function () {
 
     // TODO random chance HP drops when zombie dies
     var chance = randomInt(10) + 1;
-    if (chance < 7) {
+    if (chance < 9) {
         // TODO this will turn into a switch at some point to change types
         this.game.addEntity(new PowerUp(this.game, this, "hp"));
     }
