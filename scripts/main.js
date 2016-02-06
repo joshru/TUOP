@@ -124,8 +124,9 @@ Background.prototype.draw = function (ctx) {
     ctx.fillStyle = "white";
 
     ctx.fillText("Wave: " + globals.wave, 10, 55);
+    //ctx.fillText("Mute me", 10, 80).ondblclick.apply(document.getElementById("soundFX").muted = true);
 
-    if (globals.player.health > 0) {
+    if (globals.player.health >= 0) {
         ctx.fillText("Player Health: " + globals.player.health, 10, 30);
         /* for blood - we don't need this if you guys don't like it
          * decrease the first hardcoded number to lower threshold */
@@ -134,7 +135,8 @@ Background.prototype.draw = function (ctx) {
         // this.game.ctx.fillText(opacity, 10, 100);
         ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-    } else {
+    }
+    if (globals.player.health === 0) {
         ctx.fillStyle = "rgba(195, 0, 0, " + .5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white"
@@ -228,6 +230,7 @@ function PowerUp(game, other, type) {
     this.x = other.x;
     this.y = other.y;
     this.sprite = null;
+    this.audio = document.getElementById('soundFX');
 
     this.animations = {};
     switch(type) {
@@ -246,15 +249,17 @@ function PowerUp(game, other, type) {
 
 PowerUp.prototype.update = function() {
     // drops HP accordingly
-    this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
+    this.hitbox.updateXY(this.x + this.sprite.width / 2,  this.y + this.sprite.height / 2);
 
     // Player picks up HP
     if (this.isCollidingWith(globals.player)) {
         switch(this.type) {
             case "hp":
                 globals.player.health += 10;
+                this.audio.src = "./sound/hpup.wav";
                 break;
         }
+        this.audio.play();
         this.removeFromWorld = true;
     }
 };
