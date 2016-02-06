@@ -393,7 +393,7 @@ Zombie.prototype.die = function() {
 
     }
     //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
-
+    //
 
 };
 /**
