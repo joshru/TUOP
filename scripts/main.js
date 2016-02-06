@@ -138,6 +138,7 @@ Background.prototype.draw = function (ctx) {
         ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
+    /*Display player health*/
     if (globals.player.health === 0) {
         ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -148,7 +149,15 @@ Background.prototype.draw = function (ctx) {
 
     Entity.prototype.draw.call(this);
 };
-
+/**
+ * Hitbox for sprites and entities.
+ * Used for collision handling
+ * @param x coordinate
+ * @param y coordinate
+ * @param radius of the hitbox
+ * @param game to host me
+ * @constructor uhh
+ */
 function Hitbox(x, y, radius, game) {
     this.name = "Hitbox";
     this.x = x;
@@ -162,6 +171,7 @@ function Hitbox(x, y, radius, game) {
 Hitbox.prototype = new Entity();
 Hitbox.prototype.constructor = Hitbox;
 
+//Collision with borders
 Hitbox.prototype.collideLeft = function () {
     return (this.x - this.radius) < 0;
 };
@@ -182,6 +192,11 @@ Hitbox.prototype.update = function () {
     Entity.prototype.update.call(this);
 };
 
+/**
+ * Update x and y coordinate of this hitbox
+ * @param x
+ * @param y
+ */
 Hitbox.prototype.updateXY = function (x, y) {
     this.x = x;
     this.y = y;
@@ -224,7 +239,13 @@ Hitbox.prototype.getCollisionDirection = function (other) {
 
     return {hit: distance(this, other.hitbox) < this.radius + other.hitbox.radius, dirs: collisions};
 };
-
+/**
+ * Powerup Object. Represents the various pickups that are dropped by zombies.
+ * @param game to host me
+ * @param other TODO not sure what this is for
+ * @param type of powerup
+ * @constructor
+ */
 function PowerUp(game, other, type) {
     this.game = game;
     this.name = "PowerUp";
@@ -236,6 +257,8 @@ function PowerUp(game, other, type) {
     this.audio = document.getElementById('soundFX');
 
     this.animations = {};
+    //Assign attributes based on type
+    //Will be more types later
     switch (type) {
         case "hp":
             this.sprite = ASSET_MANAGER.getAsset("./img/hp-heart.png");
@@ -249,7 +272,9 @@ function PowerUp(game, other, type) {
 
     Entity.call(this, game, this.x, this.y);
 }
-
+/**
+ * Updates the hitbox for the game loop
+ */
 PowerUp.prototype.update = function () {
     // drops HP accordingly
     this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
@@ -275,6 +300,11 @@ PowerUp.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this)
 };
 
+/**
+ * Determines whether this powerup is colliding with another entity
+ * @param entity to compare location to
+ * @returns {boolean} true if colliding, false otherwise
+ */
 PowerUp.prototype.isCollidingWith = function (entity) {
     if (globals.debug) {
         if (distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius)
@@ -282,7 +312,11 @@ PowerUp.prototype.isCollidingWith = function (entity) {
     }
     return distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius;
 };
-
+/**
+ * Zombie Object
+ * @param game to host me
+ * @constructor
+ */
 function Zombie(game) {
     this.game = game;
     this.name = "Zombie";
@@ -324,7 +358,9 @@ function Zombie(game) {
 
 Zombie.prototype = new Entity();
 Zombie.prototype.constructor = Zombie;
-
+/**
+ * Update for the game loop
+ */
 Zombie.prototype.update = function () {
     var friction = 1;
     var maxSpeed = 100;
@@ -402,7 +438,10 @@ Zombie.prototype.update = function () {
     //accordingly
     if (this.health <= 0) this.die();
 };
-
+/**
+ * Draw for the game loop
+ * @param ctx
+ */
 Zombie.prototype.draw = function (ctx) {
 
     var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
@@ -424,11 +463,17 @@ Zombie.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 
 };
-
+/**
+ * Checks for collisions. This behavior moved to Hitbox
+ * @param bullet
+ * @returns {boolean}
+ */
 Zombie.prototype.isCollidingWith = function (bullet) {
     return distance(this.hitbox, bullet) < this.hitbox.radius + bullet.radius;
 };
-
+/**
+ * Takes care of behavior of moving the zombie onto the after-afterlife.
+ */
 Zombie.prototype.die = function () {
     // stops zombies and moves hitbox out of canvas
     this.isDead = true;
@@ -516,7 +561,16 @@ Zombie.prototype.collideOtherZombies = function () {
         }
     }
 };
-
+/**
+ * Bullet Object. Created when a gun is fired.
+ * @param x
+ * @param y
+ * @param xVelocity
+ * @param yVelocity
+ * @param src of bullet
+ * @param game
+ * @constructor
+ */
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.x = x; // probably doesn't need to be here
     this.y = y;
@@ -549,7 +603,9 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
 
 Bullet.prototype = new Entity();
 Bullet.prototype.constructor = Bullet;
-
+/**
+ * Update for the game loop
+ */
 Bullet.prototype.update = function () {
     var canvas = document.getElementById('gameWorld');
     var that = this;
@@ -562,7 +618,10 @@ Bullet.prototype.update = function () {
         this.y += that.yVelocity * this.speed;
     }
 };
-
+/**
+ * For the game loop
+ * @param ctx
+ */
 Bullet.prototype.draw = function (ctx) {
     ctx.beginPath();
     ctx.fillStyle = "#E3612F";
@@ -581,7 +640,12 @@ Bullet.prototype.draw = function (ctx) {
 
 };
 
-
+/**
+ * Player Object. Represents the player character
+ * @param game
+ * @param scale
+ * @constructor
+ */
 function Player(game, scale) {
     this.game = game;
     this.name = "Player";
@@ -647,7 +711,9 @@ Player.prototype.move = function (xTrans, yTrans) {
     this.x += xTrans;
     this.y += yTrans;
 };
-
+/**
+ * Checks for movement input
+ */
 Player.prototype.handleMovementInput = function () {
     if (Key.isDown(Key.RIGHT)) {
         this.state = this.states.MOVING;
@@ -666,7 +732,9 @@ Player.prototype.handleMovementInput = function () {
         this.move(0, this.stepDistance);
     }
 };
-
+/**
+ * Update for the game loop
+ */
 Player.prototype.update = function () {
     this.handleMovementInput();
 
@@ -698,7 +766,10 @@ Player.prototype.update = function () {
 
     Entity.prototype.update.call(this);
 };
-
+/**
+ * Draw for the game loop
+ * @param ctx
+ */
 Player.prototype.draw = function (ctx) {
     if (this.state === this.states.IDLE) {
         this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
@@ -716,7 +787,7 @@ Player.prototype.draw = function (ctx) {
         this.animations.reloadPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
-
+    //Check for collisions with zombies
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
         if (ent.name === "Zombie") {
@@ -757,7 +828,7 @@ Player.prototype.draw = function (ctx) {
 
     Entity.prototype.draw.call(this);
 };
-
+//TODO use HitBox version instead
 Player.prototype.isCollidingWith = function (entity) {
     var collisions = {
         top: this.hitbox.y < entity.hitbox.y,
@@ -770,11 +841,18 @@ Player.prototype.isCollidingWith = function (entity) {
     return {hit: distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius, dirs: collisions};
 };
 
-
+/**
+ * Generates a random number
+ * @param n max
+ * @returns {number} int: random number
+ */
 function randomInt(n) {
     return Math.floor(Math.random() * n);
 }
-
+/**
+ * Global Key object
+ * Processed keyboard input
+ */
 var Key = {
     _pressed: {},
 
@@ -802,17 +880,27 @@ var Key = {
 
 
 };
-
+/**
+ * Global function to return the mouse position on the canvas
+ * @param canvas
+ * @param event
+ * @returns {{x: number, y: number}}
+ */
 function getMousePos(canvas, event) {
     var rect = canvas.getBoundingClientRect();
     return {x: Math.round(event.clientX - rect.left), y: Math.round(event.clientY - rect.top)};
 }
-
+/**
+ * Creates an object representing the coordinates of the click
+ * @param canvas
+ * @param event
+ * @returns {{x: number, y: number}}
+ */
 function click(canvas, event) {
     return {x: Math.round(event.clientX - canvas.offsetLeft), y: Math.round(event.clientY - canvas.offsetTop)};
 }
 
-
+//Assign listeners to keys
 window.addEventListener('keyup', function (event) {
     Key.onKeyUp(event);
 }, false);
