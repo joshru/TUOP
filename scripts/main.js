@@ -5,6 +5,7 @@ var globals = {
     clickHoldPosition: {x: 0, y: 0},
     fibs: {fib1: 0, fib2: 1, currFib: 1},
     wave: 0,
+    killCount: 0,
     zombieDeathCount: 0,
     debug: false
 };
@@ -123,7 +124,8 @@ Background.prototype.draw = function (ctx) {
     ctx.font = "30px Courier New";
     ctx.fillStyle = "white";
 
-    ctx.fillText("Wave: " + globals.wave, 10, 55);
+    ctx.fillText("Wave: " + globals.wave, 200, 60);
+    ctx.fillText("Kills: " + globals.killCount, 10, 60)
     //ctx.fillText("Mute me", 10, 80).ondblclick.apply(document.getElementById("soundFX").muted = true);
 
     if (globals.player.health >= 0) {
@@ -141,7 +143,7 @@ Background.prototype.draw = function (ctx) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white"
         ctx.font = "50px Courier New";
-        ctx.fillText("YOU DEAD HOMIE rip", 125, canvas.height / 2);
+        ctx.fillText("YOU DEAD HOMIE rip", 235, canvas.height / 2);
     }
 
     Entity.prototype.draw.call(this);
@@ -282,7 +284,7 @@ function Zombie(game) {
     this.name = "Zombie";
     this.states = {};
     this.health = 100;
-
+    this.isDead = false;
     this.speed = 5;
 
 
@@ -306,7 +308,7 @@ function Zombie(game) {
 
     this.animations = {};
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
-    this.animations.Zdead = new Animation(ASSET_MANAGER.getAsset("./img/Death animation/zombie_death.png"), 0, 0, 75, 75, 0.15, 20, false, false);
+    this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/Death animation/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
     var hbX = this.x + (this.animations.idle.frameWidth / 2);
     var hbY = this.y + (this.animations.idle.frameHeight / 2);
@@ -323,55 +325,52 @@ Zombie.prototype.update = function () {
     var friction = 1;
     var maxSpeed = 100;
     var minSpeed = 5;
-   // var isDead = false;
 
     //handle movement and stuff
     //TODO iron this out
-    if (!this.isDead) {
+
+    this.collideOtherZombies();
 
 
-        this.collideOtherZombies();
+    this.x += this.velocity.x * this.game.clockTick;
+    this.y += this.velocity.y * this.game.clockTick;
 
+    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+        this.y + (this.animations.idle.frameHeight / 2));
 
-        this.x += this.velocity.x * this.game.clockTick;
-        this.y += this.velocity.y * this.game.clockTick;
+    // follow player
+    if (globals.player.health > 0) { //player is alive
+        var dx = globals.player.x - this.x;
+        var dy = globals.player.y - this.y;
+        var pointDistance = Math.sqrt(dx * dx + dy * dy);
 
+        this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
+        this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
+
+        //Not sure how often to do this
         this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
             this.y + (this.animations.idle.frameHeight / 2));
 
-        // follow player
-        if (globals.player.health > 0) { //player is alive
-            var dx = globals.player.x - this.x;
-            var dy = globals.player.y - this.y;
-            var pointDistance = Math.sqrt(dx * dx + dy * dy);
+    }
+    //player dead, bounce off walls
+    else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+        this.velocity.x = -this.velocity.x * friction;
 
-            this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
-            this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
+        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+            this.y + (this.animations.idle.frameHeight / 2));
+    }
+    else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
+        this.velocity.y = -this.velocity.y * friction;
 
-            //Not sure how often to do this
-            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-                this.y + (this.animations.idle.frameHeight / 2));
+        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+            this.y + (this.animations.idle.frameHeight / 2));
+    }
 
-        }
-        //player dead, bounce off walls
-        else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
-            this.velocity.x = -this.velocity.x * friction;
-
-            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-                this.y + (this.animations.idle.frameHeight / 2));
-        }
-        else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
-            this.velocity.y = -this.velocity.y * friction;
-
-            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-                this.y + (this.animations.idle.frameHeight / 2));
-        }
-
-        var i;
-        //check if getting shot the F up
-        for (i = 0; i < this.game.bullets.length; i++) {
-            var bullet = this.game.bullets[i];
-            //console.log("Distance From Bullet: " + distance(this, bullet));
+    var i;
+    //check if getting shot the F up
+    for (i = 0; i < this.game.bullets.length; i++) {
+        var bullet = this.game.bullets[i];
+        //console.log("Distance From Bullet: " + distance(this, bullet));
 
         if (!bullet.spent && this.isCollidingWith(bullet)) {
             this.health -= bullet.damage;
@@ -381,18 +380,17 @@ Zombie.prototype.update = function () {
         }
     }
 
-        var acceleration = 1000;//TODO add comments explaining this?
+    var acceleration = 1000;//TODO add comments explaining this?
 
-        //Handle collision with the player
-        var playerX = globals.player.x;
-        var playerY = globals.player.y;
-        var dist = distance(this, globals.player);
-        if (dist > this.radius + globals.player.radius + 2) {
-            var difX = (playerX - this.x) / dist;
-            var difY = (playerY - this.y) / dist;
-            this.velocity.x += difX * acceleration / (dist * dist);
-            this.velocity.y += difY * acceleration / (dist * dist);
-        }
+    //Handle collision with the player
+    var playerX = globals.player.x;
+    var playerY = globals.player.y;
+    var dist = distance(this, globals.player);
+    if (dist > this.radius + globals.player.radius + 2) {
+        var difX = (playerX - this.x) / dist;
+        var difY = (playerY - this.y) / dist;
+        this.velocity.x += difX * acceleration / (dist * dist);
+        this.velocity.y += difY * acceleration / (dist * dist);
     }
 
     //TODO create dying animation and stuff
@@ -407,15 +405,12 @@ Zombie.prototype.draw = function (ctx) {
 
     if (!this.isDead) {
         ctx.save();
-
         ctx.translate((this.x + (71 / 2)), this.y + (71 / 2));
         ctx.rotate(rotation);
         ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
         ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
-
         ctx.restore();
-    } else  if (this.isDead)
-        this.animations.Zdead.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+    } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
 
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
@@ -431,11 +426,16 @@ Zombie.prototype.isCollidingWith = function (bullet) {
 };
 
 Zombie.prototype.die = function () {
+    // stops zombies and moves hitbox out of canvas
     this.isDead = true;
-    if (this.animations.Zdead.isDone()) {
+    this.hitbox.updateXY(undefined, undefined);
+    this.hitbox.radius = undefined;
+    this.velocity.x = 0; this.velocity.y = 0;
+
+    if (this.animations.dying.isDone()) {
         this.removeFromWorld = true;
         ++globals.zombieDeathCount;
-
+        ++globals.killCount;
 
         // TODO add more features for drops
         var chance = randomInt(10) + 1;
@@ -850,7 +850,6 @@ ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.queueDownload("./img/Death animation/zombie_death.png");
-ASSET_MANAGER.queueDownload("./img/hp-heart.png");
 ASSET_MANAGER.queueDownload("./img/hp-heart.png");
 
 //sounds
