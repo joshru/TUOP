@@ -124,18 +124,20 @@ Background.prototype.draw = function (ctx) {
     ctx.fillStyle = "white";
 
     ctx.fillText("Wave: " + globals.wave, 10, 55);
+    //ctx.fillText("Mute me", 10, 80).ondblclick.apply(document.getElementById("soundFX").muted = true);
 
-    if (globals.player.health > 0) {
+    if (globals.player.health >= 0) {
         ctx.fillText("Player Health: " + globals.player.health, 10, 30);
         /* for blood - we don't need this if you guys don't like it
          * decrease the first hardcoded number to lower threshold */
-        opacity += .3 - (globals.player.health / 100);
+        opacity += 0.3 - (globals.player.health / 100);
         // for testing numbers:
         // this.game.ctx.fillText(opacity, 10, 100);
         ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-    } else {
-        ctx.fillStyle = "rgba(195, 0, 0, " + .5 + ")";
+    }
+    if (globals.player.health === 0) {
+        ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white"
         ctx.font = "50px Courier New";
@@ -228,6 +230,7 @@ function PowerUp(game, other, type) {
     this.x = other.x;
     this.y = other.y;
     this.sprite = null;
+    this.audio = document.getElementById('soundFX');
 
     this.animations = {};
     switch(type) {
@@ -246,18 +249,20 @@ function PowerUp(game, other, type) {
 
 PowerUp.prototype.update = function() {
     // drops HP accordingly
-    this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
+    this.hitbox.updateXY(this.x + this.sprite.width / 2,  this.y + this.sprite.height / 2);
 
     // Player picks up HP
     if (this.isCollidingWith(globals.player)) {
         switch(this.type) {
             case "hp":
                 globals.player.health += 10;
+                this.audio.src = "./sound/hpup.wav";
                 break;
         }
+        this.audio.play();
         this.removeFromWorld = true;
     }
-}
+};
 
 PowerUp.prototype.draw = function (ctx) {
     if (globals.debug) this.hitbox.draw(ctx);
@@ -265,7 +270,7 @@ PowerUp.prototype.draw = function (ctx) {
     ctx.drawImage(this.sprite, this.x, this.y);
 
     Entity.prototype.draw.call(this)
-}
+};
 
 PowerUp.prototype.isCollidingWith = function (entity) {
     return distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius;
@@ -591,6 +596,7 @@ function Player(game, scale) {
         IDLE: 0,
         MOVING: 1,
         SHOOTING: 2,
+        RELOADING: 3,
         CURRENT_GUN: 'pistol'
     };
 
@@ -600,7 +606,7 @@ function Player(game, scale) {
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260, 230, .15, 16, true, false);
     this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 0, 0, 300, 238, 0.2, 6, true, false);
-
+    this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241,.13, 15, false, false);
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 200 * this.scale;
@@ -667,6 +673,12 @@ Player.prototype.update = function () {
 
     if (!Key.keyPressed()) this.state = this.states.IDLE;
 
+
+    if (this.game.RELOAD) {
+        this.state = this.states.RELOADING;
+        console.log("Starting reload");
+    }
+
     if (this.game.leftClick) {
         if (globals.debug) console.log("shooting");
 
@@ -678,6 +690,14 @@ Player.prototype.update = function () {
     }
 
     //} else this.state = this.states.idle;
+
+    if (this.animations.reloadPistol.isDone()) {
+        this.game.RELOAD = false;
+        this.animations.reloadPistol.elapsedTime = 0;
+        this.state = this.states.IDLE;
+
+    }
+
 
     Entity.prototype.update.call(this);
 };
@@ -696,6 +716,14 @@ Player.prototype.draw = function (ctx) {
     if (this.state === this.states.MOVING) {
         this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
+
+    if (this.state === this.states.RELOADING) {
+        this.animations.reloadPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+    }
+
+
+
+
 
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
@@ -944,6 +972,7 @@ var Key = {
     RIGHT: 68, //d
     DOWN: 83, //s
     LEFT: 65, //a
+    R:    82, // R
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];
@@ -997,6 +1026,12 @@ window.addEventListener('keyup', function (event) {
 }, false);
 window.addEventListener('keydown', function (event) {
     Key.onKeyDown(event);
+
+    if (event.which === 82) {
+        globals.player.game.RELOAD = true;
+    }
+
+
 }, false);
 //window.addEventListener('mouseover', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
 //window.addEventListener('mousemove', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event); }, false);

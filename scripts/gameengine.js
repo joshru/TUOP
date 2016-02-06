@@ -64,9 +64,20 @@ GameEngine.prototype.startInput = function () {
     var that = this;
 
     this.ctx.canvas.addEventListener("keydown", function (e) {
+        console.log("GE key pressed: " + String.fromCharCode(e.which));
+
         if (String.fromCharCode(e.which) === ' ') that.space = true;
 //        console.log(e);
+
+        if (e.which === 82) {
+            console.log("GE: R pressed");
+            that.RELOAD = true;
+        }
         e.preventDefault();
+    }, false);
+
+    this.ctx.canvas.addEventListener("keypress", function(e) {
+
     }, false);
 
 
