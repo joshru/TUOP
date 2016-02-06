@@ -5,7 +5,7 @@ var globals = {
     clickHoldPosition: {x: 0, y: 0},
     fibs: {fib1: 0, fib2: 1, currFib:1},
     zombieDeathCount:0,
-    debug: true
+    debug: false
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -189,6 +189,24 @@ Hitbox.prototype.draw = function(ctx) {
 
     //Entity.prototype.draw.call(ctx);
 };
+/**
+ * Determines whether or not this hitbox is colliding with the other hit box
+ * and which directio the collision is in.
+ *  Note: can collide with multiple directions
+ * @param other hitbox to collide with
+ * @returns {{hit: boolean, dirs: {top: boolean, right: boolean, down: boolean, left: boolean}}}
+ *
+ */
+Hitbox.prototype.getCollisionDirection = function(other) {
+
+    var collisions = { top:   this.y < other.hitbox.y,
+        right: this.x > other.hitbox.x,
+        down:  this.y > other.hitbox.y,
+        left:  this.x < other.hitbox.x };
+
+
+    return {hit: distance(this, other.hitbox) < this.radius + other.hitbox.radius, dirs: collisions};
+};
 
 function Zombie(game) {
     this.game = game;
@@ -240,15 +258,21 @@ Zombie.prototype.update = function() {
     var minSpeed = 5;
 
     //handle movement and stuff
+    //TODO iron this out
+
+    this.collideOtherZombies();
 
 
     this.x += this.velocity.x * this.game.clockTick;
     this.y += this.velocity.y * this.game.clockTick;
 
+
+
+
     this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
         this.y + (this.animations.idle.frameHeight / 2));
 
-    //TODO finish this
+    // follow player
     if (globals.player.health > 0) { //player is alive
         var dx = globals.player.x - this.x;
         var dy = globals.player.y - this.y;
@@ -256,6 +280,12 @@ Zombie.prototype.update = function() {
 
         this.velocity.x  = (dx / pointDistance) * friction * this.speedScale;
         this.velocity.y  = (dy / pointDistance) * friction * this.speedScale;
+
+        //Not sure how often to do this
+        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+            this.y + (this.animations.idle.frameHeight / 2));
+
+
 
     }
     //player dead, bounce off walls
@@ -271,6 +301,9 @@ Zombie.prototype.update = function() {
         this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
             this.y + (this.animations.idle.frameHeight / 2));
     }
+
+
+
 
     var i;
     //check if getting shot the F up
@@ -340,10 +373,11 @@ Zombie.prototype.die = function() {
     if (globals.zombieDeathCount === globals.fibs.currFib) {
 
         console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+        //update previous and current fibonacci numbers
         globals.fibs.fib1 = globals.fibs.fib2;
         globals.fibs.fib2 = globals.fibs.currFib;
-        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2; //maybe move lower
-
+        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
+        //Spawn current fib amount of zombies
         for (var i = 0; i < globals.fibs.currFib; i++) {
             this.game.addEntity(new Zombie(this.game));
         }
@@ -353,7 +387,57 @@ Zombie.prototype.die = function() {
     //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
 
 
-}
+};
+/**
+ * Handles collision between zombies. At the moment tries to teleport zombies over 60 pixels
+ */
+Zombie.prototype.collideOtherZombies = function() {
+    for (var i = 0; i < this.game.entities.length; i++) {
+        var ent = this.game.entities[i];
+        if (ent.name === 'Zombie') {
+
+            var collisionInfo = this.hitbox.getCollisionDirection(ent);
+            //TODO make this work a little better
+            // it roughly works for now and prevents zombies from overlapping,
+            // but looks wonky because the zombies just teleport
+            if (ent !== this && collisionInfo.hit) {
+                var bounceDist = 60;
+
+                if (collisionInfo.dirs.top && collisionInfo.dirs.left) {
+                    this.y += bounceDist;
+                    this.x += bounceDist;
+
+                } else if (collisionInfo.dirs.top && collisionInfo.dirs.right) {
+                    this.y += bounceDist;
+                    this.x -= bounceDist;
+                } else if (collisionInfo.dirs.top) {
+                    this.y += bounceDist;
+                }
+                if (collisionInfo.dirs.bottom && collisionInfo.dirs.left) {
+                    this.y +=bounceDist;
+                    this.x +=bounceDist;
+                } else if (collisionInfo.dirs.bottom && collisionInfo.dirs.right) {
+                    this.y +=bounceDist;
+                    this.x -= bounceDist;
+                } else if (collisionInfo.dirs.bottom) {
+                    this.y += bounceDist;
+                }
+                else if (collisionInfo.dirs.left) this.x += bounceDist;
+                else if (collisionInfo.dirs.right) this.x -= bounceDist;
+
+                this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+                    this.y + (this.animations.idle.frameHeight / 2));
+
+
+            }
+
+
+
+        }
+    }
+
+
+};
 
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.x = x; // probably doesn't need to be here
@@ -598,11 +682,6 @@ Player.prototype.isCollidingWith = function(enemy) {
     return {hit: distance(this.hitbox, enemy.hitbox) < this.hitbox.radius + enemy.hitbox.radius, dirs: collisions};
 };
 
-//function distance(a, b) {
-//    var dx = a.x - b.x;
-//    var dy = a.y - b.y;
-//    return Math.sqrt(dx * dx + dy * dy);
-//}
 
 function randomInt(n) {
     return Math.floor(Math.random() * n);
