@@ -1,4 +1,4 @@
-zombie = 0 0 75 75
+zombie1 = 0 0 75 75
 zombie10 = 76 0 75 75
 zombie11 = 152 0 75 75
 zombie12 = 0 76 75 75
