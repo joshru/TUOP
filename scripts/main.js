@@ -1060,13 +1060,11 @@ ASSET_MANAGER.queueDownload("./img/Enemies/citizenzombieFlip4.png");
 ASSET_MANAGER.queueDownload("./sound/usp.wav");
 
 ASSET_MANAGER.queueDownload("./img/zombie.png");
-<<<<<<< HEAD
+
 ASSET_MANAGER.queueDownload("./img/Death animation/deathsprite sheet.png");
 ASSET_MANAGER.queueDownload("./img/hp-heart.png")
-=======
 
 ASSET_MANAGER.queueDownload("./img/hp-heart.png");
->>>>>>> origin/master
 
 
 //var player;
