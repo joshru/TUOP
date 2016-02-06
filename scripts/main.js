@@ -276,6 +276,10 @@ PowerUp.prototype.draw = function (ctx) {
 };
 
 PowerUp.prototype.isCollidingWith = function (entity) {
+    if (globals.debug) {
+        if (distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius)
+            console.log("Entity picking up Power Up: " + entity.name);
+    }
     return distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius;
 };
 
@@ -308,7 +312,7 @@ function Zombie(game) {
 
     this.animations = {};
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
-    this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/Death animation/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
+    this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/death_animation/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
     var hbX = this.x + (this.animations.idle.frameWidth / 2);
     var hbY = this.y + (this.animations.idle.frameHeight / 2);
@@ -433,13 +437,12 @@ Zombie.prototype.die = function () {
     this.velocity.x = 0; this.velocity.y = 0;
 
     if (this.animations.dying.isDone()) {
-        this.removeFromWorld = true;
         ++globals.zombieDeathCount;
         ++globals.killCount;
 
         // TODO add more features for drops
         var chance = randomInt(10) + 1;
-        if (chance > 9) {
+        if (chance > 0) {
             // TODO this will turn into a switch at some point to change types
             this.game.addEntity(new PowerUp(this.game, this, "hp"));
         }
@@ -447,10 +450,11 @@ Zombie.prototype.die = function () {
         // var currentFib = globals.fib1 + globals.fib2;
         if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
         if (globals.zombieDeathCount === globals.fibs.currFib) {
+        this.removeFromWorld = true;
             // see in Background.prototype.draw for wave counter
             globals.wave++;
 
-            if (globals.debug) ("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+            if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
             //update previous and current fibonacci numbers
             globals.fibs.fib1 = globals.fibs.fib2;
             globals.fibs.fib2 = globals.fibs.currFib;
@@ -526,7 +530,7 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.animation = null;
     this.damage = 0;
     this.spent = false;
-    //Determine which bullet to use based on the gun that fired it
+
     switch (this.src) {
         case 'pistol':
             this.speed = 10;
@@ -671,7 +675,7 @@ Player.prototype.update = function () {
 
     if (this.game.RELOAD) {
         this.state = this.states.RELOADING;
-        if (globals.debug) ("Starting reload");
+        if (globals.debug) console.log("Starting reload");
     }
 
     if (this.game.leftClick) {
@@ -849,7 +853,7 @@ ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
 ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
-ASSET_MANAGER.queueDownload("./img/Death animation/zombie_death.png");
+ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
 ASSET_MANAGER.queueDownload("./img/hp-heart.png");
 
 //sounds
