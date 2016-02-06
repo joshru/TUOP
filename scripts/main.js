@@ -407,7 +407,11 @@ Zombie.prototype.draw = function (ctx) {
     ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
     if (this.isDead === true)
+<<<<<<< HEAD
+        this.animations.Zdead.drawFrame(this.game.clockTick, ctx, this.x, this.y,1);
+=======
         this.animations.Zdead.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+>>>>>>> master
     ctx.restore();
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
@@ -425,36 +429,57 @@ Zombie.prototype.isCollidingWith = function (bullet) {
 Zombie.prototype.die = function () {
     this.isDead = true;
     if(this.animations.Zdead.isDone()) {
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> master
         this.removeFromWorld = true;
         ++globals.zombieDeathCount;
-    }
 
+<<<<<<< HEAD
+=======
     // TODO add more features for drops
     var chance = randomInt(10) + 1;
     if (chance < 9) {
         // TODO this will turn into a switch at some point to change types
         this.game.addEntity(new PowerUp(this.game, this, "hp"));
     }
+>>>>>>> master
 
-    // var currentFib = globals.fib1 + globals.fib2;
-    console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
-    if (globals.zombieDeathCount === globals.fibs.currFib) {
-        // see in Background.prototype.draw for wave counter
-        globals.wave++;
+        // TODO random chance HP drops when zombie dies
+        var chance = randomInt(10) + 1;
 
-        console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
-        //update previous and current fibonacci numbers
-        globals.fibs.fib1 = globals.fibs.fib2;
-        globals.fibs.fib2 = globals.fibs.currFib;
-        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
-        //Spawn current fib amount of zombies
-        for (var i = 0; i < globals.fibs.currFib; i++) {
-            this.game.addEntity(new Zombie(this.game));
+        if (chance < 11) {
+            // TODO this will turn into a switch at some point to change types
+            this.game.addEntity(new PowerUp(this.game, this, "hp"));
         }
-        globals.zombieDeathCount = 0;
 
+<<<<<<< HEAD
+        // var currentFib = globals.fib1 + globals.fib2;
+        console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
+        if (globals.zombieDeathCount === globals.fibs.currFib) {
+            // see in Background.prototype.draw for wave counter
+            globals.wave++;
+
+            console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+            //update previous and current fibonacci numbers
+            globals.fibs.fib1 = globals.fibs.fib2;
+            globals.fibs.fib2 = globals.fibs.currFib;
+            globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
+            //Spawn current fib amount of zombies
+            for (var i = 0; i < globals.fibs.currFib; i++) {
+                this.game.addEntity(new Zombie(this.game));
+            }
+            globals.zombieDeathCount = 0;
+=======
     }
+>>>>>>> master
 
+        }
+        //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
+        //
+    }
 };
 /**
  * Handles collision between zombies. At the moment tries to teleport zombies over 60 pixels
