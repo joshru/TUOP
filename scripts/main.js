@@ -298,7 +298,6 @@ function Zombie(game) {
 
     this.velocity = {x: Math.random() * this.speedScale, y: Math.random() * this.speedScale};
 
-
     this.states = {
         IDLE: 0,
         MOVING: 1
@@ -349,8 +348,6 @@ Zombie.prototype.update = function () {
         this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
             this.y + (this.animations.idle.frameHeight / 2));
 
-
-
     }
     //player dead, bounce off walls
     else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
@@ -380,9 +377,7 @@ Zombie.prototype.update = function () {
         }
     }
 
-
     var acceleration = 1000;//TODO add comments explaining this?
-
 
     //Handle collision with the player
     var playerX = globals.player.x;
@@ -454,8 +449,6 @@ Zombie.prototype.die = function () {
         globals.zombieDeathCount = 0;
 
     }
-    //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
-    //
 
 };
 /**
@@ -505,8 +498,6 @@ Zombie.prototype.collideOtherZombies = function() {
 
         }
     }
-
-
 };
 
 function Bullet(x, y, xVelocity, yVelocity, src, game) {
@@ -790,8 +781,8 @@ var Key = {
     RIGHT: 68, //d
     DOWN:  83, //s
     LEFT:  65, //a
-    R:     82, // R
-    F1:    112, //F1
+    R:     82, //R
+    H:     72, //H
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];
@@ -849,7 +840,7 @@ window.addEventListener('keydown', function (event) {
     if (event.which === 82) {
         globals.player.game.RELOAD = true;
     }
-    if (event.which === 112) {
+    if (event.which === Key.H) {
         globals.debug ^= true;
     }
 
