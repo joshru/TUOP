@@ -257,7 +257,7 @@ PowerUp.prototype.update = function() {
         }
         this.removeFromWorld = true;
     }
-}
+};
 
 PowerUp.prototype.draw = function (ctx) {
     if (globals.debug) this.hitbox.draw(ctx);
@@ -265,7 +265,7 @@ PowerUp.prototype.draw = function (ctx) {
     ctx.drawImage(this.sprite, this.x, this.y);
 
     Entity.prototype.draw.call(this)
-}
+};
 
 PowerUp.prototype.isCollidingWith = function (entity) {
     return distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius;
@@ -583,6 +583,7 @@ function Player(game, scale) {
         IDLE: 0,
         MOVING: 1,
         SHOOTING: 2,
+        RELOADING: 3,
         CURRENT_GUN: 'pistol'
     };
 
@@ -592,7 +593,7 @@ function Player(game, scale) {
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260, 230, .15, 16, true, false);
     this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 0, 0, 300, 238, 0.2, 6, true, false);
-
+    this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241,.13, 15, false, false);
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 200 * this.scale;
@@ -659,6 +660,12 @@ Player.prototype.update = function () {
 
     if (!Key.keyPressed()) this.state = this.states.IDLE;
 
+
+    if (this.game.RELOAD) {
+        this.state = this.states.RELOADING;
+        console.log("Starting reload");
+    }
+
     if (this.game.leftClick) {
         if (globals.debug) console.log("shooting");
 
@@ -670,6 +677,14 @@ Player.prototype.update = function () {
     }
 
     //} else this.state = this.states.idle;
+
+    if (this.animations.reloadPistol.isDone()) {
+        this.game.RELOAD = false;
+        this.animations.reloadPistol.elapsedTime = 0;
+        this.state = this.states.IDLE;
+
+    }
+
 
     Entity.prototype.update.call(this);
 };
@@ -688,6 +703,14 @@ Player.prototype.draw = function (ctx) {
     if (this.state === this.states.MOVING) {
         this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
+
+    if (this.state === this.states.RELOADING) {
+        this.animations.reloadPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+    }
+
+
+
+
 
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
@@ -936,6 +959,7 @@ var Key = {
     RIGHT: 68, //d
     DOWN: 83, //s
     LEFT: 65, //a
+    R:    82, // R
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];
@@ -989,6 +1013,12 @@ window.addEventListener('keyup', function (event) {
 }, false);
 window.addEventListener('keydown', function (event) {
     Key.onKeyDown(event);
+
+    if (event.which === 82) {
+        globals.player.game.RELOAD = true;
+    }
+
+
 }, false);
 //window.addEventListener('mouseover', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
 //window.addEventListener('mousemove', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event); }, false);
