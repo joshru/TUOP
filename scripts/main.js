@@ -202,16 +202,21 @@ Hitbox.prototype.draw = function (ctx) {
     //Entity.prototype.draw.call(ctx);
 };
 
-// TODO finish HP item
-function HPItem(game, other) {
+function PowerUp(game, other, type) {
     this.game = game;
-    this.name = "HPItem";
-    this.radius = 10;
+    this.name = "PowerUp";
+    this.radius = 15;
+    this.type = type;
     this.x = other.x;
     this.y = other.y;
 
     this.animations = {};
-    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hp-heart.png"), 0, 0, 64, 56,.15, 1, true, false);
+    switch(type) {
+        case "hp":
+            this.animations.idle =
+                new Animation(ASSET_MANAGER.getAsset("./img/hp-heart.png"), 0, 0, 64, 56, 1, 1, true, false);
+            break;
+    }
 
     var hbX = this.x + (this.animations.idle.frameWidth / 2);
     var hbY = this.y + (this.animations.idle.frameHeight / 2);
@@ -221,24 +226,28 @@ function HPItem(game, other) {
     Entity.call(this, game, this.x, this.y);
 }
 
-HPItem.prototype.update = function() {
+PowerUp.prototype.update = function() {
     // drops HP accordingly
-    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-        this.y + (this.animations.idle.frameHeight / 2));
+    this.hitbox.updateXY(this.x, this.y);
 
     // Player picks up HP
     if (this.isCollidingWith(globals.player)) {
-        globals.player.health += 10;
+        switch(this.type) {
+            case "hp":
+                globals.player.health += 10;
+                break;
+        }
+        this.removeFromWorld = true;
     }
 }
 
-HPItem.prototype.draw = function (ctx) {
+PowerUp.prototype.draw = function (ctx) {
     if (globals.debug) this.hitbox.draw(ctx);
     Entity.prototype.draw.call(this)
 }
 
-HPItem.prototype.isCollidingWith = function (entity) {
-    return distance(this.hitbox, entity) < this.hitbox.radius + entity.radius;
+PowerUp.prototype.isCollidingWith = function (entity) {
+    return distance(this.hitbox, entity) < this.hitbox.radius + entity.hitbox.radius;
 };
 
 function Zombie(game) {
@@ -386,11 +395,10 @@ Zombie.prototype.die = function () {
     ++globals.zombieDeathCount;
 
     // TODO random chance HP drops when zombie dies
-    // rip
     var chance = randomInt(10) + 1;
     if (chance < 11) {
-        console.log("I'M DRPPING A HEALTH PACK");
-        this.game.addEntity(new HPItem(this.game, this));
+        // TODO this will turn into a switch at some point to change types
+        this.game.addEntity(new PowerUp(this.game, this, "hp"));
     }
 
     // var currentFib = globals.fib1 + globals.fib2;
@@ -576,7 +584,6 @@ Player.prototype.update = function () {
 
         this.state = this.states.SHOOTING;
         this.shoot(globals.mousePosition.x, globals.mousePosition.y);
-        //globals.sound.src = "./sound/m9.mp3";
         this.audio.src = "./sound/usp.wav";
         this.audio.play();
         this.game.leftClick = false;
