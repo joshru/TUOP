@@ -130,14 +130,14 @@ Background.prototype.draw = function (ctx) {
         ctx.fillText("Player Health: " + globals.player.health, 10, 30);
         /* for blood - we don't need this if you guys don't like it
          * decrease the first hardcoded number to lower threshold */
-        opacity += .3 - (globals.player.health / 100);
+        opacity += 0.3 - (globals.player.health / 100);
         // for testing numbers:
         // this.game.ctx.fillText(opacity, 10, 100);
         ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     if (globals.player.health === 0) {
-        ctx.fillStyle = "rgba(195, 0, 0, " + .5 + ")";
+        ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white"
         ctx.font = "50px Courier New";
