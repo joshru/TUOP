@@ -402,7 +402,7 @@ Zombie.prototype.collideOtherZombies = function() {
             // but looks wonky because the zombies just teleport
             if (ent !== this && collisionInfo.hit) {
                 var bounceDist = 60;
-
+                // check combinations of directions
                 if (collisionInfo.dirs.top && collisionInfo.dirs.left) {
                     this.y += bounceDist;
                     this.x += bounceDist;
