@@ -371,7 +371,6 @@ Zombie.prototype.update = function () {
 
     this.collideOtherZombies();
 
-
     this.x += this.velocity.x * this.game.clockTick;
     this.y += this.velocity.y * this.game.clockTick;
 
@@ -482,12 +481,13 @@ Zombie.prototype.die = function () {
     this.velocity.x = 0; this.velocity.y = 0;
 
     if (this.animations.dying.isDone()) {
+        this.removeFromWorld = true;
         ++globals.zombieDeathCount;
         ++globals.killCount;
 
         // TODO add more features for drops
         var chance = randomInt(10) + 1;
-        if (chance > 0) {
+        if (chance > 8) {
             // TODO this will turn into a switch at some point to change types
             this.game.addEntity(new PowerUp(this.game, this, "hp"));
         }
@@ -495,7 +495,6 @@ Zombie.prototype.die = function () {
         // var currentFib = globals.fib1 + globals.fib2;
         if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
         if (globals.zombieDeathCount === globals.fibs.currFib) {
-        this.removeFromWorld = true;
             // see in Background.prototype.draw for wave counter
             globals.wave++;
 
