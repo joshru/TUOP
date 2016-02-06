@@ -125,7 +125,7 @@ Background.prototype.draw = function (ctx) {
     ctx.fillStyle = "white";
 
     ctx.fillText("Wave: " + globals.wave, 200, 60);
-    ctx.fillText("Kills: " + globals.killCount, 10, 60)
+    ctx.fillText("Kills: " + globals.killCount, 10, 60);
     //ctx.fillText("Mute me", 10, 80).ondblclick.apply(document.getElementById("soundFX").muted = true);
 
     if (globals.player.health >= 0) {
@@ -142,7 +142,7 @@ Background.prototype.draw = function (ctx) {
     if (globals.player.health === 0) {
         ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white"
+        ctx.fillStyle = "white";
         ctx.font = "50px Courier New";
         ctx.fillText("YOU DEAD HOMIE rip", 235, canvas.height / 2);
     }
@@ -279,6 +279,7 @@ PowerUp.prototype.update = function () {
     // drops HP accordingly
     this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
 
+
     // Player picks up HP
     if (this.isCollidingWith(globals.player)) {
         switch (this.type) {
@@ -290,6 +291,7 @@ PowerUp.prototype.update = function () {
         this.audio.play();
         this.removeFromWorld = true;
     }
+
 };
 
 PowerUp.prototype.draw = function (ctx) {
@@ -325,12 +327,10 @@ function Zombie(game) {
     this.isDead = false;
     this.speed = 5;
 
-
     this.radius = 20;
     this.ground = 500;
-    this.x = randomInt(750); //hardcoded for prototype zombie
-    this.y = randomInt(750); //TODO come up with a zombie spawning system using timers or something
-
+    this.x = randomInt(950); //hardcoded for prototype zombie
+    this.y = randomInt(950); //TODO come up with a zombie spawning system using timers or something
 
     //TODO create speedScale variable so zombies of different types can have different speeds
     //EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.
@@ -553,10 +553,7 @@ Zombie.prototype.collideOtherZombies = function () {
 
                 this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
                     this.y + (this.animations.idle.frameHeight / 2));
-
-
             }
-
 
         }
     }
@@ -763,7 +760,6 @@ Player.prototype.update = function () {
 
     }
 
-
     Entity.prototype.update.call(this);
 };
 /**
@@ -813,7 +809,6 @@ Player.prototype.draw = function (ctx) {
                 if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
                 this.audio.play();
                 this.health -= 5;
-
 
                 if (this.health <= 0) {
                     this.audio.src = "./sound/death.wav";

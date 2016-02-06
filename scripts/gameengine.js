@@ -159,7 +159,7 @@ GameEngine.prototype.update = function () {
         this.addEntity(zombie);
     }*/
 
-    //update entitiesaaa
+    //update entities
 
     this.updateEntitiesIn(this.entities);
 
