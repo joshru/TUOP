@@ -223,21 +223,21 @@ Hitbox.prototype.getCollisionDirection = function(other) {
 function PowerUp(game, other, type) {
     this.game = game;
     this.name = "PowerUp";
-    this.radius = 15;
+    this.radius = 25;
     this.type = type;
     this.x = other.x;
     this.y = other.y;
+    this.sprite = null;
 
     this.animations = {};
     switch(type) {
         case "hp":
-            this.animations.idle =
-                new Animation(ASSET_MANAGER.getAsset("./img/hp-heart.png"), 0, 0, 64, 56, 1, 1, true, false);
+            this.sprite = ASSET_MANAGER.getAsset("./img/hp-heart.png");
             break;
     }
 
-    var hbX = this.x + (this.animations.idle.frameWidth / 2);
-    var hbY = this.y + (this.animations.idle.frameHeight / 2);
+    var hbX = this.x;
+    var hbY = this.y;
 
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
@@ -246,7 +246,7 @@ function PowerUp(game, other, type) {
 
 PowerUp.prototype.update = function() {
     // drops HP accordingly
-    this.hitbox.updateXY(this.x, this.y);
+    this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
 
     // Player picks up HP
     if (this.isCollidingWith(globals.player)) {
@@ -261,11 +261,14 @@ PowerUp.prototype.update = function() {
 
 PowerUp.prototype.draw = function (ctx) {
     if (globals.debug) this.hitbox.draw(ctx);
+
+    ctx.drawImage(this.sprite, this.x, this.y);
+
     Entity.prototype.draw.call(this)
 }
 
 PowerUp.prototype.isCollidingWith = function (entity) {
-    return distance(this.hitbox, entity) < this.hitbox.radius + entity.hitbox.radius;
+    return distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius;
 };
 
 function Zombie(game) {
@@ -423,7 +426,7 @@ Zombie.prototype.die = function () {
 
     // TODO random chance HP drops when zombie dies
     var chance = randomInt(10) + 1;
-    if (chance < 11) {
+    if (chance < 7) {
         // TODO this will turn into a switch at some point to change types
         this.game.addEntity(new PowerUp(this.game, this, "hp"));
     }
@@ -1015,7 +1018,7 @@ ASSET_MANAGER.queueDownload("./sound/usp.wav");
 
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 
-ASSET_MANAGER.queueDownload("./img/hp-heart.png")
+ASSET_MANAGER.queueDownload("./img/hp-heart.png");
 
 //var player;
 
