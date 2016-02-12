@@ -80,6 +80,10 @@ GameEngine.prototype.startInput = function () {
             console.log("GE: R pressed");
             that.RELOAD = true;
         }
+        if (e.which === 2){
+            console.log("GE: 2 pressed");
+            that.ASSAULT = true;
+        }
         e.preventDefault();
     }, false);
 
@@ -93,6 +97,8 @@ GameEngine.prototype.startInput = function () {
         e.preventDefault();
 
     }, false);
+
+
 
     this.ctx.canvas.addEventListener("mousedown", function(e) {
       //  if (e.button == 0) that.leftClick = true;

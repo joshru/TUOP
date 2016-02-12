@@ -32,6 +32,11 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
             this.radius = 5;
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
             break;
+        case 'assault rifle':
+            this.speed = 15;
+            this.damage = 25;
+            this.radius = 5;
+            this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
         default:
             break;
 
