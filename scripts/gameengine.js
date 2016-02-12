@@ -30,6 +30,13 @@ Timer.prototype.tick = function () {
 };
 
 function GameEngine() {
+   this.gameStates = {
+       PAUSED:false,
+       GAMEOVER:false,
+       SPEED:1.0
+   } ;
+
+
     this.entities = [];
     this.bullets = [];//testing best place to put this
     this.showOutlines = false;
@@ -178,9 +185,12 @@ GameEngine.prototype.update = function () {
 };
 
 GameEngine.prototype.loop = function () {
-    this.clockTick = this.timer.tick();
-    this.update();
-    this.draw();
+
+    if (!this.gameStates.PAUSED && !this.gameStates.GAMEOVER) {
+        this.clockTick = this.timer.tick();
+        this.update();
+        this.draw();
+    }
     //this.space = null;
 };
 

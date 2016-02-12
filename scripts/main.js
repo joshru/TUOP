@@ -171,6 +171,7 @@ var Key = {
     LEFT: 65, //a
     R: 82, //R
     H: 72, //H
+    P: 80,
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];
@@ -220,6 +221,9 @@ window.addEventListener('keydown', function (event) {
     if (event.which === 82) {
         globals.player.game.RELOAD = true;
     }
+    //P key
+    if (event.keyCode === Key.P) globals.player.game.gameStates.PAUSED ^= true;
+
     if (event.which === Key.H) {
         globals.debug ^= true;
     }
