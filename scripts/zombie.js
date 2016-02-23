@@ -124,6 +124,7 @@ Zombie.prototype.update = function () {
     //accordingly
     if (this.health <= 0) this.die();
 };
+
 /**
  * Draw for the game loop
  * @param ctx
