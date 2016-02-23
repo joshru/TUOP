@@ -46,7 +46,7 @@ function GameEngine() {
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
-    this.powerupClock = 0;
+    this.powerUpClock = 0;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -194,10 +194,10 @@ GameEngine.prototype.update = function () {
 GameEngine.prototype.loop = function () {
 
     this.clockTick = this.timer.tick();
-    this.powerupClock++;
+    this.powerUpClock++;
 
     if (globals.player.godlike) {
-        if (this.powerupClock % 60 === 0 && globals.powerUpTime != 0) {
+        if (this.powerUpClock % 60 === 0 && globals.powerUpTime != 0) {
             globals.powerUpTime -= 1;
             console.log(globals.powerUpTime);
         }
