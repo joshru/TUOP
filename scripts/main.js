@@ -7,6 +7,7 @@ var globals = {
     wave: 0,
     killCount: 0,
     zombieDeathCount: 0,
+    mute: false,
     debug: false
 };
 
@@ -28,11 +29,9 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
  * @param a first entity
  * @param b second entity
  * @shoutout Marriot
- *
  */
 function distance(a, b) {
     // console.log("Received parameters: (" + a.x + "," + a.y + ") , (" + b.x + "," + b.y + ")");
-
     var dx = Math.abs(a.x - b.x);
     var dy = Math.abs(a.y - b.y);
     return Math.sqrt(dx * dx + dy * dy);
@@ -67,7 +66,6 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     //console.log("Mouse X: " + globals.mousePosition.x + " | Mouse Y: " + globals.mousePosition.y);
 
     //ROTATION HANDLED HERE
-
     //Negating these arguments makes him face the mouse instead of the opposite direction.
     var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x) - 50);
 
@@ -238,6 +236,8 @@ window.addEventListener('mousemove', function (event) {
     globals.mousePosition = getMousePos(document.getElementById('gameWorld'), event);
 }, false);
 
+var muteButton = document.getElementById('muteToggle');
+muteButton.addEventListener('click', function() { globals.mute ^= true });
 
 // the "main" code begins here
 

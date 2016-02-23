@@ -1,4 +1,5 @@
 /**
+/**
  * Created by Josh on 2/10/2016.
  */
 /**
@@ -50,7 +51,11 @@ PowerUp.prototype.update = function () {
                 this.audio.src = "./sound/hpup.wav";
                 break;
         }
-        this.audio.play();
+
+        if (!globals.mute) {
+            this.audio.play();
+        }
+
         this.removeFromWorld = true;
     }
 

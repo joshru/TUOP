@@ -112,8 +112,12 @@ Player.prototype.update = function () {
 
         this.state = this.states.SHOOTING;
         this.shoot(globals.mousePosition.x, globals.mousePosition.y);
-        this.audio.src = "./sound/usp.wav";
-        this.audio.play();
+
+        if (!globals.mute) {
+            this.audio.src = "./sound/usp.wav";
+            this.audio.play();
+        }
+
         this.game.leftClick = false;
     }
 
@@ -170,13 +174,17 @@ Player.prototype.draw = function (ctx) {
                     this.x -= knockback;
                 }
 
-                if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
-                this.audio.play();
+                if (!globals.mute) {
+                    if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
+                    this.audio.play();
+                }
                 this.health -= 5;
 
                 if (this.health <= 0) {
-                    this.audio.src = "./sound/death.wav";
-                    this.audio.play();
+                    if (!globals.mute) {
+                        this.audio.src = "./sound/death.wav";
+                        this.audio.play();
+                    }
                     this.removeFromWorld = true;
                 }
             }
@@ -187,6 +195,7 @@ Player.prototype.draw = function (ctx) {
 
     Entity.prototype.draw.call(this);
 };
+
 //TODO use HitBox version instead
 Player.prototype.isCollidingWith = function (entity) {
     var collisions = {
