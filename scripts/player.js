@@ -25,6 +25,8 @@ function Player(game, scale) {
         CURRENT_GUN: 'pistol'
     };
 
+
+
     this.state = this.states.IDLE;
     this.animations = {};
 
@@ -108,18 +110,50 @@ Player.prototype.update = function () {
     }
 
     if (this.game.leftClick) {
-        if (globals.debug) console.log("shooting");
+        if (!this.game.CURRENT_GUN == "assault rifle") {
+            if (globals.debug) console.log("shooting");
 
-        this.state = this.states.SHOOTING;
-        this.shoot(globals.mousePosition.x, globals.mousePosition.y);
+            this.state = this.states.SHOOTING;
+            this.shoot(globals.mousePosition.x, globals.mousePosition.y);
 
-        if (!globals.mute) {
-            this.audio.src = "./sound/usp.wav";
-            this.audio.play();
+            if (!globals.mute) {
+                this.audio.src = "./sound/usp.wav";
+                this.audio.play();
+            }
+
+            this.game.leftClick = false;
+        }
+    }
+    if(this.game.ASSAULT === true){
+        var mouseStillDown = false;
+
+        $(document).mousedown(function(event) {
+            mouseStillDown = true;
+            fireAssault();
+        });
+
+        function fireAssault() {
+            if (!mouseStillDown) { return; } // we could have come back from
+                                             // SetInterval and the mouse is no longer down
+            this.state = this.states.SHOOTING;
+            this.shoot(globals.mousePosition.x, globals.mousePosition.y);
+
+            if (!globals.mute) {
+                this.audio.src = "./sound/usp.wav";
+                this.audio.play();
+            }
+
+            if (mouseStillDown) { setInterval("fireAssault()", 100); }
         }
 
-        this.game.leftClick = false;
+        $(document).mouseup(function(event) {
+            mouseStillDown = false;
+        });
+
+
+
     }
+
 
     if (this.animations.reloadPistol.isDone()) {
         this.game.RELOAD = false;
@@ -127,6 +161,8 @@ Player.prototype.update = function () {
         this.state = this.states.IDLE;
 
     }
+
+    if (this.game.ASSAULT === true)this.states.CURRENT_GUN = "assault rifle";
 
     Entity.prototype.update.call(this);
 };

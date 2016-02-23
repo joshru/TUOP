@@ -101,7 +101,7 @@ GameEngine.prototype.startInput = function () {
 
 
     this.ctx.canvas.addEventListener("mousedown", function(e) {
-      //  if (e.button == 0) that.leftClick = true;
+       if (e.button == 0) that.mousedown = true;
         e.preventDefault();
 
     }, false);
