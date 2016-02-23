@@ -55,7 +55,7 @@ PowerUp.prototype.update = function () {
                 break;
             case "godlike":
                 globals.player.godlike = true;
-                globals.powerUpTime = 15;
+                globals.powerUpTime.godlike += 20;
                 this.audio.src = "./sound/godlike.wav";
                 break;
         }

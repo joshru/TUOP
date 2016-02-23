@@ -197,11 +197,10 @@ GameEngine.prototype.loop = function () {
     this.powerUpClock++;
 
     if (globals.player.godlike) {
-        if (this.powerUpClock % 60 === 0 && globals.powerUpTime != 0) {
-            globals.powerUpTime -= 1;
-            console.log(globals.powerUpTime);
+        if (this.powerUpClock % 60 === 0 && globals.powerUpTime.godlike != 0) {
+            globals.powerUpTime.godlike -= 1;
         }
-        if (globals.powerUpTime === 0)
+        if (globals.powerUpTime.godlike === 0)
             globals.player.godlike = false;
     }
 

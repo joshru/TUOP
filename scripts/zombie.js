@@ -124,7 +124,8 @@ Zombie.prototype.update = function () {
     //TODO create dying animation and stuff
     //Do this by setting dying=true; then have a conditional that checks for dying and changes the animation
     //accordingly
-    if (this.health <= 0) this.die();
+    if (this.health <= 0)
+        this.die();
 };
 /**
  * Draw for the game loop
@@ -162,12 +163,13 @@ Zombie.prototype.isCollidingWith = function (bullet) {
 /**
  * Takes care of behavior of moving the zombie onto the after-afterlife.
  */
-Zombie.prototype.die = function () {
+Zombie.prototype.die = function (powerUpSpawn) {
     // stops zombies and moves hitbox out of canvas
     this.isDead = true;
     this.hitbox.updateXY(undefined, undefined);
     this.hitbox.radius = undefined;
-    this.velocity.x = 0; this.velocity.y = 0;
+    this.velocity.x = 0;
+    this.velocity.y = 0;
 
     if (this.animations.dying.isDone()) {
         this.removeFromWorld = true;
@@ -190,7 +192,7 @@ Zombie.prototype.die = function () {
         if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
         if (globals.zombieDeathCount === globals.fibs.currFib) {
             // see in Background.prototype.draw for wave counter
-            globals.wave++;
+            globals.wave++
 
             if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
             //update previous and current fibonacci numbers
@@ -201,6 +203,7 @@ Zombie.prototype.die = function () {
             for (var i = 0; i < globals.fibs.currFib; i++) {
                 this.game.addEntity(new Zombie(this.game));
             }
+
             globals.zombieDeathCount = 0;
         }
         //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
