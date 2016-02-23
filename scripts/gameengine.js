@@ -106,6 +106,12 @@ GameEngine.prototype.startInput = function () {
 
     }, false);
 
+    this.ctx.canvas.addEventListener("mouseup", function(e) {
+        if (e.button !== 0) that.mouseup = true;
+        e.preventDefault();
+
+    }, false);
+
 
     //stop context menu from opening when user right clicks
     this.ctx.canvas.addEventListener("contextmenu", function(e) {

@@ -110,7 +110,7 @@ Player.prototype.update = function () {
     }
 
     if (this.game.leftClick) {
-        if (!this.game.CURRENT_GUN == "assault rifle") {
+        if (this.game.CURRENT_GUN !== "assault rifle") {
             if (globals.debug) console.log("shooting");
 
             this.state = this.states.SHOOTING;
@@ -127,7 +127,7 @@ Player.prototype.update = function () {
     if(this.game.ASSAULT === true){
         var mouseStillDown = false;
 
-        $(document).mousedown(function(event) {
+        this.game.mousedown(function(event) {
             mouseStillDown = true;
             fireAssault();
         });
@@ -146,7 +146,7 @@ Player.prototype.update = function () {
             if (mouseStillDown) { setInterval("fireAssault()", 100); }
         }
 
-        $(document).mouseup(function(event) {
+        this.game.mouseup(function(event) {
             mouseStillDown = false;
         });
 
