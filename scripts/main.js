@@ -7,7 +7,7 @@ var globals = {
     wave: 0,
     killCount: 0,
     zombieDeathCount: 0,
-    mute: false,
+    mute: true,
     debug: false
 };
 
@@ -252,6 +252,7 @@ ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
 ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
+ASSET_MANAGER.queueDownload("./img/running.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");

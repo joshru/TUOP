@@ -32,6 +32,7 @@ function Player(game, scale) {
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260, 230, .15, 16, true, false);
     this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 0, 0, 300, 238, 0.2, 6, true, false);
     this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241, .13, 15, false, false);
+    this.animations.runFeet = new Animation(ASSET_MANAGER.getAsset("./img/running.png"), 0, 0, 204, 124, 0.1, 20, true, false);
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 200 * this.scale;
@@ -99,7 +100,7 @@ Player.prototype.handleMovementInput = function () {
 Player.prototype.update = function () {
     this.handleMovementInput();
 
-    if (!Key.keyPressed()) this.state = this.states.IDLE;
+    if (!this.states.MOVING) this.state = this.states.IDLE;
 
 
     if (this.game.RELOAD) {
@@ -136,18 +137,23 @@ Player.prototype.update = function () {
  */
 Player.prototype.draw = function (ctx) {
     if (this.state === this.states.IDLE) {
+        //this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
         this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
     if (this.state === this.states.SHOOTING) {
+        this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
         this.animations.shootPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
     if (this.state === this.states.MOVING) {
+        this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
         this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+
     }
 
     if (this.state === this.states.RELOADING) {
+        this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
         this.animations.reloadPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
     }
 
