@@ -6,6 +6,7 @@ var globals = {
     fibs: {fib1: 0, fib2: 1, currFib: 1},
     wave: 0,
     killCount: 0,
+    powerUpTime: {godlike: 0},
     zombieDeathCount: 0,
     mute: false,
     debug: false
@@ -84,7 +85,6 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
         this.frameHeight * scaleBy);
 
     ctx.restore();
-
 };
 
 Animation.prototype.currentFrame = function () {
@@ -117,33 +117,43 @@ Background.prototype.draw = function (ctx) {
 
     ctx.drawImage(this.bg, 0, 0);
 
-    // for wave counter
-
-    ctx.font = "30px Courier New";
-    ctx.fillStyle = "white";
-
-    ctx.fillText("Wave: " + globals.wave, 200, 60);
-    ctx.fillText("Kills: " + globals.killCount, 10, 60);
     //ctx.fillText("Mute me", 10, 80).ondblclick.apply(document.getElementById("soundFX").muted = true);
 
+    /* Screen get's bloodier */
     if (globals.player.health >= 0) {
-        ctx.fillText("Player Health: " + globals.player.health, 10, 30);
-        /* for blood - we don't need this if you guys don't like it
-         * decrease the first hardcoded number to lower threshold */
         opacity += 0.3 - (globals.player.health / 100);
-        // for testing numbers:
-        // this.game.ctx.fillText(opacity, 10, 100);
         ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "30px Courier New";
+        ctx.fillStyle = "white";
+        ctx.fillText("Player Health: " + globals.player.health, 10, 30);
     }
-    /*Display player health*/
-    if (globals.player.health === 0) {
+
+    /* Display Player health */
+    if (globals.player.health <= 0) {
         ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white";
         ctx.font = "50px Courier New";
         ctx.fillText("YOU DEAD HOMIE rip", 235, canvas.height / 2);
+        // line below stops updating the game (we can keep this or lose this).
+        this.game.gameStates.GAMEOVER = true;
     }
+
+    /* Display Godlike */
+    if (globals.player.godlike) {
+        ctx.fillStyle = "rgba(255, 255, 58, " + 0.15 + ")";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "30px Courier New";
+        ctx.fillStyle = "white";
+        ctx.fillText("GODLIKE: " + globals.powerUpTime.godlike, 10, 90);
+    }
+
+    /* Display Wave and Kills */
+    ctx.font = "30px Courier New";
+    ctx.fillStyle = "white";
+    ctx.fillText("Wave: " + globals.wave, 200, 60);
+    ctx.fillText("Kills: " + globals.killCount, 10, 60);
 
     Entity.prototype.draw.call(this);
 };
@@ -255,10 +265,12 @@ ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
-ASSET_MANAGER.queueDownload("./img/hp-heart.png");
+ASSET_MANAGER.queueDownload("./img/powerups/hp-heart.png");
+ASSET_MANAGER.queueDownload("./img/powerups/godlike.png");
 
 //sounds
 ASSET_MANAGER.queueDownload("./sound/usp.wav");
+ASSET_MANAGER.queueDownload("./sound/godlike.wav");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");

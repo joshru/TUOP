@@ -24,7 +24,10 @@ function PowerUp(game, other, type) {
     //Will be more types later
     switch (type) {
         case "hp":
-            this.sprite = ASSET_MANAGER.getAsset("./img/hp-heart.png");
+            this.sprite = ASSET_MANAGER.getAsset("./img/powerups/hp-heart.png");
+            break;
+        case "godlike":
+            this.sprite = ASSET_MANAGER.getAsset("./img/powerups/godlike.png");
             break;
     }
 
@@ -43,12 +46,17 @@ PowerUp.prototype.update = function () {
     this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
 
 
-    // Player picks up HP
+    // Player picks up power up
     if (this.isCollidingWith(globals.player)) {
         switch (this.type) {
             case "hp":
                 globals.player.health += 10;
                 this.audio.src = "./sound/hpup.wav";
+                break;
+            case "godlike":
+                globals.player.godlike = true;
+                globals.powerUpTime.godlike += 20;
+                this.audio.src = "./sound/godlike.wav";
                 break;
         }
 
@@ -58,7 +66,6 @@ PowerUp.prototype.update = function () {
 
         this.removeFromWorld = true;
     }
-
 };
 
 PowerUp.prototype.draw = function (ctx) {
