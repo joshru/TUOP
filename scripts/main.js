@@ -6,6 +6,7 @@ var globals = {
     fibs: {fib1: 0, fib2: 1, currFib: 1},
     wave: 0,
     killCount: 0,
+    powerUpTime: 0,
     zombieDeathCount: 0,
     mute: false,
     debug: false
@@ -84,7 +85,6 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
         this.frameHeight * scaleBy);
 
     ctx.restore();
-
 };
 
 Animation.prototype.currentFrame = function () {
@@ -136,13 +136,23 @@ Background.prototype.draw = function (ctx) {
         ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-    /*Display player health*/
-    if (globals.player.health === 0) {
+    /*Display Player health*/
+    if (globals.player.health <= 0) {
         ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white";
         ctx.font = "50px Courier New";
         ctx.fillText("YOU DEAD HOMIE rip", 235, canvas.height / 2);
+        // line below stops updating the game (we can keep this or lose this).
+        this.game.gameStates.GAMEOVER = true;
+    }
+    /* Display Godlike */
+    if (globals.player.godlike) {
+        ctx.fillStyle = "rgba(255, 255, 58, " + 0.15 + ")";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "white";
+        ctx.font = "16px Courier New";
+        ctx.fillText("GODLIKE", 735, canvas.height / 2);
     }
 
     Entity.prototype.draw.call(this);
@@ -255,10 +265,12 @@ ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
-ASSET_MANAGER.queueDownload("./img/hp-heart.png");
+ASSET_MANAGER.queueDownload("./img/powerups/hp-heart.png");
+ASSET_MANAGER.queueDownload("./img/powerups/godlike.png");
 
 //sounds
 ASSET_MANAGER.queueDownload("./sound/usp.wav");
+ASSET_MANAGER.queueDownload("./sound/godlike.wav");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");

@@ -31,9 +31,9 @@ Timer.prototype.tick = function () {
 
 function GameEngine() {
    this.gameStates = {
-       PAUSED:false,
-       GAMEOVER:false,
-       SPEED:1.0
+       PAUSED: false,
+       GAMEOVER: false,
+       SPEED: 1.0
    } ;
 
 
@@ -46,6 +46,7 @@ function GameEngine() {
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+    this.powerupClock = 0;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -192,11 +193,22 @@ GameEngine.prototype.update = function () {
 
 GameEngine.prototype.loop = function () {
 
-    if (!this.gameStates.PAUSED && !this.gameStates.GAMEOVER) {
-        this.clockTick = this.timer.tick();
-        this.update();
-        this.draw();
+    this.clockTick = this.timer.tick();
+    this.powerupClock++;
+
+    if (globals.player.godlike) {
+        if (this.powerupClock % 60 === 0 && globals.powerUpTime != 0) {
+            globals.powerUpTime -= 1;
+            console.log(globals.powerUpTime);
+        }
+        if (globals.powerUpTime === 0)
+            globals.player.godlike = false;
     }
+
+    if (!this.gameStates.PAUSED && !this.gameStates.GAMEOVER) {
+        this.update();
+    }
+    this.draw();
     //this.space = null;
 };
 

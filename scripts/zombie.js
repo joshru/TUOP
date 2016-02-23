@@ -79,6 +79,8 @@ Zombie.prototype.update = function () {
 
     }
     //player dead, bounce off walls
+    // this isn't necessary if we stop updating when the player isn't dead anymore
+    // heh
     else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
         this.velocity.x = -this.velocity.x * friction;
 
@@ -176,7 +178,12 @@ Zombie.prototype.die = function () {
         var chance = randomInt(10) + 1;
         if (chance > 8) {
             // TODO this will turn into a switch at some point to change types
-            this.game.addEntity(new PowerUp(this.game, this, "hp"));
+            // TODO currently 20% chance of godlike, 80% hp
+            chance = randomInt(10) + 1;
+            if (chance > 2)
+                this.game.addEntity(new PowerUp(this.game, this, "hp"));
+            else
+                this.game.addEntity(new PowerUp(this.game, this, "godlike"));
         }
 
         // var currentFib = globals.fib1 + globals.fib2;
