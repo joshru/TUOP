@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -7,10 +7,6 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
     <!--<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">-->
-
-    <script type="text/javascript" src="./scripts/gameengine.js"></script>
-    <script type="text/javascript" src="./scripts/assetmanager.js"></script>
-    <script type="text/javascript" src="./scripts/main.js"></script>
 
     <title>491 Red Team Five Project</title>
 </head>
@@ -29,6 +25,7 @@
         </section>
     </div>
 </header>
+
 <ul>
     <div style="text-align: center;">
     <h2>Features: </h2>
@@ -36,19 +33,48 @@
         <h4>• Bullets!</h4>
         <h4>• Health Pickups!</h4>
         <h4>• Sound Effects!</h4>
-        <h4>• Fibonacci Sequence Spawning!!</h4>
+        <h4>• Fibonacci Sequence Spawning!</h4>
     </div>
 
+    <br><br>
     <li>VOLUME WARNING!! All our sound effects are quite loud right now, you've been warned...</li>
     <li>Move the player around with W A S D. Shoot with left click. Press H to toggle debug mode.</li>
 </ul>
+<div class="wrapper" style="text-align: center;">
+    <button name="mute" id="muteToggle">Mute</button>
+</div>
+
 <canvas id="gameWorld" tabindex="1" width="1000" height="1000" style="width:1000px; height:1000px;border: 5px solid black;"></canvas>
+
 <audio id="soundFX" style="display: none;"></audio>
 
-<div style="text-align: center;">
-    <li>Bugs: If a zombie is killed on top of a health drop he will pick it up for you, we tried fix it but can't find the reason right now. Will fix later.</li>
-    <li>Features to come: More guns, more animations, movement within a much larger map (close to finished but not polished enough for this submission), better item drops, and much more!</li>
-    <p></p>
-    Project maintained by Brandon Bell, Ian Henderson, Jef LeCompte, and Josh Rueschenberg</div>
+<ul>
+    <h2><span style="text-decoration: underline;">Bugs</span></h2>
+    <li>Power Ups cannot be picked up while a zombie is dying.</li>
+    <li>Power Ups are picked up from a dying zombie while they are idle on ground.</li>
+
+    <br><br>
+    <h2><span style="text-decoration: underline;">Features to come</span></h2>
+    <li>More guns.</li>
+    <li>More animations</li>
+    <li>Movement within a much larger map (close to finished but not polished enough for this submission).</li>
+    <li>Better item drops.</li>
+    <li>And much more!</li>
+
+    <br><br>
+    <div style="text-align: center;">
+        <h2>Project maintained by Brandon Bell, Ian Henderson, Jef LeCompte, and Josh Rueschenber</h2>
+    </div>
+</ul>
+
+<script type="text/javascript" src="./scripts/gameengine.js"></script>
+<script type="text/javascript" src="./scripts/assetmanager.js"></script>
+<script type="text/javascript" src="./scripts/main.js"></script>
+<script type="text/javascript" src="./scripts/player.js"></script>
+<script type="text/javascript" src="./scripts/bullet.js"></script>
+<script type="text/javascript" src="./scripts/zombie.js"></script>
+<script type="text/javascript" src="./scripts/powerup.js"></script>
+<script type="text/javascript" src="./scripts/hitbox.js"></script>
+
 </body>
 </html>

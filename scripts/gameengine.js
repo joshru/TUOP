@@ -30,6 +30,13 @@ Timer.prototype.tick = function () {
 };
 
 function GameEngine() {
+   this.gameStates = {
+       PAUSED: false,
+       GAMEOVER: false,
+       SPEED: 1.0
+   } ;
+
+
     this.entities = [];
     this.bullets = [];//testing best place to put this
     this.showOutlines = false;
@@ -39,6 +46,7 @@ function GameEngine() {
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+    this.powerUpClock = 0;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -73,6 +81,10 @@ GameEngine.prototype.startInput = function () {
             console.log("GE: R pressed");
             that.RELOAD = true;
         }
+        if (e.which === 2){
+            console.log("GE: 2 pressed");
+            that.ASSAULT = true;
+        }
         e.preventDefault();
     }, false);
 
@@ -86,6 +98,8 @@ GameEngine.prototype.startInput = function () {
         e.preventDefault();
 
     }, false);
+
+
 
     this.ctx.canvas.addEventListener("mousedown", function(e) {
       //  if (e.button == 0) that.leftClick = true;
@@ -178,8 +192,21 @@ GameEngine.prototype.update = function () {
 };
 
 GameEngine.prototype.loop = function () {
+
     this.clockTick = this.timer.tick();
-    this.update();
+    this.powerUpClock++;
+
+    if (globals.player.godlike) {
+        if (this.powerUpClock % 60 === 0 && globals.powerUpTime.godlike != 0) {
+            globals.powerUpTime.godlike -= 1;
+        }
+        if (globals.powerUpTime.godlike === 0)
+            globals.player.godlike = false;
+    }
+
+    if (!this.gameStates.PAUSED && !this.gameStates.GAMEOVER) {
+        this.update();
+    }
     this.draw();
     //this.space = null;
 };
