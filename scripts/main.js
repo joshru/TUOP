@@ -253,11 +253,11 @@ muteButton.addEventListener('click', function() { globals.mute ^= true });
 
 var ASSET_MANAGER = new AssetManager();
 
-//terrain
+// terrain
 ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
 
-//animations
+// animations
 ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
@@ -265,10 +265,15 @@ ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
+
+// splash screen
+ASSET_MANAGER.queueDownload("./img/welcome-splash.png");
+
+// power ups
 ASSET_MANAGER.queueDownload("./img/powerups/hp-heart.png");
 ASSET_MANAGER.queueDownload("./img/powerups/godlike.png");
 
-//sounds
+// sounds
 ASSET_MANAGER.queueDownload("./sound/usp.wav");
 ASSET_MANAGER.queueDownload("./sound/godlike.wav");
 
@@ -277,16 +282,41 @@ ASSET_MANAGER.downloadAll(function () {
     var canvas = document.getElementById('gameWorld');
 
     var ctx = canvas.getContext('2d');
-    ctx.font = "48px serif";
 
-    var gameEngine = new GameEngine();
-    globals.player = new Player(gameEngine, 0.5);
-    var bg = new Background(gameEngine);
+    /* for splash screen and start */
+    var startText = {
+        x: 420, // 420 heh
+        y: canvas.height / 2 - 50,
+        w: 150,
+        h: 30
+    };
 
-    gameEngine.addEntity(bg);
-    gameEngine.addEntity(new Zombie(gameEngine));
-    gameEngine.addEntity(globals.player);
+    canvas.addEventListener("mousedown", fireUpTheEnginesBoys, false);
 
-    gameEngine.init(ctx);
-    gameEngine.start();
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/welcome-splash.png"), 0, 0);
+    ctx.fillStyle = "white";
+    ctx.font = "50px Courier New";
+    ctx.fillText("START", startText.x, startText.y);
+
+    function fireUpTheEnginesBoys(event) {
+        var rect = canvas.getBoundingClientRect();
+        var canvas_x = Math.round(event.clientX - rect.left);
+        var canvas_y = Math.round(event.clientY - rect.top);
+
+        console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
+        if (canvas_x >= startText.x && canvas_x <= startText.x + startText.w &&
+                canvas_y >= startText.y - startText.h && canvas_y <= startText.y) {
+            startText = {x: undefined, y: undefined, w: undefined, h: undefined};
+            var gameEngine = new GameEngine();
+            globals.player = new Player(gameEngine, 0.5);
+            var bg = new Background(gameEngine);
+
+            gameEngine.addEntity(bg);
+            gameEngine.addEntity(new Zombie(gameEngine));
+            gameEngine.addEntity(globals.player);
+
+            gameEngine.init(ctx);
+            gameEngine.start();
+        }
+    }
 });
