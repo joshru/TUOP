@@ -137,7 +137,7 @@ Background.prototype.draw = function (ctx) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     /*Display player health*/
-    if (globals.player.health === 0) {
+    if (globals.player.health <= 0) {
         ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white";
@@ -252,7 +252,9 @@ ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
 ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
-ASSET_MANAGER.queueDownload("./img/running.png");
+ASSET_MANAGER.queueDownload("./img/hgun_flash.png");
+ASSET_MANAGER.queueDownload("./img/moving_feet.png");
+ASSET_MANAGER.queueDownload("./img/idle_feet.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
