@@ -12,6 +12,7 @@ function Player(game, scale) {
     this.name = "Player";
     this.scale = scale || 1;
     this.stepDistance = 5;
+    this.scrollStep = 2;
     this.health = 100;
     this.godlike = false;
 
@@ -19,10 +20,10 @@ function Player(game, scale) {
 
 
     this.states = {
-        IDLE: 0,
-        MOVING: 1,
-        SHOOTING: 2,
-        RELOADING: 3,
+        IDLE:         0,
+        MOVING:       1,
+        SHOOTING:     2,
+        RELOADING:    3,
         CURRENT_GUN: 'pistol'
     };
 
@@ -79,32 +80,77 @@ Player.prototype.move = function (xTrans, yTrans) {
  * Checks for movement input
  */
 Player.prototype.handleMovementInput = function () {
+    var bgX = globals.background.x;
+    var bgY = globals.background.y;
+    var centerX = this.game.ctx.canvas.width / 2;
+    var centerY = this.game.ctx.canvas.height / 2;
+
     if (Key.isDown(Key.RIGHT)) {
         this.state = this.states.MOVING;
-        this.move(this.stepDistance, 0);
+        if (bgX === -9000 || this.hitbox.x < centerX) {
+            globals.background.scrolling = false;
+            this.move(this.stepDistance, 0);
+        } else {
+            globals.background.scrolling = true;
+            this.move(this.scrollStep, 0);
+        }
     }
     if (Key.isDown(Key.LEFT)) {
         this.state = this.states.MOVING;
-        this.move(-this.stepDistance, 0);
+        if (bgX === 0 || this.hitbox.x > centerX) {
+            globals.background.scrolling = false;
+            this.move(-this.stepDistance, 0);
+        } else {
+            globals.background.scrolling = true;
+            this.move(-this.scrollStep, 0);
+        }
     }
     if (Key.isDown(Key.UP)) {
         this.state = this.states.MOVING;
-        this.move(0, -this.stepDistance);
+        if (bgY === 0 || this.hitbox.y > centerY) {
+            globals.background.scrolling = false;
+            this.move(0, -this.stepDistance);
+        } else {
+            globals.background.scrolling = true;
+            this.move(0, -this.scrollStep);
+        }
     }
     if (Key.isDown(Key.DOWN)) {
         this.state = this.states.MOVING;
-        this.move(0, this.stepDistance);
+        if (bgY === -9000 || this.hitbox.y < centerY) {
+            globals.background.scrolling = false;
+            this.move(0, this.stepDistance);
+        } else {
+            globals.background.scrolling = false;
+            this.move(0, this.scrollStep);
+        }
     }
     if (!Key.isDown(Key.RIGHT) && !Key.isDown(Key.LEFT) && !Key.isDown(Key.UP) && !Key.isDown(Key.DOWN)) {
         this.state = this.states.IDLE;
     }
+
+    //this.updateZombies(bgX, bgY);
 };
+
+Player.prototype.updateZombies = function(x, y) {
+    //update all the zombie's XY coords to match the map scrolling
+    for (var i = 0; i < this.game.entities.length; i++) {
+        var current = this.game.entities[i];
+        if (current.name === "Zombie") {
+                current.x += -x;
+                current.y += -y;
+        }
+    }
+};
+
 /**
  * Update for the game loop
  */
 Player.prototype.update = function () {
     this.handleMovementInput();
     this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale)  / 2, this.y + (this.animations.idle.frameHeight * this.scale) / 2);
+
+    //console.log("player x: " + this.x + " | player y: " + this.y);
 
     //if (!this.states.MOVING) this.state = this.states.IDLE;
 

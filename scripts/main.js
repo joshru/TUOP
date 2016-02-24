@@ -1,5 +1,6 @@
 var globals = {
     player: null,
+    background: null,
     mousePosition: {x: 0, y: 0},
     clickPosition: {x: 0, y: 0},
     clickHoldPosition: {x: 0, y: 0},
@@ -97,25 +98,64 @@ Animation.prototype.isDone = function () {
 
 function Background(game) {
     this.name = "Background";
-    Entity.call(this, game, 0, 400);
+    this.game = game;
+    this.x = 0;
+    this.y = 0;
+    this.scrolling = false;
     this.radius = 0;
-    this.bg = ASSET_MANAGER.getAsset("./img/terrain/grass.png");
+    this.bg = ASSET_MANAGER.getAsset("./img/terrain/2048_grass.png");
+    this.width = this.bg.width;
+    this.height = this.bg.height;
+
+    //Entity.call(this, game, 0, 400);
 }
 
 Background.prototype = new Entity();
 Background.prototype.constructor = Background;
 
 Background.prototype.update = function () {
+    var stepDist = 5;
+    //console.log("bg x: " + this.x + " | bg y: " + this.y);
+    if (Key.isDown(Key.RIGHT)) {
+        if (this.x >= -this.width + this.game.ctx.canvas.width + stepDist) {
+            //this.scrolling = true;
+            this.x -= stepDist;
+        } else {
+            //this.scrolling = false;
+        }
+    }
+    if (Key.isDown(Key.LEFT)) {
+        if (this.x <= -stepDist) {
+            //this.scrolling = true;
+            this.x += stepDist;
+        } else {
+            //this.scrolling = false;
+        }
+    }
+    if (Key.isDown(Key.UP)) {
+        if (this.y <= -stepDist) {
+            //this.scrolling = true;
+            this.y += stepDist;
+        } else {
+            //this.scrolling = false;
+        }
+    }
+    if (Key.isDown(Key.DOWN)) {
+        if (this.y >= -this.height + this.game.ctx.canvas.height + stepDist) {
+            //this.scrolling = true;
+            this.y -= stepDist;
+        } else {
+            //this.scrolling = false;
+        }
+    }
+    //console.log("bg x: " + this.x + " | bg y: " + this.y);
 };
 
 Background.prototype.draw = function (ctx) {
-    //ctx.fillStyle = "SaddleBrown";
-    //ctx.fillRect(0,500,800,300);
-    //ctx.font
     var canvas = document.getElementById('gameWorld');
     var opacity = 0;
 
-    ctx.drawImage(this.bg, 0, 0);
+    ctx.drawImage(this.bg, this.x, this.y);
 
     //ctx.fillText("Mute me", 10, 80).ondblclick.apply(document.getElementById("soundFX").muted = true);
 
@@ -157,13 +197,23 @@ Background.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 };
 
+//converts coordinates in game world to coordinates where the sprite should be drawn on screen.
+function worldToScreen(x, y) {
+    return {x: x - globals.background.x, y: y - globals.background.y};
+}
+
+//converts coordinates on the screen to coordinates in the game world as a whole.
+function screenToWorld(x, y) {
+    return {x: x + globals.background.x, y: y + globals.background.y};
+}
+
 /**
  * Generates a random number
  * @param n max
  * @returns {number} int: random number
  */
 function randomInt(n) {
-    return Math.floor(Math.random() * n);
+    return Math.floor(Math.random() * n);df
 }
 /**
  * Global Key object
@@ -255,6 +305,7 @@ var ASSET_MANAGER = new AssetManager();
 // terrain
 ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
+ASSET_MANAGER.queueDownload("./img/terrain/2048_grass.png");
 
 // animations
 ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
@@ -311,9 +362,9 @@ ASSET_MANAGER.downloadAll(function () {
             startText = {x: undefined, y: undefined, w: undefined, h: undefined};
             var gameEngine = new GameEngine();
             globals.player = new Player(gameEngine, 0.5);
-            var bg = new Background(gameEngine);
+            globals.background = new Background(gameEngine);
 
-            gameEngine.addEntity(bg);
+            gameEngine.addEntity(globals.background);
             gameEngine.addEntity(new Zombie(gameEngine));
             gameEngine.addEntity(globals.player);
 

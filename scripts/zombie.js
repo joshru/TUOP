@@ -12,12 +12,14 @@ function Zombie(game) {
     this.states = {};
     this.health = 100;
     this.isDead = false;
+    this.isOnScreen = true;
     this.speed = 5;
 
     this.radius = 20;
     this.ground = 500;
-    this.x = randomInt(950); //hardcoded for prototype zombie
-    this.y = randomInt(950); //TODO come up with a zombie spawning system using timers or something
+    this.x = -randomInt(1245); //hardcoded for prototype zombie
+    this.y = -randomInt(1245); //TODO come up with a zombie spawning system using timers or something
+    console.log("spawning zombie at: " + this.x + ", " + this.y);
 
     //TODO create speedScale variable so zombies of different types can have different speeds
     //EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.
@@ -58,8 +60,13 @@ Zombie.prototype.update = function () {
     if (!this.isDead) {
         this.collideOtherZombies();
 
-        this.x += this.velocity.x * this.game.clockTick;
-        this.y += this.velocity.y * this.game.clockTick;
+        if (!globals.background.scrolling) {
+            this.x += this.velocity.x * this.game.clockTick;
+            this.y += this.velocity.y * this.game.clockTick;
+        } else {
+            this.x = (this.velocity.x * 0.3) * this.game.clockTick;
+            this.y = (this.velocity.y * 0.3) * this.game.clockTick;
+        }
 
         this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
             this.y + (this.animations.idle.frameHeight / 2));
@@ -78,10 +85,11 @@ Zombie.prototype.update = function () {
                 this.y + (this.animations.idle.frameHeight / 2));
 
         }
-        //player dead, bounce off walls
+        // player dead, bounce off walls
         // this isn't necessary if we stop updating when the player isn't dead anymore
         // heh
         else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+
             this.velocity.x = -this.velocity.x * friction;
 
             this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
@@ -171,6 +179,20 @@ Zombie.prototype.update = function () {
 
 };
 
+Zombie.prototype.convertToOffScreen = function() {
+    this.isOnScreen = false;
+    var convert = screenToWorld(this.x, this.y);
+    this.x = convert.x;
+    this.y = convert.y;
+};
+
+Zombie.prototype.convertToOnScreen = function() {
+    this.isOnScreen = true;
+    var convert = worldToScreen(this.x, this.y);
+    this.x = convert.x;
+    this.y = convert.y;
+};
+
 /**
  * Draw for the game loop
  * @param ctx
@@ -178,7 +200,7 @@ Zombie.prototype.update = function () {
 Zombie.prototype.draw = function (ctx) {
 
 
-    if (!this.isDead) {
+    if (!this.isDead && this.isOnScreen) {
         var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
 
         ctx.save();
