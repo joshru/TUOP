@@ -55,125 +55,83 @@ Zombie.prototype.update = function () {
 
     //handle movement and stuff
     //TODO iron this out
+    if (!this.isDead) {
+        this.collideOtherZombies();
 
-    this.collideOtherZombies();
-
-    this.x += this.velocity.x * this.game.clockTick;
-    this.y += this.velocity.y * this.game.clockTick;
-
-    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-        this.y + (this.animations.idle.frameHeight / 2));
-
-    // follow player
-    if (globals.player.health > 0) { //player is alive
-        var dx = globals.player.x - this.x;
-        var dy = globals.player.y - this.y;
-        var pointDistance = Math.sqrt(dx * dx + dy * dy);
-
-        this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
-        this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
-
-        //Not sure how often to do this
-        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-            this.y + (this.animations.idle.frameHeight / 2));
-
-    }
-    //player dead, bounce off walls
-    // this isn't necessary if we stop updating when the player isn't dead anymore
-    // heh
-    else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
-        this.velocity.x = -this.velocity.x * friction;
+        this.x += this.velocity.x * this.game.clockTick;
+        this.y += this.velocity.y * this.game.clockTick;
 
         this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
             this.y + (this.animations.idle.frameHeight / 2));
-    }
-    else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
-        this.velocity.y = -this.velocity.y * friction;
 
-        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-            this.y + (this.animations.idle.frameHeight / 2));
-    }
+        // follow player
+        if (globals.player.health > 0) { //player is alive
+            var dx = globals.player.x - this.x;
+            var dy = globals.player.y - this.y;
+            var pointDistance = Math.sqrt(dx * dx + dy * dy);
 
-    var i;
-    //check if getting shot the F up
-    for (i = 0; i < this.game.bullets.length; i++) {
-        var bullet = this.game.bullets[i];
-        //console.log("Distance From Bullet: " + distance(this, bullet));
+            this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
+            this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
 
-        if (!bullet.spent && this.isCollidingWith(bullet)) {
-            this.health -= bullet.damage;
-            bullet.spent = true;
-            bullet.removeFromWorld = true;
-            if (globals.debug) console.log("You shot me!");
+            //Not sure how often to do this
+            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+                this.y + (this.animations.idle.frameHeight / 2));
+
         }
-    }
+        //player dead, bounce off walls
+        // this isn't necessary if we stop updating when the player isn't dead anymore
+        // heh
+        else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+            this.velocity.x = -this.velocity.x * friction;
 
-    var acceleration = 1000;//TODO add comments explaining this?
+            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+                this.y + (this.animations.idle.frameHeight / 2));
+        }
+        else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
+            this.velocity.y = -this.velocity.y * friction;
 
-    //Handle collision with the player
-    var playerX = globals.player.x;
-    var playerY = globals.player.y;
-    var dist = distance(this, globals.player);
-    if (dist > this.radius + globals.player.radius + 2) {
-        var difX = (playerX - this.x) / dist;
-        var difY = (playerY - this.y) / dist;
-        this.velocity.x += difX * acceleration / (dist * dist);
-        this.velocity.y += difY * acceleration / (dist * dist);
+            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
+                this.y + (this.animations.idle.frameHeight / 2));
+        }
+
+        var i;
+        //check if getting shot the F up
+        for (i = 0; i < this.game.bullets.length; i++) {
+            var bullet = this.game.bullets[i];
+            //console.log("Distance From Bullet: " + distance(this, bullet));
+
+            if (!bullet.spent && this.isCollidingWith(bullet)) {
+                this.health -= bullet.damage;
+                bullet.spent = true;
+                bullet.removeFromWorld = true;
+                if (globals.debug) console.log("You shot me!");
+            }
+        }
+
+        var acceleration = 1000;//TODO add comments explaining this?
+
+        //Handle collision with the player
+        var playerX = globals.player.x;
+        var playerY = globals.player.y;
+        var dist = distance(this, globals.player);
+
+
+        if (dist > this.radius + globals.player.radius + 2) {
+            var difX = (playerX - this.x) / dist;
+            var difY = (playerY - this.y) / dist;
+            this.velocity.x += difX * acceleration / (dist * dist);
+            this.velocity.y += difY * acceleration / (dist * dist);
+        }
     }
 
     //TODO create dying animation and stuff
     //Do this by setting dying=true; then have a conditional that checks for dying and changes the animation
     //accordingly
-    if (this.health <= 0)
-        this.die();
-};
+    if (this.health <= 0) this.die();
 
-/**
- * Draw for the game loop
- * @param ctx
- */
-Zombie.prototype.draw = function (ctx) {
-
-    var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
-
-    if (!this.isDead) {
-        ctx.save();
-        ctx.translate((this.x + (71 / 2)), this.y + (71 / 2));
-        ctx.rotate(rotation);
-        ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
-        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
-        ctx.restore();
-    } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
-
-    //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
-    //console.log("Zombie position (" + this.x + "," + this.y + ")");
-
-    if (globals.debug) this.hitbox.draw(ctx);
-
-    Entity.prototype.draw.call(this);
-
-};
-/**
- * Checks for collisions. This behavior moved to Hitbox
- * @param bullet
- * @returns {boolean}
- */
-Zombie.prototype.isCollidingWith = function (bullet) {
-    return distance(this.hitbox, bullet) < this.hitbox.radius + bullet.radius;
-};
-/**
- * Takes care of behavior of moving the zombie onto the after-afterlife.
- */
-Zombie.prototype.die = function (powerUpSpawn) {
-    // stops zombies and moves hitbox out of canvas
-    this.isDead = true;
-    this.hitbox.updateXY(undefined, undefined);
-    this.hitbox.radius = undefined;
-    this.velocity.x = 0;
-    this.velocity.y = 0;
 
     if (this.animations.dying.isDone()) {
-        if (!this.removeFromWorld) this.removeFromWorld = true;
+        this.removeFromWorld = true;
         ++globals.zombieDeathCount;
         ++globals.killCount;
 
@@ -207,9 +165,58 @@ Zombie.prototype.die = function (powerUpSpawn) {
 
             globals.zombieDeathCount = 0;
         }
-        //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
-        //
+
     }
+
+
+};
+
+/**
+ * Draw for the game loop
+ * @param ctx
+ */
+Zombie.prototype.draw = function (ctx) {
+
+
+    if (!this.isDead) {
+        var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
+
+        ctx.save();
+        ctx.translate((this.x + (71 / 2)), this.y + (71 / 2));
+        ctx.rotate(rotation);
+        ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
+        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
+        ctx.restore();
+    } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+
+    //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+    //console.log("Zombie position (" + this.x + "," + this.y + ")");
+
+    if (globals.debug) this.hitbox.draw(ctx);
+
+    Entity.prototype.draw.call(this);
+
+};
+/**
+ * Checks for collisions. This behavior moved to Hitbox
+ * @param bullet
+ * @returns {boolean}
+ */
+Zombie.prototype.isCollidingWith = function (bullet) {
+    return distance(this.hitbox, bullet) < this.hitbox.radius + bullet.radius;
+};
+/**
+ * Takes care of behavior of moving the zombie onto the after-afterlife.
+ */
+Zombie.prototype.die = function (powerUpSpawn) {
+    // stops zombies and moves hitbox out of canvas
+    this.isDead = true;
+  //  this.hitbox.updateXY(undefined, undefined);
+ //   this.hitbox.radius = undefined;
+    this.velocity.x = 0;
+    this.velocity.y = 0;
+
+
 };
 /**
  * Handles collision between zombies. At the moment tries to teleport zombies over 60 pixels
@@ -219,7 +226,7 @@ Zombie.prototype.collideOtherZombies = function () {
         var ent = this.game.entities[i];
         if (ent.name === 'Zombie') {
 
-            var collisionInfo = this.hitbox.getCollisionDirection(ent);
+            var collisionInfo = this.hitbox.getCollisionInfo(ent);
             //TODO make this work a little better
             // it roughly works for now and prevents zombies from overlapping,
             // but looks wonky because the zombies just teleport

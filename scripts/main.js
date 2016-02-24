@@ -73,8 +73,8 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     ctx.save();
     ctx.translate((locX + ((this.frameWidth * scaleBy) / 2)), (locY + ((this.frameHeight * scaleBy) / 2)));
     ctx.rotate(rotation);
-    globals.player.hitbox.x = locX + ((this.frameWidth * scaleBy) / 2);
-    globals.player.hitbox.y = locY + ((this.frameHeight * scaleBy) / 2);
+//    globals.player.hitbox.x = locX + ((this.frameWidth * scaleBy) / 2);
+  //  globals.player.hitbox.y = locY + ((this.frameHeight * scaleBy) / 2);
     ctx.translate(-(locX + (this.frameWidth * scaleBy) / 2), -(locY + (this.frameHeight * scaleBy) / 2));
 
     ctx.drawImage(this.spriteSheet,

@@ -104,6 +104,7 @@ Player.prototype.handleMovementInput = function () {
  */
 Player.prototype.update = function () {
     this.handleMovementInput();
+    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale)  / 2, this.y + (this.animations.idle.frameHeight * this.scale) / 2);
 
     //if (!this.states.MOVING) this.state = this.states.IDLE;
 
@@ -112,6 +113,8 @@ Player.prototype.update = function () {
     //    this.state = this.states.RELOADING;
     //    if (globals.debug) console.log("Starting reload");
     //}
+
+    this.grabPowerups();
 
     if (this.game.leftClick) {
         if (globals.debug) console.log("shooting");
@@ -175,7 +178,7 @@ Player.prototype.draw = function (ctx) {
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
         if (ent.name === "Zombie") {
-            var currentZombie = this.isCollidingWith(ent);
+            var currentZombie = this.hitbox.getCollisionInfo(ent);
             if (currentZombie.hit) {
                 if (globals.debug) console.log("Bit by a zombie!");
 
@@ -199,7 +202,7 @@ Player.prototype.draw = function (ctx) {
                     this.audio.play();
                 }
 
-                if (!globals.player.godlike)
+                if (!this.godlike)
                     this.health -= 5;
 
                 if (this.health <= 0) {
@@ -217,6 +220,38 @@ Player.prototype.draw = function (ctx) {
 
     Entity.prototype.draw.call(this);
 };
+
+Player.prototype.grabPowerups = function() {
+
+    for (var i = 0; i < this.game.entities.length; i++) {
+        var current = this.game.entities[i];
+
+        if (current.name && current.name === "PowerUp") {
+
+            if (this.hitbox.getCollisionInfo(current).hit) {
+                switch (current.type) {
+                    case "hp":
+                        this.health += 10;
+                        current.audio.src = "./sound/hpup.wav";
+                        break;
+                    case "godlike":
+                        this.godlike = true;
+                        globals.powerUpTime.godlike += 20;
+                        current.audio.src = "./sound/godlike.wav";
+                        break;
+                }
+                if (!globals.mute) {
+                    current.audio.play();
+                }
+
+                current.removeFromWorld = true;
+            }
+        }
+
+    }
+
+};
+
 
 //TODO use HitBox version instead
 Player.prototype.isCollidingWith = function (entity) {

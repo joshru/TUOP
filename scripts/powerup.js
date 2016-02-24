@@ -50,7 +50,7 @@ PowerUp.prototype.update = function () {
 
 
     // Player picks up power up
-    if (this.isCollidingWith(globals.player)) {
+  /*  if (this.isCollidingWith(globals.player)) {
         switch (this.type) {
             case "hp":
                 globals.player.health += 10;
@@ -69,7 +69,7 @@ PowerUp.prototype.update = function () {
 
             if (!this.removeFromWorld) this.removeFromWorld = true;
 
-    }
+    }*/
 };
 
 PowerUp.prototype.draw = function (ctx) {
