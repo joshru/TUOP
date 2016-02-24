@@ -8,7 +8,7 @@ var globals = {
     killCount: 0,
     powerUpTime: {godlike: 0},
     zombieDeathCount: 0,
-    mute: false,
+    mute: true,
     debug: false
 };
 
@@ -73,8 +73,8 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     ctx.save();
     ctx.translate((locX + ((this.frameWidth * scaleBy) / 2)), (locY + ((this.frameHeight * scaleBy) / 2)));
     ctx.rotate(rotation);
-    globals.player.hitbox.x = locX + ((this.frameWidth * scaleBy) / 2);
-    globals.player.hitbox.y = locY + ((this.frameHeight * scaleBy) / 2);
+//    globals.player.hitbox.x = locX + ((this.frameWidth * scaleBy) / 2);
+  //  globals.player.hitbox.y = locY + ((this.frameHeight * scaleBy) / 2);
     ctx.translate(-(locX + (this.frameWidth * scaleBy) / 2), -(locY + (this.frameHeight * scaleBy) / 2));
 
     ctx.drawImage(this.spriteSheet,
@@ -128,8 +128,7 @@ Background.prototype.draw = function (ctx) {
         ctx.fillStyle = "white";
         ctx.fillText("Player Health: " + globals.player.health, 10, 30);
     }
-
-    /* Display Player health */
+    /*Display player health*/
     if (globals.player.health <= 0) {
         ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -262,6 +261,9 @@ ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
 ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
+ASSET_MANAGER.queueDownload("./img/hgun_flash.png");
+ASSET_MANAGER.queueDownload("./img/moving_feet.png");
+ASSET_MANAGER.queueDownload("./img/idle_feet.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
@@ -303,7 +305,7 @@ ASSET_MANAGER.downloadAll(function () {
         var canvas_x = Math.round(event.clientX - rect.left);
         var canvas_y = Math.round(event.clientY - rect.top);
 
-        console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
+        //console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
         if (canvas_x >= startText.x && canvas_x <= startText.x + startText.w &&
                 canvas_y >= startText.y - startText.h && canvas_y <= startText.y) {
             startText = {x: undefined, y: undefined, w: undefined, h: undefined};

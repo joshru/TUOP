@@ -38,6 +38,9 @@ function PowerUp(game, other, type) {
 
     Entity.call(this, game, this.x, this.y);
 }
+PowerUp.prototype = new Entity();
+PowerUp.prototype.constructor = PowerUp;
+
 /**
  * Updates the hitbox for the game loop
  */
@@ -47,7 +50,7 @@ PowerUp.prototype.update = function () {
 
 
     // Player picks up power up
-    if (this.isCollidingWith(globals.player)) {
+  /*  if (this.isCollidingWith(globals.player)) {
         switch (this.type) {
             case "hp":
                 globals.player.health += 10;
@@ -60,12 +63,13 @@ PowerUp.prototype.update = function () {
                 break;
         }
 
-        if (!globals.mute) {
-            this.audio.play();
-        }
+            if (!globals.mute) {
+                this.audio.play();
+            }
 
-        this.removeFromWorld = true;
-    }
+            if (!this.removeFromWorld) this.removeFromWorld = true;
+
+    }*/
 };
 
 PowerUp.prototype.draw = function (ctx) {

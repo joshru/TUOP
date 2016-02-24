@@ -79,7 +79,7 @@ Hitbox.prototype.draw = function (ctx) {
  * @returns {{hit: boolean, dirs: {top: boolean, right: boolean, down: boolean, left: boolean}}}
  *
  */
-Hitbox.prototype.getCollisionDirection = function (other) {
+Hitbox.prototype.getCollisionInfo = function (other) {
 
     var collisions = {
         top: this.y < other.hitbox.y,

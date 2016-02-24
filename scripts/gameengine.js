@@ -72,17 +72,17 @@ GameEngine.prototype.startInput = function () {
     var that = this;
 
     this.ctx.canvas.addEventListener("keydown", function (e) {
-        console.log("GE key pressed: " + String.fromCharCode(e.which));
+        //console.log("GE key pressed: " + String.fromCharCode(e.which));
 
         if (String.fromCharCode(e.which) === ' ') that.space = true;
 //        console.log(e);
 
         if (e.which === 82) {
-            console.log("GE: R pressed");
+            //console.log("GE: R pressed");
             that.RELOAD = true;
         }
         if (e.which === 2){
-            console.log("GE: 2 pressed");
+            //console.log("GE: 2 pressed");
             that.ASSAULT = true;
         }
         e.preventDefault();
