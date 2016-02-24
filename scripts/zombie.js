@@ -45,6 +45,11 @@ function Zombie(game) {
 
 Zombie.prototype = new Entity();
 Zombie.prototype.constructor = Zombie;
+
+Zombie.prototype.clone =  function() {
+  return new Zombie(this.game);
+};
+
 /**
  * Update for the game loop
  */
