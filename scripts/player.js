@@ -13,6 +13,7 @@ function Player(game, scale) {
     this.scale = scale || 1;
     this.stepDistance = 5;
     this.health = 100;
+    this.godlike = false;
 
     this.audio = document.getElementById('soundFX');
 
@@ -199,7 +200,9 @@ Player.prototype.draw = function (ctx) {
                     if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
                     this.audio.play();
                 }
-                this.health -= 5;
+
+                if (!globals.player.godlike)
+                    this.health -= 5;
 
                 if (this.health <= 0) {
                     if (!globals.mute) {

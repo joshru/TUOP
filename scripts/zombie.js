@@ -79,6 +79,8 @@ Zombie.prototype.update = function () {
 
     }
     //player dead, bounce off walls
+    // this isn't necessary if we stop updating when the player isn't dead anymore
+    // heh
     else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
         this.velocity.x = -this.velocity.x * friction;
 
@@ -122,7 +124,8 @@ Zombie.prototype.update = function () {
     //TODO create dying animation and stuff
     //Do this by setting dying=true; then have a conditional that checks for dying and changes the animation
     //accordingly
-    if (this.health <= 0) this.die();
+    if (this.health <= 0)
+        this.die();
 };
 
 /**
@@ -161,12 +164,13 @@ Zombie.prototype.isCollidingWith = function (bullet) {
 /**
  * Takes care of behavior of moving the zombie onto the after-afterlife.
  */
-Zombie.prototype.die = function () {
+Zombie.prototype.die = function (powerUpSpawn) {
     // stops zombies and moves hitbox out of canvas
     this.isDead = true;
     this.hitbox.updateXY(undefined, undefined);
     this.hitbox.radius = undefined;
-    this.velocity.x = 0; this.velocity.y = 0;
+    this.velocity.x = 0;
+    this.velocity.y = 0;
 
     if (this.animations.dying.isDone()) {
         this.removeFromWorld = true;
@@ -177,14 +181,19 @@ Zombie.prototype.die = function () {
         var chance = randomInt(10) + 1;
         if (chance > 8) {
             // TODO this will turn into a switch at some point to change types
-            this.game.addEntity(new PowerUp(this.game, this, "hp"));
+            // TODO currently 20% chance of godlike, 80% hp
+            chance = randomInt(10) + 1;
+            if (chance > 2)
+                this.game.addEntity(new PowerUp(this.game, this, "hp"));
+            else
+                this.game.addEntity(new PowerUp(this.game, this, "godlike"));
         }
 
         // var currentFib = globals.fib1 + globals.fib2;
         if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
         if (globals.zombieDeathCount === globals.fibs.currFib) {
             // see in Background.prototype.draw for wave counter
-            globals.wave++;
+            globals.wave++
 
             if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
             //update previous and current fibonacci numbers
@@ -195,6 +204,7 @@ Zombie.prototype.die = function () {
             for (var i = 0; i < globals.fibs.currFib; i++) {
                 this.game.addEntity(new Zombie(this.game));
             }
+
             globals.zombieDeathCount = 0;
         }
         //if (globals.zombieDeathCount % 3 == 0) globals.zombieSpawnScale *= 1.5;
