@@ -99,8 +99,8 @@ Animation.prototype.isDone = function () {
 function Background(game) {
     this.name = "Background";
     this.game = game;
-    this.x = 0;
-    this.y = 0;
+    this.x = -1024;
+    this.y = -1024;
     this.scrolling = false;
     this.radius = 0;
     this.bg = ASSET_MANAGER.getAsset("./img/terrain/2048_grass.png");
@@ -213,7 +213,7 @@ function screenToWorld(x, y) {
  * @returns {number} int: random number
  */
 function randomInt(n) {
-    return Math.floor(Math.random() * n);df
+    return Math.floor(Math.random() * n);
 }
 /**
  * Global Key object
@@ -317,6 +317,7 @@ ASSET_MANAGER.queueDownload("./img/moving_feet.png");
 ASSET_MANAGER.queueDownload("./img/idle_feet.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie.png");
+ASSET_MANAGER.queueDownload("./img/zombie_move.png");
 ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
 
 // splash screen

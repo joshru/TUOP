@@ -35,6 +35,7 @@ function Zombie(game) {
 
     this.animations = {};
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
+    this.animations.move = new Animation(ASSET_MANAGER.getAsset("./img/zombie_move.png"), 0, 0, 288, 311, 0.15, 17, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/death_animation/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
     var hbX = this.x + (this.animations.idle.frameWidth / 2);
@@ -55,10 +56,24 @@ Zombie.prototype.update = function () {
     var maxSpeed = 100;
     var minSpeed = 5;
 
+    //console.log("zombie x: " + this.x + " | zombie y: " + this.y);
+
+
+
     //handle movement and stuff
     //TODO iron this out
     if (!this.isDead) {
         this.collideOtherZombies();
+
+        if ((this.x > 0 || this.y < 0) && !this.isOnScreen) {
+            console.log("converting zombie to screen coords");
+            this.convertToOnScreen();
+        }
+
+        if ((this.x > 800 || this.y < -800) && this.isOnScreen) {
+            console.log("converting zombie to off-screen coords");
+            this.convertToOffScreen();
+        }
 
         if (!globals.background.scrolling) {
             this.x += this.velocity.x * this.game.clockTick;
@@ -176,7 +191,6 @@ Zombie.prototype.update = function () {
 
     }
 
-
 };
 
 Zombie.prototype.convertToOffScreen = function() {
@@ -198,16 +212,21 @@ Zombie.prototype.convertToOnScreen = function() {
  * @param ctx
  */
 Zombie.prototype.draw = function (ctx) {
+    ctx.font = "12px Courier New";
+    ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
 
 
-    if (!this.isDead && this.isOnScreen) {
+    if (!this.isDead/* && this.isOnScreen*/) {
         var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
 
         ctx.save();
-        ctx.translate((this.x + (71 / 2)), this.y + (71 / 2));
+        ctx.translate((this.x + (71 / 2)), this.y + (71 / 2)); //magic numbers for zombie sprite dimensions
+        //ctx.translate((this.x + (288 / 2)), this.y + (311 / 2)); //magic numbers for zombie sprite dimensions
         ctx.rotate(rotation);
         ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
+        //ctx.translate(-(this.x + (288 / 2)), -(this.y + (311 / 2)));
         ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
+        //this.animations.move.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.3);
         ctx.restore();
     } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
 
