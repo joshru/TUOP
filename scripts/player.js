@@ -31,15 +31,15 @@ function Player(game, scale) {
 
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 258, 220, 0.15, 15, true, false);
-    this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_flash.png"), 0, 0, 258, 220, 0.1, 1, true, false);
+    this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_flash.png"), 0, 0, 258, 220, 0.03, 1, true, false);
     this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241, 0.13, 15, false, false);
     this.animations.idleFeet = new Animation(ASSET_MANAGER.getAsset("./img/idle_feet.png", 0, 0, 132, 155, 0.2, 1, true, false));
     this.animations.runFeet = new Animation(ASSET_MANAGER.getAsset("./img/moving_feet.png"), 0, 0, 204, 124, 0.1, 20, true, false);
     //this.animation = this.animations.hgunIdle;
 
-    this.radius = 200 * this.scale;
+    this.radius = 120 * this.scale;
 
-    this.hitbox = new Hitbox(this.x, this.y, this.radius * this.scale, game);
+    this.hitbox = new Hitbox(this.x, this.y, this.radius, game);
 
     this.ground = 400;
     Entity.call(this, game, 0, this.ground);
@@ -135,8 +135,6 @@ Player.prototype.update = function () {
     //    this.state = this.states.IDLE;
     //
     //}
-
-    console.log("player state = " + this.state);
 
     Entity.prototype.update.call(this);
 };

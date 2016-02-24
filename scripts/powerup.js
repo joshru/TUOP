@@ -38,6 +38,9 @@ function PowerUp(game, other, type) {
 
     Entity.call(this, game, this.x, this.y);
 }
+PowerUp.prototype = new Entity();
+PowerUp.prototype.constructor = PowerUp;
+
 /**
  * Updates the hitbox for the game loop
  */
@@ -60,11 +63,12 @@ PowerUp.prototype.update = function () {
                 break;
         }
 
-        if (!globals.mute) {
-            this.audio.play();
-        }
+            if (!globals.mute) {
+                this.audio.play();
+            }
 
-        this.removeFromWorld = true;
+            if (!this.removeFromWorld) this.removeFromWorld = true;
+
     }
 };
 

@@ -173,7 +173,7 @@ Zombie.prototype.die = function (powerUpSpawn) {
     this.velocity.y = 0;
 
     if (this.animations.dying.isDone()) {
-        this.removeFromWorld = true;
+        if (!this.removeFromWorld) this.removeFromWorld = true;
         ++globals.zombieDeathCount;
         ++globals.killCount;
 
@@ -193,7 +193,7 @@ Zombie.prototype.die = function (powerUpSpawn) {
         if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
         if (globals.zombieDeathCount === globals.fibs.currFib) {
             // see in Background.prototype.draw for wave counter
-            globals.wave++
+            globals.wave++;
 
             if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
             //update previous and current fibonacci numbers

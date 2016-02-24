@@ -305,7 +305,7 @@ ASSET_MANAGER.downloadAll(function () {
         var canvas_x = Math.round(event.clientX - rect.left);
         var canvas_y = Math.round(event.clientY - rect.top);
 
-        console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
+        //console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
         if (canvas_x >= startText.x && canvas_x <= startText.x + startText.w &&
                 canvas_y >= startText.y - startText.h && canvas_y <= startText.y) {
             startText = {x: undefined, y: undefined, w: undefined, h: undefined};
