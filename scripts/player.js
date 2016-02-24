@@ -22,7 +22,7 @@ function Player(game, scale) {
         MOVING: 1,
         SHOOTING: 2,
         RELOADING: 3,
-        CURRENT_GUN: 'pistol'
+        CURRENT_GUN: 'assault rifle'
     };
 
 
@@ -109,32 +109,19 @@ Player.prototype.update = function () {
         if (globals.debug) console.log("Starting reload");
     }
 
-    if (this.game.leftClick) {
-        if (this.game.CURRENT_GUN !== "assault rifle") {
-            if (globals.debug) console.log("shooting");
 
-            this.state = this.states.SHOOTING;
-            this.shoot(globals.mousePosition.x, globals.mousePosition.y);
-
-            if (!globals.mute) {
-                this.audio.src = "./sound/usp.wav";
-                this.audio.play();
-            }
-
-            this.game.leftClick = false;
-        }
-    }
-    if(this.game.ASSAULT === true){
         var mouseStillDown = false;
 
-        this.game.mousedown(function(event) {
+        if(this.game.mousedown) {
             mouseStillDown = true;
             fireAssault();
-        });
+        }
 
         function fireAssault() {
             if (!mouseStillDown) { return; } // we could have come back from
                                              // SetInterval and the mouse is no longer down
+            if (globals.debug) console.log("shooting");
+
             this.state = this.states.SHOOTING;
             this.shoot(globals.mousePosition.x, globals.mousePosition.y);
 
@@ -146,13 +133,15 @@ Player.prototype.update = function () {
             if (mouseStillDown) { setInterval("fireAssault()", 100); }
         }
 
-        this.game.mouseup(function(event) {
+        if(this.game.mouseup) {
             mouseStillDown = false;
-        });
+            this.state = this.states.IDLE;
+        }
+    
 
 
 
-    }
+
 
 
     if (this.animations.reloadPistol.isDone()) {

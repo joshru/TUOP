@@ -170,6 +170,7 @@ var Key = {
     R: 82, //R
     H: 72, //H
     P: 80,
+    CLICK: 1,
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];

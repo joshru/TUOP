@@ -99,7 +99,6 @@ GameEngine.prototype.startInput = function () {
     }, false);
 
 
-
     this.ctx.canvas.addEventListener("mousedown", function(e) {
        if (e.button == 0) that.mousedown = true;
         e.preventDefault();
