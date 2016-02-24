@@ -52,8 +52,16 @@ Player.prototype.constructor = Player;
  * creates a bullet and adds it to the game's bullet data structure
  */
 Player.prototype.shoot = function (endX, endY) {
-    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale);
-    var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
+
+    var rotation = Math.atan2((this.hitbox.y), (this.hitbox.x));
+    //if (rotation < 0) {
+    //    rotation += (2 * Math.PI);
+    //}
+    //var bulletX = this.x + (this.animations.idle.frameWidth * this.scale);
+    //var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
+
+    var bulletX = this.x + Math.cos(0 *Math.PI/180) * this.radius;
+    var bulletY = this.y + Math.sin(0 *Math.PI/180) * this.radius;
 
     var dx = (endX - bulletX);
     var dy = (endY - bulletY);

@@ -70,6 +70,11 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
     //Negating these arguments makes him face the mouse instead of the opposite direction.
     var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x) - 50);
 
+    // makes player rotation when facing the lower half of the screen more accurate
+    if (rotation < 0) {
+        rotation += (2 * Math.PI);
+    }
+
     ctx.save();
     ctx.translate((locX + ((this.frameWidth * scaleBy) / 2)), (locY + ((this.frameHeight * scaleBy) / 2)));
     ctx.rotate(rotation);
