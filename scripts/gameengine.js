@@ -39,7 +39,7 @@ function GameEngine() {
 
     this.entities = [];
     this.bullets = [];//testing best place to put this
-    this.showOutlines = false;
+    this.showOutlines = true;
     this.ctx = null;
     this.click = null;
     this.mouse = null;

@@ -99,8 +99,8 @@ Animation.prototype.isDone = function () {
 function Background(game) {
     this.name = "Background";
     this.game = game;
-    this.x = -1024;
-    this.y = -1024;
+    this.x = 0;
+    this.y = 0;
     this.scrolling = false;
     this.radius = 0;
     this.bg = ASSET_MANAGER.getAsset("./img/terrain/2048_grass.png");
@@ -199,7 +199,7 @@ Background.prototype.draw = function (ctx) {
 
 //converts coordinates in game world to coordinates where the sprite should be drawn on screen.
 function worldToScreen(x, y) {
-    return {x: x - globals.background.x, y: y - globals.background.y};
+    return {x: x - (/*-*/globals.background.x), y: y - (/*-*/globals.background.y)};
 }
 
 //converts coordinates on the screen to coordinates in the game world as a whole.

@@ -17,9 +17,10 @@ function Zombie(game) {
 
     this.radius = 20;
     this.ground = 500;
-    this.x = -randomInt(1245); //hardcoded for prototype zombie
-    this.y = -randomInt(1245); //TODO come up with a zombie spawning system using timers or something
-
+    //this.x = randomInt(1245); //hardcoded for prototype zombie
+    //this.y = randomInt(1245); //TODO come up with a zombie spawning system using timers or something
+    this.x = 10;
+    this.y = 10;
     var screen = worldToScreen(this.x, this.y);
     var world = screenToWorld(this.x, this.y);
     this.screenX = screen.x;
@@ -50,7 +51,7 @@ function Zombie(game) {
 
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
-    Entity.call(this, game, this.x, this.y);
+    Entity.call(this, game, this.worldX, this.worldY);
 }
 
 Zombie.prototype = new Entity();
@@ -85,8 +86,8 @@ Zombie.prototype.update = function () {
 
         // follow player
         if (globals.player.health > 0) { //player is alive
-            var dx = globals.player.x - this.x;
-            var dy = globals.player.y - this.y;
+            var dx = globals.player.x - this.worldX;
+            var dy = globals.player.y - this.worldY;
             var pointDistance = Math.sqrt(dx * dx + dy * dy);
 
             this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
@@ -207,6 +208,9 @@ Zombie.prototype.convertToOffScreen = function() {
     //this.y = convert.y;
     this.worldX = convert.x;
     this.worldY = convert.y;
+    this.hitbox.x = convert.x;
+    this.hitbox.y = convert.y;
+
 };
 
 Zombie.prototype.convertToOnScreen = function() {
@@ -215,7 +219,9 @@ Zombie.prototype.convertToOnScreen = function() {
     //this.x = convert.x;
     //this.y = convert.y;
     this.screenX = convert.x;
-    this.screenY = convert.y
+    this.screenY = convert.y;
+    this.hitbox.x = convert.x;
+    this.hitbox.y = convert.y;
 };
 
 /**
@@ -223,14 +229,14 @@ Zombie.prototype.convertToOnScreen = function() {
  * @param ctx
  */
 Zombie.prototype.draw = function (ctx) {
+    this.convertToOffScreen();
     this.convertToOnScreen();
     ctx.font = "12px Courier New";
     ctx.fillText("x: " + Math.round(this.worldX) + " y: " + Math.round(this.worldY), this.screenX, this.screenY + 10);
 
 
-
     if (!this.isDead /*|| this.isOnScreen*/) {
-        var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
+        var rotation = Math.atan2(-(this.screenY - globals.player.hitbox.y), -(this.screenX - globals.player.hitbox.x));
 
         ctx.save();
         ctx.translate((this.screenX + (71 / 2)), this.screenY + (71 / 2)); //magic numbers for zombie sprite dimensions
