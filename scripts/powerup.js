@@ -42,34 +42,10 @@ PowerUp.prototype = new Entity();
 PowerUp.prototype.constructor = PowerUp;
 
 /**
- * Updates the hitbox for the game loop
+ * Updates the hitbox for power up
  */
 PowerUp.prototype.update = function () {
-    // drops HP accordingly
     this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
-
-
-    // Player picks up power up
-  /*  if (this.isCollidingWith(globals.player)) {
-        switch (this.type) {
-            case "hp":
-                globals.player.health += 10;
-                this.audio.src = "./sound/hpup.wav";
-                break;
-            case "godlike":
-                globals.player.godlike = true;
-                globals.powerUpTime.godlike += 20;
-                this.audio.src = "./sound/godlike.wav";
-                break;
-        }
-
-            if (!globals.mute) {
-                this.audio.play();
-            }
-
-            if (!this.removeFromWorld) this.removeFromWorld = true;
-
-    }*/
 };
 
 PowerUp.prototype.draw = function (ctx) {
