@@ -13,7 +13,11 @@ function Map(name, path) {
     this.assignMapProperties();
 
 }
-
+/**
+ * Adds information about the map to this object.
+ * Manually sets spawn points for the map.
+ *
+ */
 Map.prototype.assignMapProperties = function() {
     switch(this.name) {
 
@@ -29,6 +33,8 @@ Map.prototype.assignMapProperties = function() {
             this.bossSpawns.push({x: 1020, y: 1530});
             this.bossSpawns.push({x: 1026, y: 510});
 
+            break;
+        default:
             break;
     }
 

@@ -177,7 +177,7 @@ Player.prototype.draw = function (ctx) {
     //Check for collisions with zombies
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
-        if (ent.name === "Zombie") {
+        if (ent.name === "Zombie" && !ent.isDead) {
             var currentZombie = this.hitbox.getCollisionInfo(ent);
             if (currentZombie.hit) {
                 if (globals.debug) console.log("Bit by a zombie!");
@@ -227,7 +227,6 @@ Player.prototype.grabPowerups = function() {
         var current = this.game.entities[i];
 
         if (current.name && current.name === "PowerUp") {
-
             if (this.hitbox.getCollisionInfo(current).hit) {
                 switch (current.type) {
                     case "hp":
@@ -236,10 +235,11 @@ Player.prototype.grabPowerups = function() {
                         break;
                     case "godlike":
                         this.godlike = true;
-                        globals.powerUpTime.godlike += 20;
+                        globals.powerUpTime.godlike += 10;
                         current.audio.src = "./sound/godlike.wav";
                         break;
                 }
+
                 if (!globals.mute) {
                     current.audio.play();
                 }
@@ -251,7 +251,6 @@ Player.prototype.grabPowerups = function() {
     }
 
 };
-
 
 //TODO use HitBox version instead
 Player.prototype.isCollidingWith = function (entity) {
