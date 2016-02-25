@@ -280,13 +280,16 @@ ASSET_MANAGER.queueDownload("./sound/usp.wav");
 ASSET_MANAGER.queueDownload("./sound/godlike.wav");
 
 ASSET_MANAGER.downloadAll(function () {
-    console.log("starting up da sheild");
+    startGame();
+});
+
+function startGame() {
     var canvas = document.getElementById('gameWorld');
 
     var ctx = canvas.getContext('2d');
 
     /* for splash screen and start */
-    var startText = {
+    var startOrReplay = {
         x: 420, // 420 heh
         y: canvas.height / 2 - 50,
         w: 150,
@@ -298,7 +301,22 @@ ASSET_MANAGER.downloadAll(function () {
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/welcome-splash.png"), 0, 0);
     ctx.fillStyle = "white";
     ctx.font = "50px Courier New";
-    ctx.fillText("START", startText.x, startText.y);
+    ctx.fillText("START", startOrReplay.x, startOrReplay.y);
+
+    if (this.game.gameStates.GAMEOVER) {
+        this.game.gameStates.GAMEOVER = false;
+
+        /* for splash screen and start */
+        var startOrReplay = {
+            x: 620,
+            y: canvas.height / 2 - 50,
+            w: 150,
+            h: 30
+        };
+
+        canvas.addEventListener("mousedown", fireUpTheEnginesBoys, false);
+        ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
+    }
 
     function fireUpTheEnginesBoys(event) {
         var rect = canvas.getBoundingClientRect();
@@ -306,9 +324,9 @@ ASSET_MANAGER.downloadAll(function () {
         var canvas_y = Math.round(event.clientY - rect.top);
 
         //console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
-        if (canvas_x >= startText.x && canvas_x <= startText.x + startText.w &&
-                canvas_y >= startText.y - startText.h && canvas_y <= startText.y) {
-            startText = {x: undefined, y: undefined, w: undefined, h: undefined};
+        if (canvas_x >= startOrReplay.x && canvas_x <= startOrReplay.x + startOrReplay.w &&
+            canvas_y >= startOrReplay.y - startOrReplay.h && canvas_y <= startOrReplay.y) {
+            startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
             var gameEngine = new GameEngine();
             globals.player = new Player(gameEngine, 0.5);
             var bg = new Background(gameEngine);
@@ -321,4 +339,5 @@ ASSET_MANAGER.downloadAll(function () {
             gameEngine.start();
         }
     }
-});
+}
+
