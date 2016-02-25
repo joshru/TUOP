@@ -17,10 +17,9 @@ function Zombie(game) {
 
     this.radius = 20;
     this.ground = 500;
-    //this.x = randomInt(1245); //hardcoded for prototype zombie
-    //this.y = randomInt(1245); //TODO come up with a zombie spawning system using timers or something
-    this.x = 10;
-    this.y = 10;
+    this.x = randomInt(1245); //hardcoded for prototype zombie
+    this.y = randomInt(1245); //TODO come up with a zombie spawning system using timers or something
+
     var screen = worldToScreen(this.x, this.y);
     var world = screenToWorld(this.x, this.y);
     this.screenX = screen.x;
@@ -72,7 +71,7 @@ Zombie.prototype.update = function () {
 
         //this.collideOtherZombies();
 
-
+        //TODO Explain this?
         if (!globals.background.scrolling) {
             this.worldX += this.velocity.x * this.game.clockTick;
             this.worldY += this.velocity.y * this.game.clockTick;
