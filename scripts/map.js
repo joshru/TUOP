@@ -30,6 +30,8 @@ Map.prototype.assignMapProperties = function() {
             this.bossSpawns.push({x: 1026, y: 510});
 
             break;
+        default:
+            break;
     }
 
 };

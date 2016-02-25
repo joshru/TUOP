@@ -37,7 +37,26 @@ Spawner.prototype.setCurrentMap = function(map) {
 
 Spawner.prototype.spawnWave = function(size) {
 
-    for (var i = 0; i < size; i++) {
+    var numSpawned = 0;
+    var lastSpawn = Date.now();
+
+
+    while (numSpawned < size) {
+
+        var timePassed = Date.now() - lastSpawn / 1000;
+        if (timePassed > .8) {
+
+            shuffle(this.currentMap.spawnPoints);
+
+            for (var i = 0; i < this.activeSpawns; i++) {
+                var coords = this.currentMap.spawnPoints[i];
+                this.spawnZombie(coords.x, coords.y);
+                numSpawned++;
+            }
+            lastSpawn = Date.now();
+
+        }
+
 
     }
 

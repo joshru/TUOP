@@ -157,14 +157,7 @@ Background.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 };
 
-/**
- * Generates a random number
- * @param n max
- * @returns {number} int: random number
- */
-function randomInt(n) {
-    return Math.floor(Math.random() * n);
-}
+
 /**
  * Global Key object
  * Processed keyboard input
