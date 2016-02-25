@@ -71,7 +71,7 @@ Zombie.prototype.update = function () {
 
         //this.collideOtherZombies();
 
-
+        //TODO Explain this?
         if (!globals.background.scrolling) {
             this.worldX += this.velocity.x * this.game.clockTick;
             this.worldY += this.velocity.y * this.game.clockTick;
@@ -85,63 +85,19 @@ Zombie.prototype.update = function () {
 
         // follow player
         if (globals.player.health > 0) { //player is alive
-            var dx = globals.player.x - this.x;
-            var dy = globals.player.y - this.y;
-            var pointDistance = Math.sqrt(dx * dx + dy * dy);
-
-            this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
-            this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
-
-            //Not sure how often to do this
-            this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
-                this.worldY + (this.animations.idle.frameHeight / 2));
-
+            this.lockOnPlayer();
         }
         // player dead, bounce off walls
         // this isn't necessary if we stop updating when the player isn't dead anymore
         // heh
-        else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+        //TODO consider deleting
+        else this.checkWallCollisions();
 
-            this.velocity.x = -this.velocity.x * friction;
+       this.checkForGunshots();
 
-            this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
-                this.worldY + (this.animations.idle.frameHeight / 2));
-        }
-        else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
-            this.velocity.y = -this.velocity.y * friction;
-
-            this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
-                this.worldY + (this.animations.idle.frameHeight / 2));
-        }
-
-        var i;
-        //check if getting shot the F up
-        for (i = 0; i < this.game.bullets.length; i++) {
-            var bullet = this.game.bullets[i];
-            //console.log("Distance From Bullet: " + distance(this, bullet));
-
-            if (!bullet.spent && this.isCollidingWith(bullet)) {
-                this.health -= bullet.damage;
-                bullet.spent = true;
-                bullet.removeFromWorld = true;
-                if (globals.debug) console.log("You shot me!");
-            }
-        }
-
-        var acceleration = 1000; //TODO add comments explaining this?
 
         //Handle collision with the player
-        var playerX = globals.player.x;
-        var playerY = globals.player.y;
-        var dist = distance(this, globals.player);
-
-
-        if (dist > this.radius + globals.player.radius + 2) {
-            var difX = (playerX - this.worldX) / dist;
-            var difY = (playerY - this.worldY) / dist;
-            this.velocity.x += difX * acceleration / (dist * dist);
-            this.velocity.y += difY * acceleration / (dist * dist);
-        }
+        this.checkPlayerCollision();
     }
 
     //TODO create dying animation and stuff
@@ -150,6 +106,36 @@ Zombie.prototype.update = function () {
     if (this.health <= 0) this.die();
 
 
+    this.removeAndReplace();
+
+
+
+    //if ((this.x > 0 || this.y < 0) && !this.isOnScreen) {
+    //    //console.log("converting zombie to screen coords");
+    //    this.convertToOnScreen();
+    //}
+    //
+    //if ((this.x > 800 || this.y < 800) && this.isOnScreen) {
+    //    //console.log("converting zombie to off-screen coords");
+    //    this.convertToOffScreen();
+    //}
+
+};
+
+Zombie.prototype.lockOnPlayer = function() {
+    var dx = globals.player.x - this.x;
+    var dy = globals.player.y - this.y;
+    var pointDistance = Math.sqrt(dx * dx + dy * dy);
+
+    this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
+    this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
+
+    //Not sure how often to do this
+    this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
+        this.worldY + (this.animations.idle.frameHeight / 2));
+};
+
+Zombie.prototype.removeAndReplace = function() {
     if (this.animations.dying.isDone()) {
         this.removeFromWorld = true;
         ++globals.zombieDeathCount;
@@ -185,20 +171,55 @@ Zombie.prototype.update = function () {
 
             globals.zombieDeathCount = 0;
         }
-
     }
-
-    //if ((this.x > 0 || this.y < 0) && !this.isOnScreen) {
-    //    //console.log("converting zombie to screen coords");
-    //    this.convertToOnScreen();
-    //}
-    //
-    //if ((this.x > 800 || this.y < 800) && this.isOnScreen) {
-    //    //console.log("converting zombie to off-screen coords");
-    //    this.convertToOffScreen();
-    //}
-
 };
+
+Zombie.prototype.checkForGunshots = function() {
+    for (var i = 0; i < this.game.bullets.length; i++) {
+        var bullet = this.game.bullets[i];
+        //console.log("Distance From Bullet: " + distance(this, bullet));
+
+        if (!bullet.spent && this.isCollidingWith(bullet)) {
+            this.health -= bullet.damage;
+            bullet.spent = true;
+            bullet.removeFromWorld = true;
+            if (globals.debug) console.log("You shot me!");
+        }
+    }
+};
+
+Zombie.prototype.checkWallCollisions = function() {
+    if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+
+        this.velocity.x = -this.velocity.x * friction;
+
+        this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
+            this.worldY + (this.animations.idle.frameHeight / 2));
+    }
+    else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
+        this.velocity.y = -this.velocity.y * friction;
+
+        this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
+            this.worldY + (this.animations.idle.frameHeight / 2));
+    }
+};
+
+Zombie.prototype.checkPlayerCollision = function() {
+    var acceleration = 1000; //TODO add comments explaining this?
+
+    var playerX = globals.player.x;
+    var playerY = globals.player.y;
+    var dist = distance(this, globals.player);
+
+
+    if (dist > this.radius + globals.player.radius + 2) {
+        var difX = (playerX - this.worldX) / dist;
+        var difY = (playerY - this.worldY) / dist;
+        this.velocity.x += difX * acceleration / (dist * dist);
+        this.velocity.y += difY * acceleration / (dist * dist);
+    }
+};
+
 
 Zombie.prototype.convertToOffScreen = function() {
     this.isOnScreen = false;
