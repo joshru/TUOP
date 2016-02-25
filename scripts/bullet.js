@@ -72,12 +72,12 @@ Bullet.prototype.draw = function (ctx) {
     ctx.fillStyle = "#E3612F";
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fill();
-    if (globals.debug) {
-        ctx.strokeStyle = "Pink";
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
-        ctx.stroke();
-    }
+    //if (globals.debug) {
+    //    ctx.strokeStyle = "Pink";
+    //    ctx.moveTo(this.x, this.y);
+    //    ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
+    //    ctx.stroke();
+    //}
 
     ctx.closePath();
     //console.log("click x: " + globals.clickPosition.x + " | click y: " + globals.clickPosition.y);
