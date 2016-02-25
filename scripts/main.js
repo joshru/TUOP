@@ -137,16 +137,16 @@ Background.prototype.draw = function (ctx) {
         ctx.fillText("YOU DEAD HOMIE rip", 235, canvas.height / 2);
         // line below stops updating the game (we can keep this or lose this).
         this.game.gameStates.GAMEOVER = true;
-        /* for splash screen and start */
-        var startOrReplay = {
-            x: 420,
-            y: canvas.height / 2 - 50,
-            w: 150,
-            h: 30
-        };
-
-        canvas.addEventListener("mousedown", startGame, false);
-        ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
+        ///* for splash screen and start */
+        //var startOrReplay = {
+        //    x: 420,
+        //    y: canvas.height / 2 - 50,
+        //    w: 150,
+        //    h: 30
+        //};
+        //
+        //canvas.addEventListener("mousedown", startGame, false);
+        //ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
     }
 
     /* Display Godlike */
