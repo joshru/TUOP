@@ -19,6 +19,11 @@ function Zombie(game) {
     this.ground = 500;
     this.x = -randomInt(1245); //hardcoded for prototype zombie
     this.y = -randomInt(1245); //TODO come up with a zombie spawning system using timers or something
+
+    this.screenX = this.x;
+    this.screenY = this.y;
+    this.worldX = this.x;
+    this.worldY = this.y;
     console.log("spawning zombie at: " + this.x + ", " + this.y);
 
     //TODO create speedScale variable so zombies of different types can have different speeds
@@ -65,15 +70,7 @@ Zombie.prototype.update = function () {
     if (!this.isDead) {
         this.collideOtherZombies();
 
-        if ((this.x > 0 || this.y < 0) && !this.isOnScreen) {
-            console.log("converting zombie to screen coords");
-            this.convertToOnScreen();
-        }
 
-        if ((this.x > 800 || this.y < -800) && this.isOnScreen) {
-            console.log("converting zombie to off-screen coords");
-            this.convertToOffScreen();
-        }
 
         if (!globals.background.scrolling) {
             this.x += this.velocity.x * this.game.clockTick;
@@ -131,7 +128,7 @@ Zombie.prototype.update = function () {
             }
         }
 
-        var acceleration = 1000;//TODO add comments explaining this?
+        var acceleration = 1000; //TODO add comments explaining this?
 
         //Handle collision with the player
         var playerX = globals.player.x;
@@ -191,20 +188,34 @@ Zombie.prototype.update = function () {
 
     }
 
+    if ((this.x > 0 || this.y < 0) && !this.isOnScreen) {
+        //console.log("converting zombie to screen coords");
+        this.convertToOnScreen();
+    }
+
+    if ((this.x > 800 || this.y < 800) && this.isOnScreen) {
+        //console.log("converting zombie to off-screen coords");
+        this.convertToOffScreen();
+    }
+
 };
 
 Zombie.prototype.convertToOffScreen = function() {
     this.isOnScreen = false;
     var convert = screenToWorld(this.x, this.y);
-    this.x = convert.x;
-    this.y = convert.y;
+    //this.x = convert.x;
+    //this.y = convert.y;
+    this.worldX = convert.x;
+    this.worldY = convert.y;
 };
 
 Zombie.prototype.convertToOnScreen = function() {
     this.isOnScreen = true;
     var convert = worldToScreen(this.x, this.y);
-    this.x = convert.x;
-    this.y = convert.y;
+    //this.x = convert.x;
+    //this.y = convert.y;
+    this.screenX = convert.x;
+    this.screenY = convert.y
 };
 
 /**
@@ -216,7 +227,7 @@ Zombie.prototype.draw = function (ctx) {
     ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
 
 
-    if (!this.isDead/* && this.isOnScreen*/) {
+    if (!this.isDead || this.isOnScreen) {
         var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
 
         ctx.save();
