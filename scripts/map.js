@@ -13,7 +13,11 @@ function Map(name, path) {
     this.assignMapProperties();
 
 }
-
+/**
+ * Adds information about the map to this object.
+ * Manually sets spawn points for the map.
+ *
+ */
 Map.prototype.assignMapProperties = function() {
     switch(this.name) {
 
