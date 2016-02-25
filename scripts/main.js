@@ -41,7 +41,7 @@ function distance(a, b) {
 
 
 Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
-    var scaleBy = scaleBy || 1;
+    scaleBy = scaleBy || 1;
     this.elapsedTime += tick;
     if (this.loop) {
         if (this.isDone()) {
@@ -213,7 +213,7 @@ function screenToWorld(x, y) {
  * @returns {number} int: random number
  */
 function randomInt(n) {
-    return Math.floor(Math.random() * n);df
+    return Math.floor(Math.random() * n);
 }
 /**
  * Global Key object
