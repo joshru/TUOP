@@ -194,6 +194,9 @@ Player.prototype.update = function () {
 Player.prototype.draw = function (ctx) {
     var currAnim;
 
+    ctx.font = "12px Courier New";
+    ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
+
     if (this.state === this.states.MOVING) {
         this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
         //this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
