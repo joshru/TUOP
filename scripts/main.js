@@ -171,6 +171,8 @@ var Key = {
     H: 72, //H
     P: 80,
     CLICK: 1,
+    TWO: 50,
+    ONE: 49,
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];
@@ -236,6 +238,16 @@ window.addEventListener('click', function (event) {
 window.addEventListener('mousemove', function (event) {
     globals.mousePosition = getMousePos(document.getElementById('gameWorld'), event);
 }, false);
+
+
+window.addEventListener('mousedown', function(event) {
+    globals.player.game.firing = true;
+}, false);
+
+window.addEventListener('mouseup', function(event) {
+    globals.player.game.firing = false;
+}, false);
+
 
 var muteButton = document.getElementById('muteToggle');
 muteButton.addEventListener('click', function() { globals.mute ^= true });

@@ -14,6 +14,9 @@ function Player(game, scale) {
     this.stepDistance = 5;
     this.health = 100;
 
+
+    this.lastShotFired = Date.now();
+
     this.audio = document.getElementById('soundFX');
 
 
@@ -103,21 +106,37 @@ Player.prototype.update = function () {
 
     if (!Key.keyPressed()) this.state = this.states.IDLE;
 
+    if (Key.isDown(Key.TWO)){
+        this.states.CURRENT_GUN = "assault rifle";
+        console.log("assault rifle equipped")
+    }
 
     if (this.game.RELOAD) {
         this.state = this.states.RELOADING;
         if (globals.debug) console.log("Starting reload");
     }
 
+   /* if (this.game.ASSAULT){
+      //  this.game.ASSAULT = false;
+        console.log("Assault Rifle equipped");
+        this.states.CURRENT_GUN = "assault rifle";
+    }*/
+       // var mouseStillDown = false;
 
-        var mouseStillDown = false;
+    if(this.game.firing) {
+      //  mouseStillDown = true;
 
-        if(this.game.mousedown) {
-            mouseStillDown = true;
-            fireAssault();
+        var currentTime = Date.now();
+
+        if ((currentTime - this.lastShotFired) / 1000 > .1) {
+            this.shoot(globals.mousePosition.x, globals.mousePosition.y);
+            this.lastShotFired = Date.now();
         }
 
-        function fireAssault() {
+        //fireAssault();
+    }
+
+    /*function fireAssault() {
             if (!mouseStillDown) { return; } // we could have come back from
                                              // SetInterval and the mouse is no longer down
             if (globals.debug) console.log("shooting");
@@ -130,11 +149,11 @@ Player.prototype.update = function () {
                 this.audio.play();
             }
 
-            if (mouseStillDown) { setInterval("fireAssault()", 100); }
-        }
+         //   if (mouseStillDown) { setInterval("fireAssault()", 100); }
+    }*/
 
         if(this.game.mouseup) {
-            mouseStillDown = false;
+           // mouseStillDown = false;
             this.state = this.states.IDLE;
         }
     
@@ -151,10 +170,13 @@ Player.prototype.update = function () {
 
     }
 
-    if (this.game.ASSAULT === true)this.states.CURRENT_GUN = "assault rifle";
+
 
     Entity.prototype.update.call(this);
 };
+
+
+
 /**
  * Draw for the game loop
  * @param ctx
