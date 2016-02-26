@@ -98,7 +98,7 @@ Zombie.prototype.update = function () {
         // follow player
         if (globals.player.health > 0) { //player is alive
             var dx = globals.player.x - this.screenX;
-            var dy = globals.player.y - this.screenX;
+            var dy = globals.player.y - this.screenY;
             var pointDistance = Math.sqrt(dx * dx + dy * dy);
 
             this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
@@ -112,19 +112,19 @@ Zombie.prototype.update = function () {
         // player dead, bounce off walls
         // this isn't necessary if we stop updating when the player isn't dead anymore
         // heh
-        //else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
-        //
-        //    this.velocity.x = -this.velocity.x * friction;
-        //
-        //    this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
-        //        this.screenY + (this.animations.idle.frameHeight / 2));
-        //}
-        //else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
-        //    this.velocity.y = -this.velocity.y * friction;
-        //
-        //    this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
-        //        this.screenY + (this.animations.idle.frameHeight / 2));
-        //}
+        else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+
+            this.velocity.x = -this.velocity.x * friction;
+
+            this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+                this.screenY + (this.animations.idle.frameHeight / 2));
+        }
+        else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
+            this.velocity.y = -this.velocity.y * friction;
+
+            this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+                this.screenY + (this.animations.idle.frameHeight / 2));
+        }
 
         var i;
         //check if getting shot the F up
