@@ -368,6 +368,7 @@ ASSET_MANAGER.downloadAll(function () {
 
             gameEngine.addEntity(globals.background);
             gameEngine.addEntity(new Zombie(gameEngine));
+            //gameEngine.addEntity(new PowerUp(gameEngine, {x: 900, y: 900}, "hp")); //for testing on scrolling map
             gameEngine.addEntity(globals.player);
 
             gameEngine.init(ctx);

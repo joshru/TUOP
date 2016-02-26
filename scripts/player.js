@@ -76,6 +76,7 @@ Player.prototype.move = function (xTrans, yTrans) {
     this.x += xTrans;
     this.y += yTrans;
 };
+
 /**
  * Checks for movement input
  */
@@ -87,7 +88,7 @@ Player.prototype.handleMovementInput = function () {
 
     if (Key.isDown(Key.RIGHT)) {
         this.state = this.states.MOVING;
-        if (bgX === -9000 || this.hitbox.x < centerX) {
+        if (bgX === -1248 || this.hitbox.x < centerX) {
             globals.background.scrolling = false;
             this.move(this.stepDistance, 0);
         } else {
@@ -117,7 +118,7 @@ Player.prototype.handleMovementInput = function () {
     }
     if (Key.isDown(Key.DOWN)) {
         this.state = this.states.MOVING;
-        if (bgY === -9000 || this.hitbox.y < centerY) {
+        if (bgY === -1248 || this.hitbox.y < centerY) {
             globals.background.scrolling = false;
             this.move(0, this.stepDistance);
         } else {
@@ -147,7 +148,7 @@ Player.prototype.updateZombies = function(x, y) {
  * Update for the game loop
  */
 Player.prototype.update = function () {
-    this.convertToOffScreen()
+    this.convertToOffScreen();
     this.handleMovementInput();
     this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale)  / 2,
                          this.y + (this.animations.idle.frameHeight * this.scale) / 2);
@@ -224,7 +225,7 @@ Player.prototype.draw = function (ctx) {
     ctx.font = "12px Courier New";
     ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
     ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.x, this.y + 20);
-    ctx.fillText("wX: " + Math.round(this.worldX) + " | wY: " + Math.round(this.worldX), this.x, this.y + 30);
+    ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldX), this.x, this.y + 30);
 
     //if (this.state === this.states.RELOADING) {
     //    this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);

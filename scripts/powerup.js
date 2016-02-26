@@ -14,10 +14,17 @@ function PowerUp(game, other, type) {
     this.name = "PowerUp";
     this.radius = 25;
     this.type = type;
-    this.x = other.x;
-    this.y = other.y;
+    this.x = other.screenX;
+    this.y = other.screenY;
     this.sprite = null;
     this.audio = document.getElementById('soundFX');
+
+    var screen = worldToScreen(this.x, this.y);
+    var world  = screenToWorld(this.x, this.y);
+    this.screenX = screen.x;
+    this.screenY = screen.y;
+    this.worldX = world.x;
+    this.worldY = world.y;
 
     this.animations = {};
     //Assign attributes based on type
@@ -36,7 +43,7 @@ function PowerUp(game, other, type) {
 
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
-    Entity.call(this, game, this.x, this.y);
+    Entity.call(this, game, this.worldX, this.worldY);
 }
 PowerUp.prototype = new Entity();
 PowerUp.prototype.constructor = PowerUp;
@@ -45,8 +52,9 @@ PowerUp.prototype.constructor = PowerUp;
  * Updates the hitbox for the game loop
  */
 PowerUp.prototype.update = function () {
+    this.convertToOnScreen();
     // drops HP accordingly
-    this.hitbox.updateXY(this.x + this.sprite.width / 2, this.y + this.sprite.height / 2);
+    this.hitbox.updateXY(this.screenX + this.sprite.width / 2, this.screenY + this.sprite.height / 2);
 
 
     // Player picks up power up
@@ -73,9 +81,12 @@ PowerUp.prototype.update = function () {
 };
 
 PowerUp.prototype.draw = function (ctx) {
+    this.convertToOffScreen();
     if (globals.debug) this.hitbox.draw(ctx);
 
-    ctx.drawImage(this.sprite, this.x, this.y);
+    this.hitbox.updateXY(this.screenX + (this.radius / 2),
+        this.screenY + (this.radius / 2));
+    ctx.drawImage(this.sprite, this.screenX, this.screenY);
 
     Entity.prototype.draw.call(this)
 };
@@ -91,4 +102,20 @@ PowerUp.prototype.isCollidingWith = function (entity) {
             console.log("Entity picking up Power Up: " + entity.name);
     }
     return distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius;
+};
+
+PowerUp.prototype.convertToOnScreen = function() {
+    var convert = worldToScreen(this.worldX, this.worldY);
+    this.screenX = convert.x;
+    this.screenY = convert.y;
+    this.hitbox.updateXY(this.screenX + (this.radius / 2),
+        this.screenY + (this.radius / 2));
+};
+
+PowerUp.prototype.convertToOffScreen = function() {
+    var convert = screenToWorld(this.screenX, this.screenY);
+    this.worldX = convert.x;
+    this.worldY = convert.y;
+    this.hitbox.updateXY(this.worldX + (this.radius / 2),
+        this.worldY + (this.radius / 2));
 };
