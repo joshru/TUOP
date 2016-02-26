@@ -148,7 +148,8 @@ Player.prototype.updateZombies = function(x, y) {
  */
 Player.prototype.update = function () {
     this.handleMovementInput();
-    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale)  / 2, this.y + (this.animations.idle.frameHeight * this.scale) / 2);
+    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale)  / 2,
+                         this.y + (this.animations.idle.frameHeight * this.scale) / 2);
 
     //console.log("player x: " + this.x + " | player y: " + this.y);
 
