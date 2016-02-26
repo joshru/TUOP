@@ -11,9 +11,10 @@
  * @param game
  * @constructor
  */
-function Bullet(x, y, xVelocity, yVelocity, src, game) {
+function Bullet(x, y, xVelocity, yVelocity, rotation, src, game) {
     this.x = x; // probably doesn't need to be here
     this.y = y;
+    this.rotation = rotation;
     this.name = "Bullet";
     //this.dir = dir;
     this.xVelocity = xVelocity;
@@ -68,18 +69,28 @@ Bullet.prototype.update = function () {
  * @param ctx
  */
 Bullet.prototype.draw = function (ctx) {
-    ctx.beginPath();
-    ctx.fillStyle = "#E3612F";
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    ctx.fill();
+    //ctx.beginPath();
+    //ctx.fillStyle = "#E3612F";
+    //ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    //ctx.fill();
+    //console.log("destination x: " + this.destX + " | destination y: " + this.destY);
+    //console.log(this.rotation * 180/Math.PI);
+    //var rotation = Math.atan2(-(this.y - this.destY), -(this.x - this.destX));
+    ctx.save();
+    ctx.translate((this.x + (15/2)), (this.y + (16/2)));
+    ctx.rotate(1 * (Math.PI/180));
+    ctx.translate(-(this.x + (15/2)), -(this.y + (16/2)));
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/ammo/shell_10.png"), this.x, this.y);
+
     if (globals.debug) {
         ctx.strokeStyle = "Pink";
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
         ctx.stroke();
     }
+    ctx.restore();
 
-    ctx.closePath();
+    //ctx.closePath();
     //console.log("click x: " + globals.clickPosition.x + " | click y: " + globals.clickPosition.y);
     //this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
 

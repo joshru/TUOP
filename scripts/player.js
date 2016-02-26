@@ -29,12 +29,12 @@ function Player(game, scale) {
     this.state = this.states.IDLE;
     this.animations = {};
 
-    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
-    this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 258, 220, 0.15, 15, true, false);
-    this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_flash.png"), 0, 0, 258, 220, 0.03, 1, true, false);
-    this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241, 0.13, 15, false, false);
-    this.animations.idleFeet = new Animation(ASSET_MANAGER.getAsset("./img/idle_feet.png", 0, 0, 132, 155, 0.2, 1, true, false));
-    this.animations.runFeet = new Animation(ASSET_MANAGER.getAsset("./img/moving_feet.png"), 0, 0, 204, 124, 0.1, 20, true, false);
+    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
+    this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_move.png"), 0, 0, 258, 220, 0.15, 15, true, false);
+    this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_flash.png"), 0, 0, 258, 220, 0.03, 1, true, false);
+    this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_reload.png"), 0, 0, 269, 241, 0.13, 15, false, false);
+    this.animations.idleFeet = new Animation(ASSET_MANAGER.getAsset("./img/player/idle_feet.png", 0, 0, 132, 155, 0.2, 1, true, false));
+    this.animations.runFeet = new Animation(ASSET_MANAGER.getAsset("./img/player/moving_feet.png"), 0, 0, 204, 124, 0.1, 20, true, false);
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 120 * this.scale;
@@ -52,7 +52,7 @@ Player.prototype.constructor = Player;
  * creates a bullet and adds it to the game's bullet data structure
  */
 Player.prototype.shoot = function (endX, endY) {
-    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale);
+    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale) / 2;
     var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
 
     var dx = (endX - bulletX);
@@ -61,9 +61,11 @@ Player.prototype.shoot = function (endX, endY) {
     var mag = Math.sqrt(dx * dx + dy * dy);
 
     var xVelocity = (dx / mag); // * 5;
-    var yVelocity = (dy / mag); //* 5;
+    var yVelocity = (dy / mag); // * 5;
 
-    this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
+    var rotation = Math.atan2(-(bulletY - globals.clickPosition.y), -(bulletX - globals.clickPosition.x));
+
+    this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, rotation, this.states.CURRENT_GUN, this.game));
 };
 
 /**
@@ -166,7 +168,6 @@ Player.prototype.draw = function (ctx) {
         currAnim = this.animations.shootPistol;
 
     }
-
     currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
 
     //if (this.state === this.states.RELOADING) {
@@ -264,3 +265,4 @@ Player.prototype.isCollidingWith = function (entity) {
 
     return {hit: distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius, dirs: collisions};
 };
+

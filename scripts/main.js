@@ -134,7 +134,7 @@ Background.prototype.draw = function (ctx) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white";
         ctx.font = "50px Courier New";
-        ctx.fillText("YOU DEAD HOMIE rip", 235, canvas.height / 2);
+        ctx.fillText("YOU DEAD HOMIE rip", 120, canvas.height / 2);
         // line below stops updating the game (we can keep this or lose this).
         this.game.gameStates.GAMEOVER = true;
         ///* for splash screen and start */
@@ -260,16 +260,18 @@ ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
 
 // animations
-ASSET_MANAGER.queueDownload("./img/hgun_idle.png");
-ASSET_MANAGER.queueDownload("./img/hgun_move.png");
-ASSET_MANAGER.queueDownload("./img/hgun_reload.png");
-ASSET_MANAGER.queueDownload("./img/hgun_shoot.png");
-ASSET_MANAGER.queueDownload("./img/hgun_flash.png");
-ASSET_MANAGER.queueDownload("./img/moving_feet.png");
-ASSET_MANAGER.queueDownload("./img/idle_feet.png");
+ASSET_MANAGER.queueDownload("./img/player/hgun_idle.png");
+ASSET_MANAGER.queueDownload("./img/player/hgun_move.png");
+ASSET_MANAGER.queueDownload("./img/player/hgun_reload.png");
+ASSET_MANAGER.queueDownload("./img/player/hgun_shoot.png");
+ASSET_MANAGER.queueDownload("./img/player/hgun_flash.png");
+ASSET_MANAGER.queueDownload("./img/player/moving_feet.png");
+ASSET_MANAGER.queueDownload("./img/player/idle_feet.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
-ASSET_MANAGER.queueDownload("./img/zombie.png");
-ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
+ASSET_MANAGER.queueDownload("./img/zombie/zombie.png");
+ASSET_MANAGER.queueDownload("./img/zombie/zombie_death.png");
+ASSET_MANAGER.queueDownload("./img/ammo/proj_25.png");
+ASSET_MANAGER.queueDownload("./img/ammo/shell_10.png");
 
 // splash screen
 ASSET_MANAGER.queueDownload("./img/welcome-splash800.png");
@@ -320,7 +322,7 @@ function startGame() {
             var bg = new Background(gameEngine);
 
             gameEngine.addEntity(bg);
-            gameEngine.addZombie(new Zombie(gameEngine));
+            //gameEngine.addZombie(new Zombie(gameEngine));
             gameEngine.addEntity(globals.player);
 
             gameEngine.init(ctx);

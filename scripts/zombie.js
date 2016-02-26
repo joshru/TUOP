@@ -32,8 +32,8 @@ function Zombie(game) {
     };
 
     this.animations = {};
-    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
-    this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/death_animation/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
+    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
+    this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
     var hbX = this.x + (this.animations.idle.frameWidth / 2);
     var hbY = this.y + (this.animations.idle.frameHeight / 2);
@@ -185,7 +185,7 @@ Zombie.prototype.draw = function (ctx) {
         ctx.translate((this.x + (71 / 2)), this.y + (71 / 2));
         ctx.rotate(rotation);
         ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
-        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.x, this.y);
+        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), this.x, this.y);
         ctx.restore();
     } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
 
