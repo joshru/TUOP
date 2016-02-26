@@ -236,6 +236,9 @@ window.addEventListener('click', function (event) {
 window.addEventListener('mousemove', function (event) {
     globals.mousePosition = getMousePos(document.getElementById('gameWorld'), event);
 }, false);
+window.addEventListener('mousedown', function (event){
+    globals.clickHoldPosition = click(document.getElementById('gameWorld'), event);
+}, false);
 
 var muteButton = document.getElementById('muteToggle');
 muteButton.addEventListener('click', function() { globals.mute ^= true });

@@ -22,7 +22,7 @@ function Player(game, scale) {
         MOVING: 1,
         SHOOTING: 2,
         RELOADING: 3,
-        CURRENT_GUN: 'assault rifle'
+        CURRENT_GUN: 'assault rifle',
     };
 
 
@@ -34,6 +34,7 @@ function Player(game, scale) {
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260, 230, .15, 16, true, false);
     this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 0, 0, 300, 238, 0.2, 6, true, false);
     this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241, .13, 15, false, false);
+    //this.animations.idleRifle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241, .13, 15, false, false);
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 200 * this.scale;
@@ -110,37 +111,33 @@ Player.prototype.update = function () {
     }
 
 
-        var mouseStillDown = false;
+    var mouseStillDown = false;
 
-        if(this.game.mousedown) {
-            mouseStillDown = true;
-            fireAssault();
+    if(this.game.mousedown) {
+        mouseStillDown = true;
+        fireAssault();
+    }
+
+    function fireAssault() {
+        if (!mouseStillDown) { return; } // we could have come back from
+                                         // SetInterval and the mouse is no longer down
+        if (globals.debug) console.log("shooting");
+
+        this.state = this.states.SHOOTING;
+        this.shoot(globals.mousePosition.x, globals.mousePosition.y);
+
+        if (!globals.mute) {
+            this.audio.src = "./sound/usp.wav";
+            this.audio.play();
         }
 
-        function fireAssault() {
-            if (!mouseStillDown) { return; } // we could have come back from
-                                             // SetInterval and the mouse is no longer down
-            if (globals.debug) console.log("shooting");
+        if (mouseStillDown) { setInterval("fireAssault()", 100); }
+    }
 
-            this.state = this.states.SHOOTING;
-            this.shoot(globals.mousePosition.x, globals.mousePosition.y);
-
-            if (!globals.mute) {
-                this.audio.src = "./sound/usp.wav";
-                this.audio.play();
-            }
-
-            if (mouseStillDown) { setInterval("fireAssault()", 100); }
-        }
-
-        if(this.game.mouseup) {
-            mouseStillDown = false;
-            this.state = this.states.IDLE;
-        }
-    
-
-
-
+    if(this.game.mouseup) {
+        mouseStillDown = false;
+        this.state = this.states.IDLE;
+    }
 
 
 
