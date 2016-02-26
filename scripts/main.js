@@ -174,6 +174,7 @@ var Key = {
     TWO: 50,
     ONE: 49,
     THREE: 51,
+    FOUR: 52,
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];

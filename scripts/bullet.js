@@ -42,6 +42,10 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
             this.damage = 20;
             this.radius = 3;
             break;
+        case 'sniper':
+            this.speed = 70;
+            this.damage = 200;
+            this.radius = 4;
         default:
             break;
 

@@ -13,6 +13,7 @@ function Player(game, scale) {
     this.scale = scale || 1;
     this.stepDistance = 5;
     this.health = 100;
+    this.drawLazer = false;
 
     this.weaponShotDelay = .5;
 
@@ -130,11 +131,56 @@ Player.prototype.handleMovementInput = function () {
 Player.prototype.update = function () {
     this.handleMovementInput();
 
+    if (this.states.CURRENT_GUN != 'sniper') this.drawLazer = false;
+
     if (!Key.keyPressed()) this.state = this.states.IDLE;
 
 
+    this.checkForWeaponSwap();
+
+
+    if (this.game.RELOAD) {
+        this.state = this.states.RELOADING;
+        if (globals.debug) console.log("Starting reload");
+    }
+
+
+
+    if(this.game.firing) {
+      //  mouseStillDown = true;
+
+        var currentTime = Date.now();
+
+        if ((currentTime - this.lastShotFired) / 1000 > this.weaponShotDelay) {
+            this.shoot(globals.mousePosition.x, globals.mousePosition.y, this.currentFiringMode);
+            this.lastShotFired = Date.now();
+        }
+
+    }
+
+
+        if(this.game.mouseup) {
+           // mouseStillDown = false;
+            this.state = this.states.IDLE;
+        }
+    
+
+
+    if (this.animations.reloadPistol.isDone()) {
+        this.game.RELOAD = false;
+        this.animations.reloadPistol.elapsedTime = 0;
+        this.state = this.states.IDLE;
+
+    }
+
+
+
+    Entity.prototype.update.call(this);
+};
+
+Player.prototype.checkForWeaponSwap = function() {
     if (Key.isDown(Key.ONE)) {
-        this.states.CURRENT_GUN = 'pistol'
+        this.states.CURRENT_GUN = 'pistol';
         console.log("pistol equipped");
         this.weaponShotDelay = .5;
         this.currentFiringMode = "full auto";
@@ -156,67 +202,16 @@ Player.prototype.update = function () {
 
     }
 
+    if (Key.isDown(Key.FOUR)) {
+        this.states.CURRENT_GUN = 'sniper';
+        this.drawLazer = true;
 
-    if (this.game.RELOAD) {
-        this.state = this.states.RELOADING;
-        if (globals.debug) console.log("Starting reload");
-    }
-
-   /* if (this.game.ASSAULT){
-      //  this.game.ASSAULT = false;
-        console.log("Assault Rifle equipped");
-        this.states.CURRENT_GUN = "assault rifle";
-    }*/
-       // var mouseStillDown = false;
-
-    if(this.game.firing) {
-      //  mouseStillDown = true;
-
-        var currentTime = Date.now();
-
-        if ((currentTime - this.lastShotFired) / 1000 > this.weaponShotDelay) {
-            this.shoot(globals.mousePosition.x, globals.mousePosition.y, this.currentFiringMode);
-            this.lastShotFired = Date.now();
-        }
+        console.log("sniper equipped");
+        this.weaponShotDelay = 1.5;
+        this.currentFiringMode = "full auto";
 
     }
-
-    /*function fireAssault() {
-            if (!mouseStillDown) { return; } // we could have come back from
-                                             // SetInterval and the mouse is no longer down
-            if (globals.debug) console. log("shooting");
-
-            this.state = this.states.SHOOTING;
-            this.shoot(globals.mousePosition.x, globals.mousePosition.y);
-
-            if (!globals.mute) {
-                this.audio.src = "./sound/usp.wav";
-                this.audio.play();
-            }
-
-         //   if (mouseStillDown) { setInterval("fireAssault()", 100); }
-    }*/
-
-        if(this.game.mouseup) {
-           // mouseStillDown = false;
-            this.state = this.states.IDLE;
-        }
-    
-
-
-    if (this.animations.reloadPistol.isDone()) {
-        this.game.RELOAD = false;
-        this.animations.reloadPistol.elapsedTime = 0;
-        this.state = this.states.IDLE;
-
-    }
-
-
-
-    Entity.prototype.update.call(this);
 };
-
-
 
 /**
  * Draw for the game loop
@@ -279,10 +274,21 @@ Player.prototype.draw = function (ctx) {
         }
     }
 
+
+    if (this.drawLazer) {
+        console.log("lazer time");
+        lineToMouse(ctx, this.x + this.animations.idle.width / 2, this.y + this.animations.idle.height / 2)
+
+
+
+    }
+
     if (globals.debug) this.hitbox.draw(ctx);
 
     Entity.prototype.draw.call(this);
 };
+
+
 
 //TODO use HitBox version instead
 Player.prototype.isCollidingWith = function (entity) {
@@ -296,3 +302,32 @@ Player.prototype.isCollidingWith = function (entity) {
 
     return {hit: distance(this.hitbox, entity.hitbox) < this.hitbox.radius + entity.hitbox.radius, dirs: collisions};
 };
+/**
+ *
+ * @param x
+ * @param y
+ * @shoutout user "David Brown" @stackoverflow
+ */
+
+function lineToMouse(ctx, x, y) {
+    var dirX = globals.mousePosition.x - x;
+    var dirY = globals.mousePosition.y - y;
+
+    //normalize vector
+    var dirLen = Math.sqrt(dirX * dirX + dirY * dirY);
+    dirX /= dirLen;
+    dirY /= dirLen;
+
+    var lineX = dirX * 100;
+    var lineY = dirY * 100;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.fillStyle="rgba(255, 0, 0, 0.5)";
+
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + lineX, y + lineY);
+    ctx.lineWidth = 5;
+    ctx.stroke();
+    ctx.restore();
+}
