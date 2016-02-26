@@ -46,6 +46,11 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
             this.speed = 70;
             this.damage = 200;
             this.radius = 4;
+            break;
+        case 'grenade':
+            this.speed = 7;
+            this.damage = 100;
+            this.radius = 5;
         default:
             break;
 
@@ -93,3 +98,6 @@ Bullet.prototype.draw = function (ctx) {
     //this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.5);
 
 };
+
+
+

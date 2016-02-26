@@ -162,6 +162,7 @@ function randomInt(n) {
  */
 var Key = {
     _pressed: {},
+    _tap: {},
 
     UP: 87, //w
     RIGHT: 68, //d
@@ -170,6 +171,7 @@ var Key = {
     R: 82, //R
     H: 72, //H
     P: 80,
+    G: 71,
     CLICK: 1,
     TWO: 50,
     ONE: 49,
@@ -189,7 +191,22 @@ var Key = {
     keyPressed: function () {
         return this._pressed.length === 0;
 
+    },
+
+    keyTapped: function(keyCode) {
+        return this._tap[keyCode];
+    },
+
+    onKeyTap: function(event) {
+        this._tap[event.keyCode] = true;
+    },
+
+    resolveTap: function(keyCode) {
+        this._tap[keyCode] = false;
     }
+
+
+
 
 };
 
@@ -217,6 +234,14 @@ function click(canvas, event) {
 //Assign listeners to keys
 window.addEventListener('keyup', function (event) {
     Key.onKeyUp(event);
+
+
+    if (event.which === 71) { //g
+        globals.player.throwingGrenade = true;
+    }
+
+    //HARDCODE FOR GRENADES //TODO fix this isht
+
 }, false);
 window.addEventListener('keydown', function (event) {
     Key.onKeyDown(event);
@@ -232,8 +257,13 @@ window.addEventListener('keydown', function (event) {
     }
 //
 }, false);
-//window.addEventListener('mouseover', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
-//window.addEventListener('mousemove', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event); }, false);
+
+window.addEventListener('keypress', function (event) {
+    console.log(String.fromCharCode(event.keyCode) + " key pressed");
+    Key.onKeyTap(event);
+}, false);
+
+
 window.addEventListener('click', function (event) {
     globals.clickPosition = click(document.getElementById('gameWorld'), event);
 }, false);

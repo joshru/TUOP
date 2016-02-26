@@ -14,7 +14,7 @@ function Player(game, scale) {
     this.stepDistance = 5;
     this.health = 100;
     this.drawLazer = false;
-
+    this.throwingGrenade = false;
     this.weaponShotDelay = .5;
 
     this.lastShotFired = Date.now();
@@ -139,13 +139,20 @@ Player.prototype.update = function () {
     this.checkForWeaponSwap();
 
 
+    if (this.throwingGrenade) {
+
+        this.throwGrenade();
+        this.throwingGrenade = false;
+
+    }
+
     if (this.game.RELOAD) {
         this.state = this.states.RELOADING;
         if (globals.debug) console.log("Starting reload");
     }
 
 
-
+    //SHOOT DA GUNZ
     if(this.game.firing) {
       //  mouseStillDown = true;
 
@@ -211,6 +218,16 @@ Player.prototype.checkForWeaponSwap = function() {
         this.currentFiringMode = "full auto";
 
     }
+
+
+
+};
+
+Player.prototype.throwGrenade = function() {
+    var startX = this.x + (this.animations.idle.frameWidth * this.scale);
+    var startY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
+
+    this.game.addEntity(new Grenade(startX, startY, globals.mousePosition.x, globals.mousePosition.y, this.game ));
 };
 
 /**
