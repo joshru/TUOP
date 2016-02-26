@@ -17,10 +17,10 @@ function Zombie(game) {
 
     this.radius = 20;
     this.ground = 500;
-    //this.x = randomInt(1245); //hardcoded for prototype zombie
-    //this.y = randomInt(1245); //TODO come up with a zombie spawning system using timers or something
-    this.x = 400;
-    this.y = 400;
+    this.x = randomInt(2000 - globals.player.x); //hardcoded for prototype zombie
+    this.y = randomInt(2000 - globals.player.y); //TODO come up with a zombie spawning system using timers or something
+    //this.x = 400;
+    //this.y = 400;
 
     var screen = worldToScreen(this.x, this.y);
     var world = screenToWorld(this.x, this.y);
@@ -77,8 +77,8 @@ Zombie.prototype.update = function () {
 
         // TODO Explain this?
         //if (!globals.background.scrolling) {
-        //    this.worldX += this.velocity.x * this.game.clockTick;
-        //    this.worldY += this.velocity.y * this.game.clockTick;
+            this.worldX += this.velocity.x * this.game.clockTick;
+            this.worldY += this.velocity.y * this.game.clockTick;
         //} else {
         //    this.worldX = (this.velocity.x * 0.3) * this.game.clockTick;
         //    this.worldY = (this.velocity.y * 0.3) * this.game.clockTick;
@@ -151,46 +151,46 @@ Zombie.prototype.update = function () {
     //TODO create dying animation and stuff
     //Do this by setting dying=true; then have a conditional that checks for dying and changes the animation
     //accordingly
-    //if (this.health <= 0) this.die();
+    if (this.health <= 0) this.die();
     //
     //
-    //if (this.animations.dying.isDone()) {
-    //    this.removeFromWorld = true;
-    //    ++globals.zombieDeathCount;
-    //    ++globals.killCount;
-    //
-    //    // TODO add more features for drops
-    //    var chance = randomInt(10) + 1;
-    //    if (chance > 8) {
-    //        // TODO this will turn into a switch at some point to change types
-    //        // TODO currently 20% chance of godlike, 80% hp
-    //        chance = randomInt(10) + 1;
-    //        if (chance > 2)
-    //            this.game.addEntity(new PowerUp(this.game, this, "hp"));
-    //        else
-    //            this.game.addEntity(new PowerUp(this.game, this, "godlike"));
-    //    }
-    //
-    //    // var currentFib = globals.fib1 + globals.fib2;
-    //    if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
-    //    if (globals.zombieDeathCount === globals.fibs.currFib) {
-    //        // see in Background.prototype.draw for wave counter
-    //        globals.wave++;
-    //
-    //        if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
-    //        //update previous and current fibonacci numbers
-    //        globals.fibs.fib1 = globals.fibs.fib2;
-    //        globals.fibs.fib2 = globals.fibs.currFib;
-    //        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
-    //        //Spawn current fib amount of zombies
-    //        for (var i = 0; i < globals.fibs.currFib; i++) {
-    //            this.game.addEntity(new Zombie(this.game));
-    //        }
-    //
-    //        globals.zombieDeathCount = 0;
-    //    }
-    //
-    //}
+    if (this.animations.dying.isDone()) {
+        this.removeFromWorld = true;
+        ++globals.zombieDeathCount;
+        ++globals.killCount;
+
+        // TODO add more features for drops
+        var chance = randomInt(10) + 1;
+        if (chance > 8) {
+            // TODO this will turn into a switch at some point to change types
+            // TODO currently 20% chance of godlike, 80% hp
+            chance = randomInt(10) + 1;
+            if (chance > 2)
+                this.game.addEntity(new PowerUp(this.game, this, "hp"));
+            else
+                this.game.addEntity(new PowerUp(this.game, this, "godlike"));
+        }
+
+        // var currentFib = globals.fib1 + globals.fib2;
+        if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
+        if (globals.zombieDeathCount === globals.fibs.currFib) {
+            // see in Background.prototype.draw for wave counter
+            globals.wave++;
+
+            if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+            //update previous and current fibonacci numbers
+            globals.fibs.fib1 = globals.fibs.fib2;
+            globals.fibs.fib2 = globals.fibs.currFib;
+            globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
+            //Spawn current fib amount of zombies
+            for (var i = 0; i < globals.fibs.currFib; i++) {
+                this.game.addEntity(new Zombie(this.game));
+            }
+
+            globals.zombieDeathCount = 0;
+        }
+
+    }
 
     //if ((this.x > 0 || this.y < 0) && !this.isOnScreen) {
     //    //console.log("converting zombie to screen coords");
@@ -244,7 +244,7 @@ Zombie.prototype.draw = function (ctx) {
 
 
     if (!this.isDead /*|| this.isOnScreen*/) {
-        var rotation = Math.atan2(-(this.screenY - globals.player.hitbox.y), -(this.screenX - globals.player.hitbox.x));
+        var rotation = Math.atan2(-(this.worldY - globals.player.hitbox.y), -(this.worldX - globals.player.hitbox.x));
 
         ctx.save();
         ctx.translate((this.worldX + (71 / 2)), this.worldY + (71 / 2)); //magic numbers for zombie sprite dimensions
@@ -255,7 +255,7 @@ Zombie.prototype.draw = function (ctx) {
         ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.worldX, this.worldY);
         //this.animations.move.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.3);
         ctx.restore();
-    } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 1);
+    } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.worldX, this.worldY, 1);
 
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
