@@ -173,6 +173,7 @@ var Key = {
     CLICK: 1,
     TWO: 50,
     ONE: 49,
+    THREE: 51,
 
     isDown: function (keyCode) {
         return this._pressed[keyCode];

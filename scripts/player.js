@@ -14,8 +14,10 @@ function Player(game, scale) {
     this.stepDistance = 5;
     this.health = 100;
 
+    this.weaponShotDelay = .5;
 
     this.lastShotFired = Date.now();
+    this.currentFiringMode = "full auto";
 
     this.audio = document.getElementById('soundFX');
 
@@ -54,7 +56,7 @@ Player.prototype.constructor = Player;
 /**
  * creates a bullet and adds it to the game's bullet data structure
  */
-Player.prototype.shoot = function (endX, endY) {
+Player.prototype.shoot = function (endX, endY, firingMode) {
     var bulletX = this.x + (this.animations.idle.frameWidth * this.scale);
     var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
 
@@ -66,7 +68,30 @@ Player.prototype.shoot = function (endX, endY) {
     var xVelocity = (dx / mag); // * 5;
     var yVelocity = (dy / mag); //* 5;
 
-    this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
+    switch (firingMode) {
+        case "full auto":
+            this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
+
+            break;
+
+        case "spread":
+            this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
+            this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity + .3, yVelocity , this.states.CURRENT_GUN, this.game)); //left of bullet
+            this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity + .3, yVelocity, this.states.CURRENT_GUN, this.game)); //right of bullet
+
+            for (var i = 0; i < 8; i++) {
+                var randomSpread = (randomInt(4)) / 10;
+                var negChance = randomInt(2) + 1;
+                if (negChance > 1) randomSpread *= -1;
+                this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity + randomSpread, yVelocity , this.states.CURRENT_GUN, this.game)); //left of bullet
+
+            }
+
+
+            break;
+        default:
+            break;
+    }
 };
 
 /**
@@ -107,10 +132,30 @@ Player.prototype.update = function () {
 
     if (!Key.keyPressed()) this.state = this.states.IDLE;
 
+
+    if (Key.isDown(Key.ONE)) {
+        this.states.CURRENT_GUN = 'pistol'
+        console.log("pistol equipped");
+        this.weaponShotDelay = .5;
+        this.currentFiringMode = "full auto";
+    }
+
     if (Key.isDown(Key.TWO)){
         this.states.CURRENT_GUN = "assault rifle";
-        console.log("assault rifle equipped")
+        console.log("assault rifle equipped");
+        this.weaponShotDelay = .1;
+        this.currentFiringMode = "full auto";
+
     }
+
+    if (Key.isDown(Key.THREE)) {
+        this.states.CURRENT_GUN = 'shotgun';
+        console.log("shotgun equipped");
+        this.weaponShotDelay = .8;
+        this.currentFiringMode = "spread";
+
+    }
+
 
     if (this.game.RELOAD) {
         this.state = this.states.RELOADING;
@@ -129,18 +174,17 @@ Player.prototype.update = function () {
 
         var currentTime = Date.now();
 
-        if ((currentTime - this.lastShotFired) / 1000 > .1) {
-            this.shoot(globals.mousePosition.x, globals.mousePosition.y);
+        if ((currentTime - this.lastShotFired) / 1000 > this.weaponShotDelay) {
+            this.shoot(globals.mousePosition.x, globals.mousePosition.y, this.currentFiringMode);
             this.lastShotFired = Date.now();
         }
 
-        //fireAssault();
     }
 
     /*function fireAssault() {
             if (!mouseStillDown) { return; } // we could have come back from
                                              // SetInterval and the mouse is no longer down
-            if (globals.debug) console.log("shooting");
+            if (globals.debug) console. log("shooting");
 
             this.state = this.states.SHOOTING;
             this.shoot(globals.mousePosition.x, globals.mousePosition.y);
