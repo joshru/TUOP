@@ -228,7 +228,7 @@ window.addEventListener('keydown', function (event) {
     if (event.which === Key.H) {
         globals.debug ^= true;
     }
-
+//
 }, false);
 //window.addEventListener('mouseover', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event);}, false);
 //window.addEventListener('mousemove', function(event) { mousePosition = getMousePos(document.getElementById('gameWorld'), event); }, false);
