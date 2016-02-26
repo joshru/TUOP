@@ -11,7 +11,7 @@ function Player(game, scale) {
     this.game = game;
     this.name = "Player";
     this.scale = scale || 1;
-    this.stepDistance = 5;
+    this.stepDistance = 3;
     this.scrollStep = 2;
     this.health = 100;
     this.godlike = false;
@@ -147,6 +147,7 @@ Player.prototype.updateZombies = function(x, y) {
  * Update for the game loop
  */
 Player.prototype.update = function () {
+    this.convertToOffScreen()
     this.handleMovementInput();
     this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale)  / 2,
                          this.y + (this.animations.idle.frameHeight * this.scale) / 2);
@@ -195,8 +196,9 @@ Player.prototype.update = function () {
 Player.prototype.draw = function (ctx) {
     var currAnim;
 
-    ctx.font = "12px Courier New";
-    ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
+    this.convertToOnScreen();
+
+
 
     if (this.state === this.states.MOVING) {
         this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
@@ -218,6 +220,11 @@ Player.prototype.draw = function (ctx) {
     }
 
     currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+
+    ctx.font = "12px Courier New";
+    ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
+    ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.x, this.y + 20);
+    ctx.fillText("wX: " + Math.round(this.worldX) + " | wY: " + Math.round(this.worldX), this.x, this.y + 30);
 
     //if (this.state === this.states.RELOADING) {
     //    this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
@@ -300,6 +307,28 @@ Player.prototype.grabPowerups = function() {
 
     }
 
+};
+
+Player.prototype.convertToOnScreen = function() {
+    this.isOnScreen = false;
+    var convert = worldToScreen(this.x, this.y);
+    //this.x = convert.x;
+    //this.y = convert.y;
+    this.screenX = convert.x;
+    this.screenY = convert.y;
+    //this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2), this.screenY + (this.animations.idle.frameHeight / 2));
+};
+
+Player.prototype.convertToOffScreen = function() {
+    this.isOnScreen = true;
+    var convert = screenToWorld(this.x, this.y);
+    //this.x = convert.x;
+    //this.y = convert.y;
+    this.worldX = convert.x;
+    this.worldY = convert.y;
+    //this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2), this.worldY + (this.animations.idle.frameHeight / 2));
+    //this.hitbox.x = convert.x;
+    //this.hitbox.y = convert.y;
 };
 
 

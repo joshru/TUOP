@@ -199,12 +199,13 @@ Background.prototype.draw = function (ctx) {
 
 //converts coordinates in game world to coordinates where the sprite should be drawn on screen.
 function worldToScreen(x, y) {
-    return {x: x - (/*-*/globals.background.x), y: y - (/*-*/globals.background.y)};
+    return {x: x - (-globals.background.x), y: y - (-globals.background.y)};
+
 }
 
 //converts coordinates on the screen to coordinates in the game world as a whole.
 function screenToWorld(x, y) {
-    return {x: x + globals.background.x, y: y + globals.background.y};
+    return {x: x + -globals.background.x, y: y + -globals.background.y};
 }
 
 /**
