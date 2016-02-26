@@ -222,10 +222,12 @@ Player.prototype.draw = function (ctx) {
 
     currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
 
-    ctx.font = "12px Courier New";
-    ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
-    ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.x, this.y + 20);
-    ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldX), this.x, this.y + 30);
+    if (globals.debug) {
+        ctx.font = "12px Courier New";
+        ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
+        ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.x, this.y + 20);
+        ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldX), this.x, this.y + 30);
+    }
 
     //if (this.state === this.states.RELOADING) {
     //    this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);

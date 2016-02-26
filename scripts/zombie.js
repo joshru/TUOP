@@ -245,9 +245,11 @@ Zombie.prototype.convertToOffScreen = function() {
 Zombie.prototype.draw = function (ctx) {
     this.convertToOffScreen();
     //this.convertToOnScreen();
-    ctx.font = "12px Courier New";
-    ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.screenX, this.screenY + 10);
-    ctx.fillText("wX: " + Math.round(this.worldX) + " | wY: " + Math.round(this.worldX), this.screenX, this.screenY + 20);
+    if (globals.debug) {
+        ctx.font = "12px Courier New";
+        ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.screenX, this.screenY + 10);
+        ctx.fillText("wX: " + Math.round(this.worldX) + " | wY: " + Math.round(this.worldX), this.screenX, this.screenY + 20);
+    }
 
 
     if (!this.isDead /*|| this.isOnScreen*/) {
