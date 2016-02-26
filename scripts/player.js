@@ -37,6 +37,7 @@ function Player(game, scale) {
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/hgun_move.png"), 0, 0, 260, 230, .15, 16, true, false);
     this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_shoot.png"), 0, 0, 300, 238, 0.2, 6, true, false);
     this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241, .13, 15, false, false);
+    //this.animations.idleRifle = new Animation(ASSET_MANAGER.getAsset("./img/hgun_reload.png"), 0, 0, 269, 241, .13, 15, false, false);
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 200 * this.scale;
@@ -157,10 +158,6 @@ Player.prototype.update = function () {
             this.state = this.states.IDLE;
         }
     
-
-
-
-
 
 
     if (this.animations.reloadPistol.isDone()) {

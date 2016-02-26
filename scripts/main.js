@@ -238,6 +238,9 @@ window.addEventListener('click', function (event) {
 window.addEventListener('mousemove', function (event) {
     globals.mousePosition = getMousePos(document.getElementById('gameWorld'), event);
 }, false);
+window.addEventListener('mousedown', function (event){
+    globals.clickHoldPosition = click(document.getElementById('gameWorld'), event);
+}, false);
 
 
 window.addEventListener('mousedown', function(event) {
