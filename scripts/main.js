@@ -320,7 +320,7 @@ function startGame() {
             var bg = new Background(gameEngine);
 
             gameEngine.addEntity(bg);
-            gameEngine.addEntity(new Zombie(gameEngine));
+            gameEngine.addZombie(new Zombie(gameEngine));
             gameEngine.addEntity(globals.player);
 
             gameEngine.init(ctx);

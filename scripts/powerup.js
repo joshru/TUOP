@@ -37,7 +37,7 @@ function PowerUp(game, other, type) {
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
     Entity.call(this, game, this.x, this.y);
-}
+};
 PowerUp.prototype = new Entity();
 PowerUp.prototype.constructor = PowerUp;
 

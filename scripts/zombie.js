@@ -165,7 +165,7 @@ Zombie.prototype.update = function () {
             globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
             //Spawn current fib amount of zombies
             for (var i = 0; i < globals.fibs.currFib; i++) {
-                this.game.addEntity(new Zombie(this.game));
+                this.game.addZombie(new Zombie(this.game));
             }
 
             globals.zombieDeathCount = 0;

@@ -39,6 +39,7 @@ function GameEngine() {
 
     this.entities = [];
     this.bullets = [];//testing best place to put this
+    this.zombies = [];
     this.showOutlines = false;
     this.ctx = null;
     this.click = null;
@@ -123,6 +124,11 @@ GameEngine.prototype.addEntity = function (entity) {
     this.entities.push(entity);
 };
 
+GameEngine.prototype.addZombie = function(zombie) {
+    console.log("added zombie");
+    this.zombies.push(zombie);
+};
+
 //TODO consider making a function 'addBullet'
 //This approach may end up getting redundant if we end up with more arrays of different entity types
 
@@ -133,6 +139,9 @@ GameEngine.prototype.draw = function () {
     this.drawEntitiesIn(this.entities);
     //Draw bullets
     this.drawEntitiesIn(this.bullets);
+
+    //Draw Zombies
+    this.drawEntitiesIn(this.zombies);
 
     this.ctx.restore();
 };
@@ -181,12 +190,15 @@ GameEngine.prototype.update = function () {
 
     this.updateEntitiesIn(this.bullets);
 
+    //update zombies
+    this.updateEntitiesIn(this.zombies);
+
 
     //remove entities and bullets that are donezo
 
     this.removeFinishedFrom(this.entities);
     this.removeFinishedFrom(this.bullets);
-
+    this.removeFinishedFrom(this.zombies);
 
 
 };
