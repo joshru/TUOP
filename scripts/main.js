@@ -272,7 +272,7 @@ ASSET_MANAGER.queueDownload("./img/zombie.png");
 ASSET_MANAGER.queueDownload("./img/death_animation/zombie_death.png");
 
 // splash screen
-ASSET_MANAGER.queueDownload("./img/welcome-splash.png");
+ASSET_MANAGER.queueDownload("./img/welcome-splash800.png");
 
 // power ups
 ASSET_MANAGER.queueDownload("./img/powerups/hp-heart.png");
@@ -293,7 +293,7 @@ function startGame() {
 
     /* for splash screen and start */
     var startOrReplay = {
-        x: 420, // 420 heh
+        x: 320,
         y: canvas.height / 2 - 50,
         w: 150,
         h: 30
@@ -301,7 +301,7 @@ function startGame() {
 
     canvas.addEventListener("mousedown", fireUpTheEnginesBoys, false);
 
-    ctx.drawImage(ASSET_MANAGER.getAsset("./img/welcome-splash.png"), 0, 0);
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/welcome-splash800.png"), 0, 0);
     ctx.fillStyle = "white";
     ctx.font = "50px Courier New";
     ctx.fillText("START", startOrReplay.x, startOrReplay.y);

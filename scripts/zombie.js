@@ -45,11 +45,6 @@ function Zombie(game) {
 
 Zombie.prototype = new Entity();
 Zombie.prototype.constructor = Zombie;
-
-Zombie.prototype.clone =  function() {
-  return new Zombie(this.game);
-};
-
 /**
  * Update for the game loop
  */
@@ -165,7 +160,7 @@ Zombie.prototype.update = function () {
             globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
             //Spawn current fib amount of zombies
             for (var i = 0; i < globals.fibs.currFib; i++) {
-                this.game.addZombie(new Zombie(this.game));
+                this.game.addEntity(new Zombie(this.game));
             }
 
             globals.zombieDeathCount = 0;
