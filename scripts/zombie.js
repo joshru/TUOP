@@ -65,6 +65,7 @@ Zombie.prototype.update = function () {
     var maxSpeed = 100;
     var minSpeed = 5;
     //this.convertToOnScreen();
+    this.convertToOffScreen();
     console.log("world X:  " + this.worldX + " | world  Y: " + this.worldY + "\nscreen X: " + this.screenX + " | screen Y: " + this.screenY);
     //console.log("zombie x: " + this.x + " | zombie y: " + this.y);
 
@@ -239,19 +240,19 @@ Zombie.prototype.draw = function (ctx) {
     //this.convertToOffScreen();
     //this.convertToOnScreen();
     ctx.font = "12px Courier New";
-    ctx.fillText("x: " + Math.round(this.worldX) + " y: " + Math.round(this.worldY), this.screenX, this.screenY + 10);
+    ctx.fillText("x: " + Math.round(this.worldX) + " y: " + Math.round(this.worldY), this.worldX, this.worldY + 10);
 
 
     if (!this.isDead /*|| this.isOnScreen*/) {
         var rotation = Math.atan2(-(this.screenY - globals.player.hitbox.y), -(this.screenX - globals.player.hitbox.x));
 
         ctx.save();
-        ctx.translate((this.screenX + (71 / 2)), this.screenY + (71 / 2)); //magic numbers for zombie sprite dimensions
+        ctx.translate((this.worldX + (71 / 2)), this.worldY + (71 / 2)); //magic numbers for zombie sprite dimensions
         //ctx.translate((this.x + (288 / 2)), this.y + (311 / 2)); //movement animation stuff, will replace idle animation with this soon
         ctx.rotate(rotation);
-        ctx.translate(-(this.screenX + (71 / 2)), -(this.screenY + (71 / 2)));
+        ctx.translate(-(this.worldX + (71 / 2)), -(this.worldY + (71 / 2)));
         //ctx.translate(-(this.x + (288 / 2)), -(this.y + (311 / 2)));
-        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.screenX, this.screenY);
+        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.worldX, this.worldY);
         //this.animations.move.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.3);
         ctx.restore();
     } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 1);
