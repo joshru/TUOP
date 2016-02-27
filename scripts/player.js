@@ -61,8 +61,11 @@ Player.prototype.constructor = Player;
  * creates a bullet and adds it to the game's bullet data structure
  */
 Player.prototype.shoot = function (endX, endY, firingMode) {
+
+    console.log("shoot called");
+
     var bulletX = this.x + (this.animations.idle.frameWidth * this.scale) / 2;
-    var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
+    var bulletY = this.y + (this.animations.idle.frameWidth * this.scale ) / 2;
 
     var dx = (endX - bulletX);
     var dy = (endY - bulletY);
@@ -74,7 +77,7 @@ Player.prototype.shoot = function (endX, endY, firingMode) {
 
     var rotation = Math.atan2(-(bulletY - globals.clickPosition.y), -(bulletX - globals.clickPosition.x));
 
-    this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, rotation, this.states.CURRENT_GUN, this.game));
+   // this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, rotation, this.states.CURRENT_GUN, this.game));
     switch (firingMode) {
         case "full auto":
             this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, this.states.CURRENT_GUN, this.game));
@@ -202,40 +205,40 @@ Player.prototype.update = function () {
         if (globals.debug) console.log("Starting reload");
     }
 
-    if (this.game.leftClick) {
-        if (globals.debug) console.log("shooting");
+    // if (this.game.leftClick) {
+    if (globals.debug) console.log("shooting");
 
-        //SHOOT DA GUNZ
-        if (this.game.firing) {
+    //SHOOT DA GUNZ
+    if (this.game.firing) {
 
-            var currentTime = Date.now();
+        var currentTime = Date.now();
 
-            if ((currentTime - this.lastShotFired) / 1000 > this.weaponShotDelay) {
-                this.shoot(globals.mousePosition.x, globals.mousePosition.y, this.currentFiringMode);
-                this.lastShotFired = Date.now();
-            }
-
+        if ((currentTime - this.lastShotFired) / 1000 > this.weaponShotDelay) {
+            this.shoot(globals.mousePosition.x, globals.mousePosition.y, this.currentFiringMode);
+            this.lastShotFired = Date.now();
         }
 
-
-        if (this.game.mouseup) {
-            // mouseStillDown = false;
-            this.state = this.states.IDLE;
-        }
-
-
-        if (this.animations.reloadPistol.isDone()) {
-            this.game.RELOAD = false;
-            this.animations.reloadPistol.elapsedTime = 0;
-            this.game.leftClick = false;
-        } else if (!this.states.MOVING && !this.states.SHOOTING) {
-            this.state = this.states.IDLE;
-
-        }
-
-
-        Entity.prototype.update.call(this);
     }
+
+
+  /*  if (this.game.mouseup) {
+        // mouseStillDown = false;
+        this.state = this.states.IDLE;
+    }*/
+
+
+    if (this.animations.reloadPistol.isDone()) {
+        this.game.RELOAD = false;
+        this.animations.reloadPistol.elapsedTime = 0;
+        this.game.leftClick = false;
+    } else if (!this.states.MOVING && !this.states.SHOOTING) {
+        this.state = this.states.IDLE;
+
+    }
+
+
+    Entity.prototype.update.call(this);
+
 };
 
 Player.prototype.checkForWeaponSwap = function () {

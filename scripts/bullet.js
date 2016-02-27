@@ -11,10 +11,10 @@
  * @param game
  * @constructor
  */
-function Bullet(x, y, xVelocity, yVelocity, rotation, src, game) {
+function Bullet(x, y, xVelocity, yVelocity, src, game) {
     this.x = x; // probably doesn't need to be here
     this.y = y;
-    this.rotation = rotation;
+  //  this.rotation = rotation;
     this.name = "Bullet";
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
@@ -49,11 +49,15 @@ function Bullet(x, y, xVelocity, yVelocity, rotation, src, game) {
             this.speed = 10;
             this.damage = 20;
             this.radius = 3;
+            this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
+
             break;
         case 'sniper':
             this.speed = 70;
             this.damage = 200;
             this.radius = 4;
+            this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
+
             break;
         case 'grenade':
             this.speed = 7;
@@ -78,13 +82,13 @@ Bullet.prototype.update = function () {
     var canvas = document.getElementById('gameWorld');
     var that = this;
     //Remove bullet if offscreen
-    //if (this.x < 0 || this.y < 0 || this.x > canvas.width || this.y > canvas.height) {
-    //    that.removeFromWorld = true;
-    //} else {
+    if (this.x < 0 || this.y < 0 || this.x > canvas.width || this.y > canvas.height) {
+        that.removeFromWorld = true;
+    } else {
         //Change its position otherwise
         this.x += that.xVelocity * this.speed;
         this.y += that.yVelocity * this.speed;
-    //}
+    }
 };
 /**
  * For the game loop
@@ -98,11 +102,14 @@ Bullet.prototype.draw = function (ctx) {
     //console.log("destination x: " + this.destX + " | destination y: " + this.destY);
     //console.log(this.rotation * 180/Math.PI);
     //var rotation = Math.atan2(-(this.y - this.destY), -(this.x - this.destX));
-    ctx.save();
-    ctx.translate((this.x + (15/2)), (this.y + (16/2)));
-    ctx.rotate(1 * (Math.PI/180));
-    ctx.translate(-(this.x + (15/2)), -(this.y + (16/2)));
+    //ctx.save();
+    //ctx.translate((this.x + (15/2)), (this.y + (16/2)));
+    //ctx.rotate(1 * (Math.PI/180));
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/ammo/shell_10.png"), this.x, this.y);
+
+//    ctx.translate(-(this.x + (15/2)), -(this.y + (16/2)));
+
+    console.log("drawing bullet at : " + this.x + ", " + this.y);
 
     if (globals.debug) {
         ctx.strokeStyle = "Pink";
@@ -113,7 +120,7 @@ Bullet.prototype.draw = function (ctx) {
     ctx.restore();
 
     //ctx.closePath();
-    this.convertToOffScreen();
+  //  this.convertToOffScreen();
     //ctx.beginPath();
     //ctx.fillStyle = "#E3612F";
     //ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);

@@ -346,13 +346,7 @@ window.addEventListener('mousedown', function (event){
 }, false);
 
 
-window.addEventListener('mousedown', function(event) {
-    globals.player.game.firing = true;
-}, false);
 
-window.addEventListener('mouseup', function(event) {
-    globals.player.game.firing = false;
-}, false);
 
 
 var muteButton = document.getElementById('muteToggle');
@@ -380,6 +374,8 @@ ASSET_MANAGER.queueDownload("./img/zombie/zombie.png");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie_death.png");
 ASSET_MANAGER.queueDownload("./img/ammo/proj_25.png");
 ASSET_MANAGER.queueDownload("./img/ammo/shell_10.png");
+ASSET_MANAGER.queueDownload("./img/ammo/bullet.jpg");
+
 
 // splash screen
 ASSET_MANAGER.queueDownload("./img/welcome-splash800.png");
@@ -442,3 +438,10 @@ function startGame() {
     }
 }
 
+window.addEventListener('mousedown', function(event) {
+    globals.player.game.firing = true;
+}, false);
+
+window.addEventListener('mouseup', function(event) {
+    globals.player.game.firing = false;
+}, false);
