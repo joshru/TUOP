@@ -12,15 +12,32 @@ function Zombie(game) {
     this.states = {};
     this.health = 100;
     this.isDead = false;
+    this.isOnScreen = true;
     this.speed = 5;
 
     this.radius = 20;
     this.ground = 500;
-    this.x = randomInt(950); //hardcoded for prototype zombie
-    this.y = randomInt(950); //TODO come up with a zombie spawning system using timers or something
 
-    //TODO create speedScale variable so zombies of different types can have different speeds
-    //EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.
+    //todo spawning needs work so zombies don't spawn off the edges of the map
+    this.x = randomInt(1200); //hardcoded for prototype zombie
+    this.y = randomInt(1200); //TODO come up with a zombie spawning system using timers or something
+    //this.x = 400;
+    //this.y = 400;
+
+    var screen = worldToScreen(this.x, this.y);
+    var world  = screenToWorld(this.x, this.y);
+    this.screenX = screen.x;
+    this.screenY = screen.y;
+    this.worldX = world.x;
+    this.worldY = world.y;
+    //this.worldX = 1600;
+    //this.worldY = 1600;
+
+
+    console.log("spawning zombie at: " + this.screenX + ", " + this.screenY);
+
+    // TODO create speedScale variable so zombies of different types can have different speeds
+    // EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.
 
     this.speedScale = 100;
 
@@ -34,17 +51,21 @@ function Zombie(game) {
     this.animations = {};
     this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
+    this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
+    this.animations.move  = new Animation(ASSET_MANAGER.getAsset("./img/zombie_move.png"), 0, 0, 288, 311, 0.15, 17, true, false);
+    this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/death_animation/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
-    var hbX = this.x + (this.animations.idle.frameWidth / 2);
-    var hbY = this.y + (this.animations.idle.frameHeight / 2);
+    var hbX = this.worldX + (this.animations.idle.frameWidth  / 2);
+    var hbY = this.worldY + (this.animations.idle.frameHeight / 2);
 
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
-    Entity.call(this, game, this.x, this.y);
+    Entity.call(this, game, this.worldX, this.worldY);
 }
 
 Zombie.prototype = new Entity();
 Zombie.prototype.constructor = Zombie;
+
 /**
  * Update for the game loop
  */
@@ -52,46 +73,59 @@ Zombie.prototype.update = function () {
     var friction = 1;
     var maxSpeed = 100;
     var minSpeed = 5;
+    this.convertToOnScreen();
+    //this.convertToOffScreen();
+    //console.log("screen X:  " + Math.round(this.screenX) + " | screen  Y: " + Math.round(this.screenY) + "\nworld X: " + Math.round(this.worldX) + " | world Y: " + Math.round(this.worldY));
+    //console.log("zombie x: " + this.x + " | zombie y: " + this.y);
 
     //handle movement and stuff
     //TODO iron this out
     if (!this.isDead) {
+
         this.collideOtherZombies();
 
-        this.x += this.velocity.x * this.game.clockTick;
-        this.y += this.velocity.y * this.game.clockTick;
-
-        this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-            this.y + (this.animations.idle.frameHeight / 2));
-
+        // TODO Explain this?
+        // todo u wot m8
+        //if (!globals.background.scrolling) {
+            this.screenX += this.velocity.x * this.game.clockTick;
+            this.screenY += this.velocity.y * this.game.clockTick;
+        //} else {
+        //    this.screenX = (this.velocity.x * 0.3) * this.game.clockTick;
+        //    this.screenY = (this.velocity.y * 0.3) * this.game.clockTick;
+        //}
+        //
+        this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+            this.screenY + (this.animations.idle.frameHeight / 2));
+        //
         // follow player
         if (globals.player.health > 0) { //player is alive
-            var dx = globals.player.x - this.x;
-            var dy = globals.player.y - this.y;
+            var dx = globals.player.x - this.screenX;
+            var dy = globals.player.y - this.screenY;
             var pointDistance = Math.sqrt(dx * dx + dy * dy);
 
             this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
             this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
 
             //Not sure how often to do this
-            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-                this.y + (this.animations.idle.frameHeight / 2));
+            //this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+            //    this.screenY + (this.animations.idle.frameHeight / 2));
 
         }
-        //player dead, bounce off walls
+        // player dead, bounce off walls
         // this isn't necessary if we stop updating when the player isn't dead anymore
         // heh
         else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+
             this.velocity.x = -this.velocity.x * friction;
 
-            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-                this.y + (this.animations.idle.frameHeight / 2));
+            this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+                this.screenY + (this.animations.idle.frameHeight / 2));
         }
         else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
             this.velocity.y = -this.velocity.y * friction;
 
-            this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-                this.y + (this.animations.idle.frameHeight / 2));
+            this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+                this.screenY + (this.animations.idle.frameHeight / 2));
         }
 
         var i;
@@ -108,7 +142,7 @@ Zombie.prototype.update = function () {
             }
         }
 
-        var acceleration = 1000;//TODO add comments explaining this?
+        var acceleration = 1000;
 
         //Handle collision with the player
         var playerX = globals.player.x;
@@ -117,8 +151,8 @@ Zombie.prototype.update = function () {
 
 
         if (dist > this.radius + globals.player.radius + 2) {
-            var difX = (playerX - this.x) / dist;
-            var difY = (playerY - this.y) / dist;
+            var difX = (playerX - this.screenX) / dist;
+            var difY = (playerY - this.screenY) / dist;
             this.velocity.x += difX * acceleration / (dist * dist);
             this.velocity.y += difY * acceleration / (dist * dist);
         }
@@ -128,8 +162,8 @@ Zombie.prototype.update = function () {
     //Do this by setting dying=true; then have a conditional that checks for dying and changes the animation
     //accordingly
     if (this.health <= 0) this.die();
-
-
+    //
+    //
     if (this.animations.dying.isDone()) {
         this.removeFromWorld = true;
         ++globals.zombieDeathCount;
@@ -168,7 +202,24 @@ Zombie.prototype.update = function () {
 
     }
 
+    //this.convertToOffScreen();
 
+};
+
+Zombie.prototype.convertToOnScreen = function() {
+    var convert = worldToScreen(this.worldX, this.worldY);
+    this.screenX = convert.x;
+    this.screenY = convert.y;
+    this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+                         this.screenY + (this.animations.idle.frameHeight / 2));
+};
+
+Zombie.prototype.convertToOffScreen = function() {
+    var convert = screenToWorld(this.screenX, this.screenY);
+    this.worldX = convert.x;
+    this.worldY = convert.y;
+    this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
+                         this.worldY + (this.animations.idle.frameHeight / 2));
 };
 
 /**
@@ -176,18 +227,30 @@ Zombie.prototype.update = function () {
  * @param ctx
  */
 Zombie.prototype.draw = function (ctx) {
+    this.convertToOffScreen();
+    //this.convertToOnScreen();
+    if (globals.debug) {
+        ctx.font = "12px Courier New";
+        ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.screenX, this.screenY + 10);
+        ctx.fillText("wX: " + Math.round(this.worldX) + " | wY: " + Math.round(this.worldX), this.screenX, this.screenY + 20);
+    }
 
 
-    if (!this.isDead) {
-        var rotation = Math.atan2(-(this.y - globals.player.hitbox.y), -(this.x - globals.player.hitbox.x));
+    if (!this.isDead /*|| this.isOnScreen*/) {
+        var rotation = Math.atan2(-(this.screenY - globals.player.hitbox.y), -(this.screenX - globals.player.hitbox.x));
 
         ctx.save();
-        ctx.translate((this.x + (71 / 2)), this.y + (71 / 2));
+        ctx.translate((this.screenX + (71 / 2)), this.screenY + (71 / 2)); //magic numbers for zombie sprite dimensions
+        //ctx.translate((this.screenX + (288 / 2)), this.screenY + (311 / 2)); //movement animation stuff, will replace idle animation with this soon
         ctx.rotate(rotation);
         ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
         ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), this.x, this.y);
+        ctx.translate(-(this.screenX + (71 / 2)), -(this.screenY + (71 / 2)));
+        //ctx.translate(-(this.screenX + (288 / 2)), -(this.screenY + (311 / 2)));
+        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.screenX, this.screenY);
+        //this.animations.move.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 0.3);
         ctx.restore();
-    } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+    } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 1);
 
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
@@ -197,6 +260,7 @@ Zombie.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 
 };
+
 /**
  * Checks for collisions. This behavior moved to Hitbox
  * @param bullet
@@ -205,14 +269,16 @@ Zombie.prototype.draw = function (ctx) {
 Zombie.prototype.isCollidingWith = function (bullet) {
     return distance(this.hitbox, bullet) < this.hitbox.radius + bullet.radius;
 };
+
 /**
  * Takes care of behavior of moving the zombie onto the after-afterlife.
  */
 Zombie.prototype.die = function (powerUpSpawn) {
     // stops zombies and moves hitbox out of canvas
     this.isDead = true;
-  //  this.hitbox.updateXY(undefined, undefined);
- //   this.hitbox.radius = undefined;
+    //this.removeFromWorld = true;
+    //this.hitbox.updateXY(undefined, undefined);
+    //this.hitbox.radius = undefined;
     this.velocity.x = 0;
     this.velocity.y = 0;
 
@@ -234,29 +300,29 @@ Zombie.prototype.collideOtherZombies = function () {
                 var bounceDist = 60;
                 // check combinations of directions
                 if (collisionInfo.dirs.top && collisionInfo.dirs.left) {
-                    this.y += bounceDist;
-                    this.x += bounceDist;
+                    this.screenY += bounceDist;
+                    this.screenX += bounceDist;
 
                 } else if (collisionInfo.dirs.top && collisionInfo.dirs.right) {
-                    this.y += bounceDist;
-                    this.x -= bounceDist;
+                    this.screenY += bounceDist;
+                    this.screenX -= bounceDist;
                 } else if (collisionInfo.dirs.top) {
-                    this.y += bounceDist;
+                    this.screenY += bounceDist;
                 }
                 if (collisionInfo.dirs.bottom && collisionInfo.dirs.left) {
-                    this.y += bounceDist;
-                    this.x += bounceDist;
+                    this.screenY += bounceDist;
+                    this.screenX += bounceDist;
                 } else if (collisionInfo.dirs.bottom && collisionInfo.dirs.right) {
-                    this.y += bounceDist;
-                    this.x -= bounceDist;
+                    this.screenY += bounceDist;
+                    this.screenX -= bounceDist;
                 } else if (collisionInfo.dirs.bottom) {
-                    this.y += bounceDist;
+                    this.screenY += bounceDist;
                 }
-                else if (collisionInfo.dirs.left) this.x += bounceDist;
-                else if (collisionInfo.dirs.right) this.x -= bounceDist;
+                else if (collisionInfo.dirs.left) this.screenX += bounceDist;
+                else if (collisionInfo.dirs.right) this.screenX -= bounceDist;
 
-                this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-                    this.y + (this.animations.idle.frameHeight / 2));
+                this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+                    this.screenY + (this.animations.idle.frameHeight / 2));
             }
 
         }

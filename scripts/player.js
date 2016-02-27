@@ -11,7 +11,8 @@ function Player(game, scale) {
     this.game = game;
     this.name = "Player";
     this.scale = scale || 1;
-    this.stepDistance = 5;
+    this.stepDistance = 3;
+    this.scrollStep = 1.5;
     this.health = 100;
     this.godlike = false;
 
@@ -19,10 +20,10 @@ function Player(game, scale) {
 
 
     this.states = {
-        IDLE: 0,
-        MOVING: 1,
-        SHOOTING: 2,
-        RELOADING: 3,
+        IDLE:         0,
+        MOVING:       1,
+        SHOOTING:     2,
+        RELOADING:    3,
         CURRENT_GUN: 'pistol'
     };
 
@@ -77,36 +78,84 @@ Player.prototype.move = function (xTrans, yTrans) {
     this.x += xTrans;
     this.y += yTrans;
 };
+
 /**
  * Checks for movement input
  */
 Player.prototype.handleMovementInput = function () {
+    var bgX = globals.background.x;
+    var bgY = globals.background.y;
+    var centerX = this.game.ctx.canvas.width / 2;
+    var centerY = this.game.ctx.canvas.height / 2;
+
     if (Key.isDown(Key.RIGHT)) {
         this.state = this.states.MOVING;
-        this.move(this.stepDistance, 0);
+        if (bgX === -1248 || this.hitbox.x < centerX) {
+            globals.background.scrolling = false;
+            this.move(this.stepDistance, 0);
+        } else {
+            globals.background.scrolling = true;
+            this.move(this.scrollStep, 0);
+        }
     }
     if (Key.isDown(Key.LEFT)) {
         this.state = this.states.MOVING;
-        this.move(-this.stepDistance, 0);
+        if (bgX === 0 || this.hitbox.x > centerX) {
+            globals.background.scrolling = false;
+            this.move(-this.stepDistance, 0);
+        } else {
+            globals.background.scrolling = true;
+            this.move(-this.scrollStep, 0);
+        }
     }
     if (Key.isDown(Key.UP)) {
         this.state = this.states.MOVING;
-        this.move(0, -this.stepDistance);
+        if (bgY === 0 || this.hitbox.y > centerY) {
+            globals.background.scrolling = false;
+            this.move(0, -this.stepDistance);
+        } else {
+            globals.background.scrolling = true;
+            this.move(0, -this.scrollStep);
+        }
     }
     if (Key.isDown(Key.DOWN)) {
         this.state = this.states.MOVING;
-        this.move(0, this.stepDistance);
+        if (bgY === -1248 || this.hitbox.y < centerY) {
+            globals.background.scrolling = false;
+            this.move(0, this.stepDistance);
+        } else {
+            globals.background.scrolling = false;
+            this.move(0, this.scrollStep);
+        }
     }
     if (!Key.isDown(Key.RIGHT) && !Key.isDown(Key.LEFT) && !Key.isDown(Key.UP) && !Key.isDown(Key.DOWN)) {
         this.state = this.states.IDLE;
     }
+
+    //this.updateZombies(bgX, bgY);
 };
+
+Player.prototype.updateZombies = function(x, y) {
+    //update all the zombie's XY coords to match the map scrolling
+    for (var i = 0; i < this.game.entities.length; i++) {
+        var current = this.game.entities[i];
+        if (current.name === "Zombie") {
+                current.x += -x;
+                current.y += -y;
+        }
+    }
+};
+
 /**
  * Update for the game loop
  */
 Player.prototype.update = function () {
+    this.convertToOffScreen();
     this.handleMovementInput();
-    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale)  / 2, this.y + (this.animations.idle.frameHeight * this.scale) / 2);
+    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale)  / 2,
+                         this.y + (this.animations.idle.frameHeight * this.scale) / 2);
+
+    //console.log("player x: " + this.x + " | player y: " + this.y);
 
     //if (!this.states.MOVING) this.state = this.states.IDLE;
 
@@ -150,6 +199,8 @@ Player.prototype.update = function () {
 Player.prototype.draw = function (ctx) {
     var currAnim;
 
+    this.convertToOnScreen();
+
     if (this.state === this.states.MOVING) {
         this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
         //this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
@@ -169,6 +220,13 @@ Player.prototype.draw = function (ctx) {
 
     }
     currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+
+    if (globals.debug) {
+        ctx.font = "12px Courier New";
+        ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
+        ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.x, this.y + 20);
+        ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldX), this.x, this.y + 30);
+    }
 
     //if (this.state === this.states.RELOADING) {
     //    this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
@@ -252,6 +310,29 @@ Player.prototype.grabPowerups = function() {
     }
 
 };
+
+Player.prototype.convertToOnScreen = function() {
+    this.isOnScreen = false;
+    var convert = worldToScreen(this.x, this.y);
+    //this.x = convert.x;
+    //this.y = convert.y;
+    this.screenX = convert.x;
+    this.screenY = convert.y;
+    //this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2), this.screenY + (this.animations.idle.frameHeight / 2));
+};
+
+Player.prototype.convertToOffScreen = function() {
+    this.isOnScreen = true;
+    var convert = screenToWorld(this.x, this.y);
+    //this.x = convert.x;
+    //this.y = convert.y;
+    this.worldX = convert.x;
+    this.worldY = convert.y;
+    //this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2), this.worldY + (this.animations.idle.frameHeight / 2));
+    //this.hitbox.x = convert.x;
+    //this.hitbox.y = convert.y;
+};
+
 
 //TODO use HitBox version instead
 Player.prototype.isCollidingWith = function (entity) {

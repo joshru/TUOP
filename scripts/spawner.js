@@ -1,6 +1,7 @@
 /**
  * Created by Brandon on 2/24/2016.
  */
+
 const SMALL = 5;
 const MED = 15;
 const LARGE = 20;
@@ -38,6 +39,7 @@ Spawner.prototype.spawnZombie = function(x, y) {
     zombo.y = y;
 
     this.game.addZombie(zombo);
+    this.game.addEntity(zombo);
 };
 /**
  * Reassigns the map this spawner should use.
