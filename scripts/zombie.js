@@ -73,9 +73,7 @@ Zombie.prototype.update = function () {
     var maxSpeed = 100;
     var minSpeed = 5;
     this.convertToOnScreen();
-    //this.convertToOffScreen();
-    //console.log("screen X:  " + Math.round(this.screenX) + " | screen  Y: " + Math.round(this.screenY) + "\nworld X: " + Math.round(this.worldX) + " | world Y: " + Math.round(this.worldY));
-    //console.log("zombie x: " + this.x + " | zombie y: " + this.y);
+
 
     //handle movement and stuff
     //TODO iron this out

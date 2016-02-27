@@ -10,7 +10,8 @@ var globals = {
     powerUpTime: {godlike: 0},
     zombieDeathCount: 0,
     mute: true,
-    debug: false
+    debug: false,
+    SPAWNER: null
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -92,7 +93,7 @@ function Background(game) {
     this.y = 0;
     this.scrolling = false;
     this.radius = 0;
-    this.bg = ASSET_MANAGER.getAsset("./img/terrain/2048_grass.png");
+    this.bg = ASSET_MANAGER.getAsset("./img/terrain/LabMap.png");
     this.width = this.bg.width;
     this.height = this.bg.height;
 
@@ -336,6 +337,9 @@ var ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
 ASSET_MANAGER.queueDownload("./img/terrain/2048_grass.png");
+ASSET_MANAGER.queueDownload("./img/terrain/LabMap.png");
+
+
 
 // animations
 ASSET_MANAGER.queueDownload("./img/player/hgun_idle.png");
@@ -406,6 +410,10 @@ function startGame() {
             var gameEngine = new GameEngine();
             globals.player = new Player(gameEngine, 0.5);
             globals.background = new Background(gameEngine);
+
+
+            var map = new Map('lab','./img/terrain/LabMap.png');
+            globals.SPAWNER = new Spawner(gameEngine, map);
 
             //gameEngine.addEntity(globals.background);
             //gameEngine.addZombie(new Zombie(gameEngine));
