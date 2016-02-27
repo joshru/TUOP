@@ -10,10 +10,17 @@ function Grenade(startX, startY, targetX, targetY, game) {
     this.explosionRadius = 150;
     this.damage = 100;
 
+    var screen = worldToScreen(this.x, this.y);
+    var world  = screenToWorld(this.x, this.y);
+    this.screenX = screen.x;
+    this.screenY = screen.y;
+    this.worldX = world.x;
+    this.worldY = world.y;
+
     this.thrownTime = Date.now();
     this.timeToExplode = 3;
 
-    Entity.call(this, game, this.x, this.y);
+    Entity.call(this, game, this.worldX, this.worldY);
 }
 
 
@@ -24,11 +31,11 @@ Grenade.prototype.constructor = Grenade;
 
 
 Grenade.prototype.update = function() {
-
-    console.log("I'm a grenade, my speed is: " + this.speed);
+    this.convertToOnScreen();
+    //console.log("I'm a grenade, my speed is: " + this.speed);
     if (this.speed > 0) {
-        this.x += this.velocity.x * this.speed;
-        this.y += this.velocity.y * this.speed;
+        this.screenX += this.velocity.x * this.speed;
+        this.screenY += this.velocity.y * this.speed;
         this.speed -= 1;
     }
 
@@ -44,10 +51,11 @@ Grenade.prototype.update = function() {
 };
 
 Grenade.prototype.draw = function(ctx) {
+    this.convertToOffScreen();
     ctx.save();
     ctx.beginPath();
-    ctx.fillStyle = "red";
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fillStyle = "#979748";
+    ctx.arc(this.screenX, this.screenY, this.radius, 0, Math.PI * 2, false);
     ctx.fill();
     ctx.closePath();
     ctx.restore();
@@ -89,5 +97,17 @@ Grenade.prototype.checkEnemyCollision = function() {
 
 Grenade.prototype.isCollidingWith = function(other) {
     return distance(this, other) < this.radius + other.hitbox.radius;
+};
+
+Grenade.prototype.convertToOnScreen = function() {
+    var convert = worldToScreen(this.worldX, this.worldY);
+    this.screenX = convert.x;
+    this.screenY = convert.y;
+};
+
+Grenade.prototype.convertToOffScreen = function() {
+    var convert = screenToWorld(this.screenX, this.screenY);
+    this.worldX = convert.x;
+    this.worldY = convert.y;
 };
 

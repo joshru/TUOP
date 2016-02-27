@@ -20,7 +20,6 @@
 
         <section id="downloads">
             <a href="https://github.com/joshru/TUOP/zipball/master" class="btn">Download as .zip</a>
-            <a href="https://github.com/joshru/TUOP/tarball/master" class="btn">Download as .tar.gz</a>
             <a href="https://github.com/joshru/TUOP" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
     </div>
@@ -37,6 +36,7 @@
     </div>
 
     <br><br>
+    <li>Game starts muted now, mute button located just above the canvas.</li>
     <li>VOLUME WARNING!! All our sound effects are quite loud right now, you've been warned...</li>
     <li>Move the player around with W A S D. Shoot with left click. Press H to toggle debug mode.</li>
 </ul>
@@ -49,14 +49,22 @@
 <audio id="soundFX" style="display: none;"></audio>
 
 <ul>
+    <h2><span style="text-decoration: underline;">Controls</span></h2>
+    <li>W A S D to move. Shoot with left click. Hold left click to shoot as fast as the current weapon allows</li>
+    <li>Weapons: 1 = pistol, 2 = Assault Rifle, 3 = Shotgun, 4 = Sniper</li>
+    <li>Press G to toss a grenade (not fully implemented yet)</li>
+    <p></p>
+
     <h2><span style="text-decoration: underline;">Bugs</span></h2>
-    <li>Too much swag.</li>
+    <li>Because the different guns have different sprite dimensions the player's legs get a little wonky. Rotation makes centering them even more annoying</li>
+    <li>The first zombie of the first wave behaves a little weird, not sure what's going on with his hitbox, subsequent waves seem to work the way we want.</li>
+
 
     <br><br>
     <h2><span style="text-decoration: underline;">Features to come</span></h2>
-    <li>More guns.</li>
-    <li>More animations</li>
-    <li>Movement within a much larger map (close to finished but not polished enough for this submission).</li>
+    <li>Guns will be dropped as powerups instead of you starting with all of them.</li>
+    <li>More enemy types with more dynamic spawning</li>
+    <li>A few more levels to explore and conquer </li>
     <li>Better item drops.</li>
     <li>And much more!</li>
 

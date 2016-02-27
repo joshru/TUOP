@@ -114,12 +114,12 @@ Bullet.prototype.draw = function (ctx) {
 
     //console.log("drawing bullet at : " + this.x + ", " + this.y);
 
-    if (globals.debug) {
-        ctx.strokeStyle = "Pink";
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
-        ctx.stroke();
-    }
+    //if (globals.debug) {
+    //    ctx.strokeStyle = "Pink";
+    //    ctx.moveTo(this.x, this.y);
+    //    ctx.lineTo(globals.clickPosition.x, globals.clickPosition.y);
+    //    ctx.stroke();
+    //}
     ctx.restore();
 
 
