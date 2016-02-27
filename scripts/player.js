@@ -154,7 +154,6 @@ Player.prototype.update = function () {
 
     //SHOOT DA GUNZ
     if(this.game.firing) {
-      //  mouseStillDown = true;
 
         var currentTime = Date.now();
 
