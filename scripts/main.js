@@ -431,9 +431,9 @@ function startGame() {
 }
 
 window.addEventListener('mousedown', function(event) {
-    globals.player.game.firing = true;
+    if (globals.player) globals.player.game.firing = true;
 }, false);
 
 window.addEventListener('mouseup', function(event) {
-    globals.player.game.firing = false;
+    if (globals.player) globals.player.game.firing = false;
 }, false);
