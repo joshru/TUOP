@@ -40,7 +40,7 @@ function distance(a, b) {
 }
 
 
-Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
+Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy, type) {
     var scaleBy = scaleBy || 1;
     this.elapsedTime += tick;
     if (this.loop) {
@@ -69,7 +69,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
 
     //ROTATION HANDLED HERE
     //Negating these arguments makes him face the mouse instead of the opposite direction.
-    var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x) - 50);
+    if (type !== 'Zombie') var rotation = Math.atan2(-(locY - globals.mousePosition.y), -(locX - globals.mousePosition.x) - 50);
 
     ctx.save();
     ctx.translate((locX + ((this.frameWidth * scaleBy) / 2)), (locY + ((this.frameHeight * scaleBy) / 2)));
@@ -370,6 +370,7 @@ ASSET_MANAGER.queueDownload("./img/player/hgun_flash.png");
 
 ASSET_MANAGER.queueDownload("./img/player/rifle_idle.png");
 ASSET_MANAGER.queueDownload("./img/player/rifle_flash.png");
+
 ASSET_MANAGER.queueDownload("./img/player/shgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/player/shgun_flash.png");
 
@@ -377,6 +378,7 @@ ASSET_MANAGER.queueDownload("./img/player/moving_feet.png");
 ASSET_MANAGER.queueDownload("./img/player/idle_feet.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie.png");
+ASSET_MANAGER.queueDownload("./img/zombie/zombie_move.png");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie_death.png");
 ASSET_MANAGER.queueDownload("./img/ammo/proj_25.png");
 ASSET_MANAGER.queueDownload("./img/ammo/shell_10.png");

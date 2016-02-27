@@ -13,6 +13,7 @@ function Zombie(game) {
     this.health = 100;
     this.isDead = false;
     this.isOnScreen = true;
+    this.scale = 0.3;
     this.speed = 5;
 
     this.radius = 20;
@@ -34,7 +35,7 @@ function Zombie(game) {
     //this.worldY = 1600;
 
 
-    console.log("spawning zombie at: " + this.screenX + ", " + this.screenY);
+    //console.log("spawning zombie at: " + this.screenX + ", " + this.screenY);
 
     // TODO create speedScale variable so zombies of different types can have different speeds
     // EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.
@@ -52,7 +53,7 @@ function Zombie(game) {
     this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
     this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
-    this.animations.move  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_move.png"), 0, 0, 288, 311, 0.15, 17, true, false);
+    this.animations.move  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_move.png"), 0, 0, 288, 311, 0.3, 17, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
     var hbX = this.worldX + (this.animations.idle.frameWidth  / 2);
@@ -240,14 +241,14 @@ Zombie.prototype.draw = function (ctx) {
         var rotation = Math.atan2(-(this.screenY - globals.player.hitbox.y), -(this.screenX - globals.player.hitbox.x));
 
         ctx.save();
-        ctx.translate((this.screenX + (71 / 2)), this.screenY + (71 / 2)); //magic numbers for zombie sprite dimensions
-        //ctx.translate((this.screenX + (288 / 2)), this.screenY + (311 / 2)); //movement animation stuff, will replace idle animation with this soon
+        //ctx.translate((this.screenX + (71 / 2)), this.screenY + (71 / 2)); //magic numbers for zombie sprite dimensions
+        ctx.translate((this.screenX + (288 * this.scale / 2)), this.screenY + (311 * this.scale / 2)); //movement animation stuff, will replace idle animation with this soon
         ctx.rotate(rotation);
         //ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
-        ctx.translate(-(this.screenX + (71 / 2)), -(this.screenY + (71 / 2)));
-        //ctx.translate(-(this.screenX + (288 / 2)), -(this.screenY + (311 / 2)));
-        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), this.screenX, this.screenY);
-        //this.animations.move.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 0.3);
+        //ctx.translate(-(this.screenX + (71 / 2)), -(this.screenY + (71 / 2)));
+        ctx.translate(-(this.screenX + (288 * this.scale / 2)), -(this.screenY + (311 * this.scale / 2)));
+        //ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), this.screenX, this.screenY);
+        this.animations.move.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, this.scale, 'Zombie');
         ctx.restore();
     } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 1);
 
