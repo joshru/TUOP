@@ -12,7 +12,7 @@ function Player(game, scale) {
     this.name = "Player";
     this.scale = scale || 1;
     this.stepDistance = 3;
-    this.scrollStep = 1.5;
+    this.scrollStep = 2;
     this.health = 100;
     this.godlike = false;
     this.drawLazer = false;

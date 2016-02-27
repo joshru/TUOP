@@ -19,7 +19,6 @@ function Zombie(game) {
     this.radius = 20;
     this.ground = 500;
 
-    //todo spawning needs work so zombies don't spawn off the edges of the map
     this.x = randomInt(1200); //hardcoded for prototype zombie
     this.y = randomInt(1200); //TODO come up with a zombie spawning system using timers or something
     //this.x = 400;
@@ -52,12 +51,11 @@ function Zombie(game) {
     this.animations = {};
     this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
-    this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
     this.animations.move  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_move.png"), 0, 0, 288, 311, 0.05, 17, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
-    var hbX = this.worldX + (this.animations.idle.frameWidth  / 2);
-    var hbY = this.worldY + (this.animations.idle.frameHeight / 2);
+    var hbX = this.worldX + (this.animations.move.frameWidth  / 2);
+    var hbY = this.worldY + (this.animations.move.frameHeight / 2);
 
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
