@@ -70,7 +70,6 @@ Zombie.prototype.constructor = Zombie;
  * Update for the game loop
  */
 Zombie.prototype.update = function () {
-    var friction = 1;
     var maxSpeed = 100;
     var minSpeed = 5;
     this.convertToOnScreen();
@@ -86,61 +85,26 @@ Zombie.prototype.update = function () {
 
         // TODO Explain this?
         // todo u wot m8
-        //if (!globals.background.scrolling) {
-            this.screenX += this.velocity.x * this.game.clockTick;
-            this.screenY += this.velocity.y * this.game.clockTick;
-        //} else {
-        //    this.screenX = (this.velocity.x * 0.3) * this.game.clockTick;
-        //    this.screenY = (this.velocity.y * 0.3) * this.game.clockTick;
-        //}
-        //
+        this.screenX += this.velocity.x * this.game.clockTick;
+        this.screenY += this.velocity.y * this.game.clockTick;
+
+
         this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
             this.screenY + (this.animations.idle.frameHeight / 2));
-        //
+
         // follow player
         if (globals.player.health > 0) { //player is alive
-            var dx = globals.player.x - this.screenX;
-            var dy = globals.player.y - this.screenY;
-            var pointDistance = Math.sqrt(dx * dx + dy * dy);
 
-            this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
-            this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
-
-            //Not sure how often to do this
-            //this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
-            //    this.screenY + (this.animations.idle.frameHeight / 2));
-
+            this.findPlayerDirection();
         }
         // player dead, bounce off walls
         // this isn't necessary if we stop updating when the player isn't dead anymore
         // heh
-        else if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+        else this.bounceOffWalls();
 
-            this.velocity.x = -this.velocity.x * friction;
-
-            this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
-                this.screenY + (this.animations.idle.frameHeight / 2));
-        }
-        else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
-            this.velocity.y = -this.velocity.y * friction;
-
-            this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
-                this.screenY + (this.animations.idle.frameHeight / 2));
-        }
-
-        var i;
+        // var i;
         //check if getting shot the F up
-        for (i = 0; i < this.game.bullets.length; i++) {
-            var bullet = this.game.bullets[i];
-            //console.log("Distance From Bullet: " + distance(this, bullet));
-
-            if (!bullet.spent && this.isCollidingWith(bullet)) {
-                this.health -= bullet.damage;
-                bullet.spent = true;
-                bullet.removeFromWorld = true;
-                if (globals.debug) console.log("You shot me!");
-            }
-        }
+        this.checkForBulletWounds();
 
         var acceleration = 1000;
 
@@ -162,47 +126,97 @@ Zombie.prototype.update = function () {
     //Do this by setting dying=true; then have a conditional that checks for dying and changes the animation
     //accordingly
     if (this.health <= 0) this.die();
-    //
-    //
+
     if (this.animations.dying.isDone()) {
-        this.removeFromWorld = true;
-        ++globals.zombieDeathCount;
-        ++globals.killCount;
 
-        // TODO add more features for drops
-        var chance = randomInt(10) + 1;
-        if (chance > 8) {
-            // TODO this will turn into a switch at some point to change types
-            // TODO currently 20% chance of godlike, 80% hp
-            chance = randomInt(10) + 1;
-            if (chance > 2)
-                this.game.addEntity(new PowerUp(this.game, this, "hp"));
-            else
-                this.game.addEntity(new PowerUp(this.game, this, "godlike"));
-        }
-
-        // var currentFib = globals.fib1 + globals.fib2;
-        if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
-        if (globals.zombieDeathCount === globals.fibs.currFib) {
-            // see in Background.prototype.draw for wave counter
-            globals.wave++;
-
-            if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
-            //update previous and current fibonacci numbers
-            globals.fibs.fib1 = globals.fibs.fib2;
-            globals.fibs.fib2 = globals.fibs.currFib;
-            globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
-            //Spawn current fib amount of zombies
-            for (var i = 0; i < globals.fibs.currFib; i++) {
-                this.game.addEntity(new Zombie(this.game));
-            }
-
-            globals.zombieDeathCount = 0;
-        }
-
+        this.removeAndReplace();
     }
 
     //this.convertToOffScreen();
+
+};
+
+Zombie.prototype.checkForBulletWounds = function() {
+    for (var i = 0; i < this.game.bullets.length; i++) {
+        var bullet = this.game.bullets[i];
+        //console.log("Distance From Bullet: " + distance(this, bullet));
+
+        if (!bullet.spent && this.isCollidingWith(bullet)) {
+            this.health -= bullet.damage;
+            bullet.spent = true;
+            bullet.removeFromWorld = true;
+            if (globals.debug) console.log("You shot me!");
+        }
+    }
+};
+
+Zombie.prototype.bounceOffWalls = function() {
+    var friction = 1;
+
+    if (this.hitbox.collideLeft() || this.hitbox.collideRight()) {
+
+        this.velocity.x = -this.velocity.x * friction;
+
+        this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+            this.screenY + (this.animations.idle.frameHeight / 2));
+    }
+    else if (this.hitbox.collideTop() || this.hitbox.collideBottom()) {
+        this.velocity.y = -this.velocity.y * friction;
+
+        this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+            this.screenY + (this.animations.idle.frameHeight / 2));
+    }
+};
+
+Zombie.prototype.findPlayerDirection = function() {
+    var friction = 1;
+
+    var dx = globals.player.x - this.screenX;
+    var dy = globals.player.y - this.screenY;
+    var pointDistance = Math.sqrt(dx * dx + dy * dy);
+
+    this.velocity.x = (dx / pointDistance) * friction * this.speedScale;
+    this.velocity.y = (dy / pointDistance) * friction * this.speedScale;
+};
+
+
+Zombie.prototype.removeAndReplace = function() {
+
+    this.removeFromWorld = true;
+    ++globals.zombieDeathCount;
+    ++globals.killCount;
+
+    // TODO add more features for drops
+    var chance = randomInt(10) + 1;
+    if (chance > 8) {
+        // TODO this will turn into a switch at some point to change types
+        // TODO currently 20% chance of godlike, 80% hp
+        chance = randomInt(10) + 1;
+        if (chance > 2)
+            this.game.addEntity(new PowerUp(this.game, this, "hp"));
+        else
+            this.game.addEntity(new PowerUp(this.game, this, "godlike"));
+    }
+
+    // var currentFib = globals.fib1 + globals.fib2;
+    if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
+    if (globals.zombieDeathCount === globals.fibs.currFib) {
+        // see in Background.prototype.draw for wave counter
+        globals.wave++;
+
+        if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+        //update previous and current fibonacci numbers
+        globals.fibs.fib1 = globals.fibs.fib2;
+        globals.fibs.fib2 = globals.fibs.currFib;
+        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
+        //Spawn current fib amount of zombies
+        for (var i = 0; i < globals.fibs.currFib; i++) {
+            this.game.addEntity(new Zombie(this.game));
+        }
+
+        globals.zombieDeathCount = 0;
+    }
+
 
 };
 
@@ -211,7 +225,7 @@ Zombie.prototype.convertToOnScreen = function() {
     this.screenX = convert.x;
     this.screenY = convert.y;
     this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
-                         this.screenY + (this.animations.idle.frameHeight / 2));
+        this.screenY + (this.animations.idle.frameHeight / 2));
 };
 
 Zombie.prototype.convertToOffScreen = function() {
@@ -219,7 +233,7 @@ Zombie.prototype.convertToOffScreen = function() {
     this.worldX = convert.x;
     this.worldY = convert.y;
     this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
-                         this.worldY + (this.animations.idle.frameHeight / 2));
+        this.worldY + (this.animations.idle.frameHeight / 2));
 };
 
 /**
