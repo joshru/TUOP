@@ -91,12 +91,3 @@ Grenade.prototype.isCollidingWith = function(other) {
     return distance(this, other) < this.radius + other.hitbox.radius;
 };
 
-function calculateVelocity(sX, sY, eX, eY) {
-    var dx = eX - sX;
-    var dy = eY - sY;
-    var dist = Math.sqrt(dx * dx + dy * dy);
-    var xVel = dx / dist;
-    var yVel = dy / dist;
-
-    return {x: xVel, y: yVel};
-}

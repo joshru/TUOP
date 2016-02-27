@@ -26,18 +26,7 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
     this.loop = loop;
     this.reverse = reverse;
 }
-/**
- * Determines the distance between 2 entities
- * @param a first entity
- * @param b second entity
- * @shoutout Marriot
- */
-function distance(a, b) {
-    // console.log("Received parameters: (" + a.x + "," + a.y + ") , (" + b.x + "," + b.y + ")");
-    var dx = Math.abs(a.x - b.x);
-    var dy = Math.abs(a.y - b.y);
-    return Math.sqrt(dx * dx + dy * dy);
-}
+
 
 
 Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
@@ -207,25 +196,8 @@ Background.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 };
 
-//converts coordinates in game world to coordinates where the sprite should be drawn on screen.
-function worldToScreen(x, y) {
-    return {x: x - (-globals.background.x), y: y - (-globals.background.y)};
 
-}
 
-//converts coordinates on the screen to coordinates in the game world as a whole.
-function screenToWorld(x, y) {
-    return {x: x + -globals.background.x, y: y + -globals.background.y};
-}
-
-/**
- * Generates a random number
- * @param n max
- * @returns {number} int: random number
- */
-function randomInt(n) {
-    return Math.floor(Math.random() * n);
-}
 
 /**
  * Global Key object
@@ -264,6 +236,9 @@ var Key = {
 
     },
 
+
+    //TODO consider getting rid of these,
+    //went with a different method
     keyTapped: function(keyCode) {
         return this._tap[keyCode];
     },
@@ -314,6 +289,7 @@ window.addEventListener('keyup', function (event) {
     //HARDCODE FOR GRENADES //TODO fix this isht
 
 }, false);
+
 window.addEventListener('keydown', function (event) {
     Key.onKeyDown(event);
 
