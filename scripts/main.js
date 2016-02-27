@@ -381,7 +381,7 @@ function startGame() {
             globals.player = new Player(gameEngine, 0.5);
             globals.background = new Background(gameEngine);
 
-            gameEngine.addEntity(bg);
+            //gameEngine.addEntity(globals.background);
             //gameEngine.addZombie(new Zombie(gameEngine));
             gameEngine.addEntity(globals.background);
             gameEngine.addEntity(new Zombie(gameEngine));

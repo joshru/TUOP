@@ -49,11 +49,11 @@ function Zombie(game) {
     };
 
     this.animations = {};
-    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
+    this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
-    this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
-    this.animations.move  = new Animation(ASSET_MANAGER.getAsset("./img/zombie_move.png"), 0, 0, 288, 311, 0.15, 17, true, false);
-    this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/death_animation/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
+    this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
+    this.animations.move  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_move.png"), 0, 0, 288, 311, 0.15, 17, true, false);
+    this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
     var hbX = this.worldX + (this.animations.idle.frameWidth  / 2);
     var hbY = this.worldY + (this.animations.idle.frameHeight / 2);
@@ -243,11 +243,10 @@ Zombie.prototype.draw = function (ctx) {
         ctx.translate((this.screenX + (71 / 2)), this.screenY + (71 / 2)); //magic numbers for zombie sprite dimensions
         //ctx.translate((this.screenX + (288 / 2)), this.screenY + (311 / 2)); //movement animation stuff, will replace idle animation with this soon
         ctx.rotate(rotation);
-        ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
-        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), this.x, this.y);
+        //ctx.translate(-(this.x + (71 / 2)), -(this.y + (71 / 2)));
         ctx.translate(-(this.screenX + (71 / 2)), -(this.screenY + (71 / 2)));
         //ctx.translate(-(this.screenX + (288 / 2)), -(this.screenY + (311 / 2)));
-        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie.png"), this.screenX, this.screenY);
+        ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), this.screenX, this.screenY);
         //this.animations.move.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 0.3);
         ctx.restore();
     } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 1);
