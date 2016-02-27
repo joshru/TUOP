@@ -11,7 +11,8 @@ var globals = {
     zombieDeathCount: 0,
     mute: true,
     debug: false,
-    SPAWNER: null
+    SPAWNER: null,
+    STATETRACKER: null
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -414,16 +415,19 @@ function startGame() {
 
             var map = new Map('lab','./img/terrain/LabMap.png');
             globals.SPAWNER = new Spawner(gameEngine, map);
-
+            globals.STATETRACKER = new StateTracker(gameEngine);
             //gameEngine.addEntity(globals.background);
             //gameEngine.addZombie(new Zombie(gameEngine));
+            gameEngine.addEntity(globals.STATETRACKER);
             gameEngine.addEntity(globals.background);
-            gameEngine.addEntity(new Zombie(gameEngine));
+          //  gameEngine.addEntity(new Zombie(gameEngine)); TODO maybe re add me
             //gameEngine.addEntity(new PowerUp(gameEngine, {x: 900, y: 900}, "hp")); //for testing on scrolling map
             gameEngine.addEntity(globals.player);
 
             gameEngine.init(ctx);
             gameEngine.start();
+
+            globals.STATETRACKER.spawnNewWave();
         }
     }
 }

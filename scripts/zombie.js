@@ -197,7 +197,7 @@ Zombie.prototype.removeAndReplace = function() {
     }
 
     // var currentFib = globals.fib1 + globals.fib2;
-    if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
+    /*if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
     if (globals.zombieDeathCount === globals.fibs.currFib) {
         // see in Background.prototype.draw for wave counter
         globals.wave++;
@@ -213,7 +213,7 @@ Zombie.prototype.removeAndReplace = function() {
         }
 
         globals.zombieDeathCount = 0;
-    }
+    }*/
 
 
 };
@@ -284,7 +284,7 @@ Zombie.prototype.isCollidingWith = function (bullet) {
 /**
  * Takes care of behavior of moving the zombie onto the after-afterlife.
  */
-Zombie.prototype.die = function (powerUpSpawn) {
+Zombie.prototype.die = function () {
     // stops zombies and moves hitbox out of canvas
     this.isDead = true;
     //this.removeFromWorld = true;
@@ -292,6 +292,8 @@ Zombie.prototype.die = function (powerUpSpawn) {
     //this.hitbox.radius = undefined;
     this.velocity.x = 0;
     this.velocity.y = 0;
+
+    globals.STATETRACKER.zombiesKilled++;
 
 
 };

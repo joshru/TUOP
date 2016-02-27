@@ -279,7 +279,7 @@ Player.prototype.checkForWeaponSwap = function () {
 };
 
 Player.prototype.throwGrenade = function () {
-    var startX = this.x + (this.animations.hgun_idle.frameWidth * this.scale);
+    var startX = this.x + (this.animations.hgun_idle.frameWidth * this.scale) / 2;
     var startY = this.y + (this.animations.hgun_idle.frameWidth * this.scale) / 2;
 
     this.game.addEntity(new Grenade(startX, startY, globals.mousePosition.x, globals.mousePosition.y, this.game));
