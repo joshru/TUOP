@@ -33,22 +33,20 @@ function Player(game, scale) {
         CURRENT_GUN: 'pistol'
     };
 
-
-
     this.state = this.states.IDLE;
     this.animations = {};
 
-    this.animations.hgun_idle = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
+    this.animations.hgun_idle =  new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_idle.png"),  0, 0, 258, 220, 0.2,  1, true, false);
     this.animations.hgun_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_flash.png"), 0, 0, 258, 220, 0.03, 1, true, false);
 
-    this.animations.rifle_idle = new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_idle.png"), 0, 0, 316, 207, 0.2, 1, true, false);
+    this.animations.rifle_idle =  new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_idle.png"),  0, 0, 313, 207, 0.2, 1, true, false);
     this.animations.rifle_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_flash.png"), 0, 0, 375, 209, 0.1, 1, true, false);
 
-    this.animations.shgun_idle = new Animation(ASSET_MANAGER.getAsset("./img/player/shgun_idle.png"), 0, 0, 313, 207, 0.2, 1, true, false);
+    this.animations.shgun_idle =  new Animation(ASSET_MANAGER.getAsset("./img/player/shgun_idle.png"),  0, 0, 330, 206, 0.2, 1, true, false);
     this.animations.shgun_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/shgun_flash.png"), 0, 0, 330, 206, 0.2, 1, true, false);
 
-    this.animations.idleFeet = new Animation(ASSET_MANAGER.getAsset("./img/player/idle_feet.png", 0, 0, 132, 155, 0.2, 1, true, false));
-    this.animations.runFeet = new Animation(ASSET_MANAGER.getAsset("./img/player/moving_feet.png"), 0, 0, 204, 124, 0.1, 20, true, false);
+    this.animations.idleFeet = new Animation(ASSET_MANAGER.getAsset("./img/player/idle_feet.png"),   0, 0, 132, 155, 0.2,   1, true, false);
+    this.animations.runFeet =  new Animation(ASSET_MANAGER.getAsset("./img/player/moving_feet.png"), 0, 0, 204, 124, 0.05, 20, true, false);
     //this.animation = this.animations.hgunIdle;
 
     this.radius = 120 * this.scale;
@@ -66,9 +64,6 @@ Player.prototype.constructor = Player;
  * creates a bullet and adds it to the game's bullet data structure
  */
 Player.prototype.shoot = function (endX, endY, firingMode) {
-
-    console.log("shoot called");
-
     var bulletX = this.x + (this.animations.hgun_idle.frameWidth * this.scale) / 2;
     var bulletY = this.y + (this.animations.hgun_idle.frameWidth * this.scale ) / 2;
 
@@ -171,6 +166,7 @@ Player.prototype.handleMovementInput = function () {
         this.state = this.states.IDLE;
     }
 
+
     //this.updateZombies(bgX, bgY);
 };
 /**
@@ -185,7 +181,7 @@ Player.prototype.update = function () {
     //console.log("player x: " + this.x + " | player y: " + this.y);
     if (this.states.CURRENT_GUN != 'sniper') this.drawLazer = false;
 
-    if (!Key.keyPressed()) this.state = this.states.IDLE;
+    //if (!Key.keyPressed()) this.state = this.states.IDLE;
 
 
     //if (this.game.RELOAD) {
@@ -237,10 +233,10 @@ Player.prototype.update = function () {
     //    this.animations.reloadPistol.elapsedTime = 0;
     //    this.game.leftClick = false;
     //} else
-    if (!this.states.MOVING/* && !this.states.SHOOTING*/) {
-        this.state = this.states.IDLE;
-
-    }
+    //if (!this.states.MOVING && !this.states.SHOOTING) {
+    //    this.state = this.states.IDLE;
+    //
+    //}
 
 
     Entity.prototype.update.call(this);
@@ -251,14 +247,14 @@ Player.prototype.checkForWeaponSwap = function () {
     if (Key.isDown(Key.ONE)) {
         this.states.CURRENT_GUN = 'pistol';
         console.log("pistol equipped");
-        this.weaponShotDelay = .5;
+        this.weaponShotDelay = 0.5;
         this.currentFiringMode = "full auto";
     }
 
     if (Key.isDown(Key.TWO)) {
-        this.states.CURRENT_GUN = "assault rifle";
+        this.states.CURRENT_GUN = 'assault rifle';
         console.log("assault rifle equipped");
-        this.weaponShotDelay = .1;
+        this.weaponShotDelay = 0.1;
         this.currentFiringMode = "full auto";
 
     }
@@ -266,7 +262,7 @@ Player.prototype.checkForWeaponSwap = function () {
     if (Key.isDown(Key.THREE)) {
         this.states.CURRENT_GUN = 'shotgun';
         console.log("shotgun equipped");
-        this.weaponShotDelay = .8;
+        this.weaponShotDelay = 0.8;
         this.currentFiringMode = "spread";
 
     }
@@ -296,12 +292,24 @@ Player.prototype.throwGrenade = function () {
  * @param ctx
  */
 Player.prototype.draw = function (ctx) {
+    var runOffsetX, runOffsetY, idleOffsetX, idleOffsetY;
     var currAnim;
 
+    if (this.states.CURRENT_GUN === 'pistol') {
+        runOffsetX = 12;
+        runOffsetY = 17;
+        idleOffsetX = 27;
+        idleOffsetY = 15;
+    } else {
+        runOffsetX = 22;
+        runOffsetY = 22;
+        idleOffsetX = 40;
+        idleOffsetY = 18;
+    }
     this.convertToOnScreen();
 
     if (this.state === this.states.MOVING) {
-        this.animations.runFeet.drawFrame(this.game.clockTick, ctx, 400, 400, this.scale);
+        this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + runOffsetX, this.y + runOffsetY, this.scale);
         //this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
         if (this.states.CURRENT_GUN === 'pistol') currAnim = this.animations.hgun_idle;
         if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_idle;
@@ -309,26 +317,26 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'shotgun') currAnim = this.animations.shgun_idle;
 
     }
+
     if (this.state === this.states.IDLE) {
-        this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, 400, 400, this.scale);
-        //this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+        this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, this.x + idleOffsetX, this.y + idleOffsetY, this.scale);
         if (this.states.CURRENT_GUN === 'pistol') currAnim = this.animations.hgun_idle;
         if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_idle;
         if (this.states.CURRENT_GUN === 'sniper') currAnim = this.animations.rifle_idle;
         if (this.states.CURRENT_GUN === 'shotgun') currAnim = this.animations.shgun_idle;
     }
-    //currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
 
     if (this.state === this.states.SHOOTING) {
-        this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, 400, 400, this.scale);
-        //this.animations.shootPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+        if (noKeyPressed()) this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + runOffsetX, this.y + runOffsetY, this.scale);
+        else this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, this.x + idleOffsetX, this.y + idleOffsetY, this.scale);
         if (this.states.CURRENT_GUN === 'pistol') currAnim = this.animations.hgun_shoot;
         if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_shoot;
         if (this.states.CURRENT_GUN === 'sniper') currAnim = this.animations.rifle_shoot;
         if (this.states.CURRENT_GUN === 'shotgun') currAnim = this.animations.shgun_shoot;
 
     }
-    //currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+
+    currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
 
         if (globals.debug) {
             ctx.font = "12px Courier New";
@@ -467,6 +475,12 @@ Player.prototype.isCollidingWith = function (entity) {
         dirs: collisions
     };
 };
+
+
+function noKeyPressed() {
+    return Key.isDown(Key.RIGHT) && Key.isDown(Key.LEFT) && Key.isDown(Key.UP) && Key.isDown(Key.DOWN)
+}
+
 /**
  *
  * @param x
