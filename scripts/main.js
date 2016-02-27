@@ -354,6 +354,9 @@ ASSET_MANAGER.queueDownload("./img/player/rifle_flash.png");
 ASSET_MANAGER.queueDownload("./img/player/shgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/player/shgun_flash.png");
 
+ASSET_MANAGER.queueDownload("./img/player/snip_flash.png");
+ASSET_MANAGER.queueDownload("./img/player/snip.png");
+
 ASSET_MANAGER.queueDownload("./img/player/moving_feet.png");
 ASSET_MANAGER.queueDownload("./img/player/idle_feet.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
