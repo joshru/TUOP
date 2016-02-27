@@ -301,7 +301,7 @@ Player.prototype.draw = function (ctx) {
     this.convertToOnScreen();
 
     if (this.state === this.states.MOVING) {
-        this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
+        this.animations.runFeet.drawFrame(this.game.clockTick, ctx, 400, 400, this.scale);
         //this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
         if (this.states.CURRENT_GUN === 'pistol') currAnim = this.animations.hgun_idle;
         if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_idle;
@@ -310,7 +310,7 @@ Player.prototype.draw = function (ctx) {
 
     }
     if (this.state === this.states.IDLE) {
-        this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+        this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, 400, 400, this.scale);
         //this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
         if (this.states.CURRENT_GUN === 'pistol') currAnim = this.animations.hgun_idle;
         if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_idle;
@@ -320,7 +320,7 @@ Player.prototype.draw = function (ctx) {
     //currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
 
     if (this.state === this.states.SHOOTING) {
-        this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
+        this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, 400, 400, this.scale);
         //this.animations.shootPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
         if (this.states.CURRENT_GUN === 'pistol') currAnim = this.animations.hgun_shoot;
         if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_shoot;
@@ -328,7 +328,7 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'shotgun') currAnim = this.animations.shgun_shoot;
 
     }
-    currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
+    //currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
 
         if (globals.debug) {
             ctx.font = "12px Courier New";

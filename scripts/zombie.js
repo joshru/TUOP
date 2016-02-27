@@ -53,7 +53,7 @@ function Zombie(game) {
     this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
     this.animations.idle  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), 0, 0, 71, 71, 0.15, 1, true, false);
-    this.animations.move  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_move.png"), 0, 0, 288, 311, 0.3, 17, true, false);
+    this.animations.move  = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_move.png"), 0, 0, 288, 311, 0.05, 17, true, false);
     this.animations.dying = new Animation(ASSET_MANAGER.getAsset("./img/zombie/zombie_death.png"), 0, 0, 75, 75, 0.05, 20, false, false);
 
     var hbX = this.worldX + (this.animations.idle.frameWidth  / 2);
@@ -250,7 +250,15 @@ Zombie.prototype.draw = function (ctx) {
         //ctx.drawImage(ASSET_MANAGER.getAsset("./img/zombie/zombie.png"), this.screenX, this.screenY);
         this.animations.move.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, this.scale, 'Zombie');
         ctx.restore();
-    } else this.animations.dying.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 1);
+    } else {
+        var rotation = Math.atan2(-(this.screenY - globals.player.hitbox.y), -(this.screenX - globals.player.hitbox.x));
+        ctx.save();
+        ctx.translate((this.screenX + (71 / 2)), this.screenY + (71 / 2)); //magic numbers for zombie sprite dimensions
+        ctx.rotate(rotation);
+        ctx.translate(-(this.screenX + (71 / 2)), -(this.screenY + (71 / 2)));
+        this.animations.dying.drawFrame(this.game.clockTick, ctx, this.screenX, this.screenY, 1, 'Zombie');
+        ctx.restore();
+    }
 
     //this.currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     //console.log("Zombie position (" + this.x + "," + this.y + ")");
