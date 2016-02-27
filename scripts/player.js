@@ -53,7 +53,7 @@ Player.prototype.constructor = Player;
  * creates a bullet and adds it to the game's bullet data structure
  */
 Player.prototype.shoot = function (endX, endY) {
-    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale);
+    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale) / 2;
     var bulletY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
 
     var dx = (endX - bulletX);
@@ -198,8 +198,6 @@ Player.prototype.draw = function (ctx) {
     var currAnim;
 
     this.convertToOnScreen();
-
-
 
     if (this.state === this.states.MOVING) {
         this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);

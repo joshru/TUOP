@@ -200,25 +200,12 @@ Zombie.prototype.update = function () {
 
     }
 
-    //if ((this.x > 0 || this.y < 0) && !this.isOnScreen) {
-    //    //console.log("converting zombie to screen coords");
-    //    this.convertToOnScreen();
-    //}
-    //
-    //if ((this.x > 800 || this.y < 800) && this.isOnScreen) {
-    //    //console.log("converting zombie to off-screen coords");
-    //    this.convertToOffScreen();
-    //}
-
     //this.convertToOffScreen();
 
 };
 
 Zombie.prototype.convertToOnScreen = function() {
-    this.isOnScreen = false;
     var convert = worldToScreen(this.worldX, this.worldY);
-    //this.x = convert.x;
-    //this.y = convert.y;
     this.screenX = convert.x;
     this.screenY = convert.y;
     this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
@@ -226,16 +213,11 @@ Zombie.prototype.convertToOnScreen = function() {
 };
 
 Zombie.prototype.convertToOffScreen = function() {
-    this.isOnScreen = true;
     var convert = screenToWorld(this.screenX, this.screenY);
-    //this.x = convert.x;
-    //this.y = convert.y;
     this.worldX = convert.x;
     this.worldY = convert.y;
     this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
                          this.worldY + (this.animations.idle.frameHeight / 2));
-    //this.hitbox.x = convert.x;
-    //this.hitbox.y = convert.y;
 };
 
 /**
@@ -290,8 +272,9 @@ Zombie.prototype.isCollidingWith = function (bullet) {
 Zombie.prototype.die = function (powerUpSpawn) {
     // stops zombies and moves hitbox out of canvas
     this.isDead = true;
-    //  this.hitbox.updateXY(undefined, undefined);
- //   this.hitbox.radius = undefined;
+    //this.removeFromWorld = true;
+    //this.hitbox.updateXY(undefined, undefined);
+    //this.hitbox.radius = undefined;
     this.velocity.x = 0;
     this.velocity.y = 0;
 
@@ -313,29 +296,29 @@ Zombie.prototype.collideOtherZombies = function () {
                 var bounceDist = 60;
                 // check combinations of directions
                 if (collisionInfo.dirs.top && collisionInfo.dirs.left) {
-                    this.y += bounceDist;
-                    this.x += bounceDist;
+                    this.screenY += bounceDist;
+                    this.screenX += bounceDist;
 
                 } else if (collisionInfo.dirs.top && collisionInfo.dirs.right) {
-                    this.y += bounceDist;
-                    this.x -= bounceDist;
+                    this.screenY += bounceDist;
+                    this.screenX -= bounceDist;
                 } else if (collisionInfo.dirs.top) {
-                    this.y += bounceDist;
+                    this.screenY += bounceDist;
                 }
                 if (collisionInfo.dirs.bottom && collisionInfo.dirs.left) {
-                    this.y += bounceDist;
-                    this.x += bounceDist;
+                    this.screenY += bounceDist;
+                    this.screenX += bounceDist;
                 } else if (collisionInfo.dirs.bottom && collisionInfo.dirs.right) {
-                    this.y += bounceDist;
-                    this.x -= bounceDist;
+                    this.screenY += bounceDist;
+                    this.screenX -= bounceDist;
                 } else if (collisionInfo.dirs.bottom) {
-                    this.y += bounceDist;
+                    this.screenY += bounceDist;
                 }
-                else if (collisionInfo.dirs.left) this.x += bounceDist;
-                else if (collisionInfo.dirs.right) this.x -= bounceDist;
+                else if (collisionInfo.dirs.left) this.screenX += bounceDist;
+                else if (collisionInfo.dirs.right) this.screenX -= bounceDist;
 
-                this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth / 2),
-                    this.y + (this.animations.idle.frameHeight / 2));
+                this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+                    this.screenY + (this.animations.idle.frameHeight / 2));
             }
 
         }
