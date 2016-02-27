@@ -16,7 +16,6 @@ function Bullet(x, y, xVelocity, yVelocity, rotation, src, game) {
     this.y = y;
     this.rotation = rotation;
     this.name = "Bullet";
-    //this.dir = dir;
     this.xVelocity = xVelocity;
     this.yVelocity = yVelocity;
     this.src = src;
@@ -41,10 +40,25 @@ function Bullet(x, y, xVelocity, yVelocity, rotation, src, game) {
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
             break;
         case 'assault rifle':
-            this.speed = 15;
+            this.speed = 20;
             this.damage = 25;
             this.radius = 5;
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
+            break;
+        case 'shotgun':
+            this.speed = 10;
+            this.damage = 20;
+            this.radius = 3;
+            break;
+        case 'sniper':
+            this.speed = 70;
+            this.damage = 200;
+            this.radius = 4;
+            break;
+        case 'grenade':
+            this.speed = 7;
+            this.damage = 100;
+            this.radius = 5;
         default:
             break;
 

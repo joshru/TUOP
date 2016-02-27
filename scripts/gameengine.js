@@ -73,17 +73,18 @@ GameEngine.prototype.startInput = function () {
     var that = this;
 
     this.ctx.canvas.addEventListener("keydown", function (e) {
-        //console.log("GE key pressed: " + String.fromCharCode(e.which));
+        console.log("GE key pressed: " + String.fromCharCode(e.which));
 
         if (String.fromCharCode(e.which) === ' ') that.space = true;
 //        console.log(e);
 
         if (e.which === 82) {
-            //console.log("GE: R pressed");
+            console.log("GE: R pressed");
             that.RELOAD = true;
         }
-        if (e.which === 2){
-            //console.log("GE: 2 pressed");
+
+        if (e.which === 50){
+            console.log("GE: 2 pressed");
             that.ASSAULT = true;
         }
         e.preventDefault();
@@ -95,7 +96,7 @@ GameEngine.prototype.startInput = function () {
 
 
     this.ctx.canvas.addEventListener("click", function(e) {
-        if (e.button == 0) that.leftClick = true;
+        if (e.button == 1) that.leftClick = true;
         e.preventDefault();
 
     }, false);
