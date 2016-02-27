@@ -38,9 +38,10 @@ function Player(game, scale) {
     this.state = this.states.IDLE;
     this.animations = {};
 
-    this.animations.idle = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
+    this.animations.hgun_idle = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_idle.png"), 0, 0, 258, 220, 0.2, 1, true, false);
     this.animations.run = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_move.png"), 0, 0, 258, 220, 0.15, 15, true, false);
-    this.animations.shootPistol = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_flash.png"), 0, 0, 258, 220, 0.03, 1, true, false);
+    this.animations.hgun_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_flash.png"), 0, 0, 258, 220, 0.03, 1, true, false);
+    this.animations.rifle_idle = new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_idle.png"), 0, 0, 316, 207, 0.2, 1, true, false);
     this.animations.reloadPistol = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_reload.png"), 0, 0, 269, 241, 0.13, 15, false, false);
     this.animations.idleFeet = new Animation(ASSET_MANAGER.getAsset("./img/player/idle_feet.png", 0, 0, 132, 155, 0.2, 1, true, false));
     this.animations.runFeet = new Animation(ASSET_MANAGER.getAsset("./img/player/moving_feet.png"), 0, 0, 204, 124, 0.1, 20, true, false);
@@ -64,8 +65,8 @@ Player.prototype.shoot = function (endX, endY, firingMode) {
 
     console.log("shoot called");
 
-    var bulletX = this.x + (this.animations.idle.frameWidth * this.scale) / 2;
-    var bulletY = this.y + (this.animations.idle.frameWidth * this.scale ) / 2;
+    var bulletX = this.x + (this.animations.hgun_idle.frameWidth * this.scale) / 2;
+    var bulletY = this.y + (this.animations.hgun_idle.frameWidth * this.scale ) / 2;
 
     var dx = (endX - bulletX);
     var dy = (endY - bulletY);
@@ -96,7 +97,6 @@ Player.prototype.shoot = function (endX, endY, firingMode) {
                 this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity + randomSpread, yVelocity , this.states.CURRENT_GUN, this.game)); //left of bullet
 
             }
-
 
             break;
         default:
@@ -175,8 +175,8 @@ Player.prototype.handleMovementInput = function () {
 Player.prototype.update = function () {
     this.convertToOffScreen();
     this.handleMovementInput();
-    this.hitbox.updateXY(this.x + (this.animations.idle.frameWidth * this.scale) / 2,
-        this.y + (this.animations.idle.frameHeight * this.scale) / 2);
+    this.hitbox.updateXY(this.x + (this.animations.hgun_idle.frameWidth * this.scale) / 2,
+        this.y + (this.animations.hgun_idle.frameHeight * this.scale) / 2);
 
     //console.log("player x: " + this.x + " | player y: " + this.y);
     if (this.states.CURRENT_GUN != 'sniper') this.drawLazer = false;
@@ -279,8 +279,8 @@ Player.prototype.checkForWeaponSwap = function () {
 };
 
 Player.prototype.throwGrenade = function () {
-    var startX = this.x + (this.animations.idle.frameWidth * this.scale);
-    var startY = this.y + (this.animations.idle.frameWidth * this.scale) / 2;
+    var startX = this.x + (this.animations.hgun_idle.frameWidth * this.scale);
+    var startY = this.y + (this.animations.hgun_idle.frameWidth * this.scale) / 2;
 
     this.game.addEntity(new Grenade(startX, startY, globals.mousePosition.x, globals.mousePosition.y, this.game));
 };
@@ -297,13 +297,13 @@ Player.prototype.draw = function (ctx) {
     if (this.state === this.states.MOVING) {
         this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
         //this.animations.run.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
-        currAnim = this.animations.idle;
+        currAnim = this.animations.hgun_idle;
 
     }
     if (this.state === this.states.IDLE || this.animations.shootPistol.isDone()) {
         this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
         //this.animations.idle.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
-        currAnim = this.animations.idle;
+        currAnim = this.animations.hgun_idle;
 
         if (this.state === this.states.RELOADING) {
             this.animations.reloadPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
@@ -311,7 +311,7 @@ Player.prototype.draw = function (ctx) {
         if (this.state === this.states.SHOOTING) {
             this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
             //this.animations.shootPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
-            currAnim = this.animations.shootPistol;
+            currAnim = this.animations.hgun_shoot;
 
         }
         currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);

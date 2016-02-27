@@ -109,7 +109,7 @@ Bullet.prototype.draw = function (ctx) {
 
 //    ctx.translate(-(this.x + (15/2)), -(this.y + (16/2)));
 
-    console.log("drawing bullet at : " + this.x + ", " + this.y);
+    //console.log("drawing bullet at : " + this.x + ", " + this.y);
 
     if (globals.debug) {
         ctx.strokeStyle = "Pink";

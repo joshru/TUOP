@@ -367,6 +367,12 @@ ASSET_MANAGER.queueDownload("./img/player/hgun_move.png");
 ASSET_MANAGER.queueDownload("./img/player/hgun_reload.png");
 ASSET_MANAGER.queueDownload("./img/player/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/player/hgun_flash.png");
+
+ASSET_MANAGER.queueDownload("./img/player/rifle_idle.png");
+ASSET_MANAGER.queueDownload("./img/player/rifle_flash.png");
+ASSET_MANAGER.queueDownload("./img/player/shgun_idle.png");
+ASSET_MANAGER.queueDownload("./img/player/shgun_flash.png");
+
 ASSET_MANAGER.queueDownload("./img/player/moving_feet.png");
 ASSET_MANAGER.queueDownload("./img/player/idle_feet.png");
 ASSET_MANAGER.queueDownload("./img/bullet.jpg");
