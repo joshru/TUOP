@@ -239,6 +239,8 @@ Zombie.prototype.spawnNewWave = function() {
 
             var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
 
+            console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")" );
+
             globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
 
 
