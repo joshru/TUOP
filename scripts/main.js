@@ -167,16 +167,33 @@ Background.prototype.draw = function (ctx) {
         ctx.fillText("YOU DEAD HOMIE rip", 120, canvas.height / 2);
         // line below stops updating the game (we can keep this or lose this).
         this.game.gameStates.GAMEOVER = true;
-        ///* for splash screen and start */
-        //var startOrReplay = {
-        //    x: 420,
-        //    y: canvas.height / 2 - 50,
-        //    w: 150,
-        //    h: 30
-        //};
-        //
-        //canvas.addEventListener("mousedown", startGame, false);
-        //ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
+
+        /* for splash screen and start */
+        var startOrReplay = {
+            x: 320,
+            y: canvas.height / 2 - 50,
+            w: 150,
+            h: 30
+        };
+
+        canvas.addEventListener("mousedown", restartGame, false);
+
+        ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
+
+        function restartGame(event) {
+            console.log("testing");
+            var rect = canvas.getBoundingClientRect();
+            var canvas_x = Math.round(event.clientX - rect.left);
+            var canvas_y = Math.round(event.clientY - rect.top);
+
+            //console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
+            if (canvas_x >= startOrReplay.x && canvas_x <= startOrReplay.x + startOrReplay.w &&
+                canvas_y >= startOrReplay.y - startOrReplay.h && canvas_y <= startOrReplay.y) {
+                startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
+                // reloads page - restart all states and canvas is much more complicated
+                location.reload();
+            }
+        }
     }
 
     /* Display Godlike */
@@ -356,7 +373,6 @@ ASSET_MANAGER.queueDownload("./img/player/shgun_flash.png");
 
 ASSET_MANAGER.queueDownload("./img/player/moving_feet.png");
 ASSET_MANAGER.queueDownload("./img/player/idle_feet.png");
-ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie.png");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie_move.png");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie_death.png");
@@ -412,7 +428,7 @@ function startGame() {
             var gameEngine = new GameEngine();
             globals.player = new Player(gameEngine, 0.5);
             globals.background = new Background(gameEngine);
-
+            gameEngine.gameStates.GAMEOVER = false;
 
             var map = new Map('lab','./img/terrain/LabMap.png');
             globals.SPAWNER = new Spawner(gameEngine, map);
