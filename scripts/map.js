@@ -22,6 +22,8 @@ Map.prototype.assignMapProperties = function() {
     switch(this.name) {
 
         case 'lab':
+
+            console.log("Lab map successfully recognized and created");
             this.width = 2048;
             this.height = 2048;
 

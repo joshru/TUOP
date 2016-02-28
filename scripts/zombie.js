@@ -197,7 +197,7 @@ Zombie.prototype.removeAndReplace = function() {
     }
 
     // var currentFib = globals.fib1 + globals.fib2;
-    /*if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
+   /* if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
     if (globals.zombieDeathCount === globals.fibs.currFib) {
         // see in Background.prototype.draw for wave counter
         globals.wave++;
@@ -209,14 +209,46 @@ Zombie.prototype.removeAndReplace = function() {
         globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
         //Spawn current fib amount of zombies
         for (var i = 0; i < globals.fibs.currFib; i++) {
-            this.game.addEntity(new Zombie(this.game));
+            globals.SPAWNER.spawnZombie()
         }
 
         globals.zombieDeathCount = 0;
     }*/
+    this.spawnNewWave();
 
 
 };
+
+
+
+Zombie.prototype.spawnNewWave = function() {
+    console.log("Zombies killed: " + globals.zombieDeathCount +  ", Total in wave: "
+        + globals.currentWaveInfo.waves[globals.wave].zombies);
+
+    if (globals.zombieDeathCount === globals.currentWaveInfo.waves[globals.wave].zombies) {
+        ++globals.wave;
+        for (var i = 0; i < globals.currentWaveInfo.waves[globals.wave].zombies; i++) {
+            var j = 0;
+            //determine where to spawn zombie
+
+            var availableSpawns = globals.currentWaveInfo.waves[globals.wave].spawns;
+
+           // var numSpawns = globals.SPAWNER.map.spawnPoints.length;
+
+            var numSpawns = globals.currentWaveInfo.waves[globals.wave].spawns.length;
+
+            var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
+
+            globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
+
+
+        }
+        globals.zombieDeathCount = 0;
+
+    }
+
+};
+
 
 Zombie.prototype.convertToOnScreen = function() {
     var convert = worldToScreen(this.worldX, this.worldY);
@@ -293,7 +325,7 @@ Zombie.prototype.die = function () {
     this.velocity.x = 0;
     this.velocity.y = 0;
 
-    globals.STATETRACKER.zombiesKilled++;
+    //globals.STATETRACKER.zombiesKilled++;
 
 
 };

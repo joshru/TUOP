@@ -12,7 +12,8 @@ var globals = {
     mute: true,
     debug: false,
     SPAWNER: null,
-    STATETRACKER: null
+    STATETRACKER: null,
+    currentWaveInfo:  jsonFileToObject("./waveInfo/realWave1.json")
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -412,13 +413,20 @@ function startGame() {
             globals.player = new Player(gameEngine, 0.5);
             globals.background = new Background(gameEngine);
 
+            //Testing json object stuff
+            console.log(globals.currentWaveInfo.waves[0].zombies); // should return 3
+
 
             var map = new Map('lab','./img/terrain/LabMap.png');
             globals.SPAWNER = new Spawner(gameEngine, map);
-            globals.STATETRACKER = new StateTracker(gameEngine);
+         //   globals.STATETRACKER = new StateTracker(gameEngine);
             //gameEngine.addEntity(globals.background);
-            //gameEngine.addZombie(new Zombie(gameEngine));
-            gameEngine.addEntity(globals.STATETRACKER);
+            gameEngine.addZombie(new Zombie(gameEngine));
+            gameEngine.addZombie(new Zombie(gameEngine));
+            gameEngine.addZombie(new Zombie(gameEngine));
+
+
+            //      gameEngine.addEntity(globals.STATETRACKER);
             gameEngine.addEntity(globals.background);
           //  gameEngine.addEntity(new Zombie(gameEngine)); TODO maybe re add me
             //gameEngine.addEntity(new PowerUp(gameEngine, {x: 900, y: 900}, "hp")); //for testing on scrolling map
@@ -427,7 +435,7 @@ function startGame() {
             gameEngine.init(ctx);
             gameEngine.start();
 
-            globals.STATETRACKER.spawnNewWave();
+           // globals.STATETRACKER.spawnNewWave();
         }
     }
 }

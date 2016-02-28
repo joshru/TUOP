@@ -329,8 +329,8 @@ Player.prototype.draw = function (ctx) {
         //}
 
         //Check for collisions with zombies
-        for (var i = 0; i < this.game.entities.length; i++) {
-            var ent = this.game.entities[i];
+        for (var i = 0; i < this.game.zombies.length; i++) {
+            var ent = this.game.zombies[i];
             if (ent.name === "Zombie" && !ent.isDead) {
                 var currentZombie = this.hitbox.getCollisionInfo(ent);
                 if (currentZombie.hit) {

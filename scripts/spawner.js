@@ -40,7 +40,7 @@ Spawner.prototype.spawnZombie = function(x, y) {
     zombo.y = y;
 
     this.game.addZombie(zombo);
-    this.game.addEntity(zombo);
+    //this.game.addEntity(zombo);
 };
 /**
  * Reassigns the map this spawner should use.
