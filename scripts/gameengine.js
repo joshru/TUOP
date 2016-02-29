@@ -228,6 +228,7 @@ GameEngine.prototype.loop = function () {
         this.update();
     }
     this.draw();
+
     //this.space = null;
 };
 

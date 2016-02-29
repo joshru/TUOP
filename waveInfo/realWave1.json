@@ -6,16 +6,16 @@
   "totalWaves": 10,
   
   "waves": [
-      {"waveNum": 1, "zombies": 3, "time": 15, "spawns": [1]},
-      {"waveNum": 2, "zombies": 6, "time": 15 , "spawns": [1]},
-      {"waveNum": 3, "zombies": 9, "time": 15, "spawns": [1]},
-      {"waveNum": 4, "zombies": 12, "time": 15, "spawns": [1,2]},
-      {"waveNum": 5, "zombies": 15, "time": 14, "spawns": [1,2]},
-      {"waveNum": 6, "zombies": 18, "time": 13, "spawns": [1,2,3]},
-      {"waveNum": 7, "zombies": 21, "time": 12, "spawns": [1, 2, 3]},
-      {"waveNum": 8, "zombies": 24, "time": 12, "spawns": [1,2,3,4]},
-      {"waveNum": 9, "zombies": 27, "time": 12, "spawns": [1,2,3,4]},
-      {"waveNum": 10, "zombies": 30, "time": 12, "spawns": [1,2,3,4]}
+      {"waveNum": 1, "zombies":  1, "time": 15, "spawns": [1]},
+      {"waveNum": 2, "zombies":  3, "time": 15 , "spawns": [1]},
+      {"waveNum": 3, "zombies":  6, "time": 15, "spawns": [1,2]},
+      {"waveNum": 4, "zombies":  10, "time": 15, "spawns": [1,2,3]},
+      {"waveNum": 5, "zombies":  15, "time": 14, "spawns": [1,2,3]},
+      {"waveNum": 6, "zombies":  21, "time": 13, "spawns": [1,2,3]},
+      {"waveNum": 7, "zombies":  28, "time": 12, "spawns": [1, 2, 3]},
+      {"waveNum": 8, "zombies":  36, "time": 12, "spawns": [1,2,3,4]},
+      {"waveNum": 9, "zombies":  45, "time": 12, "spawns": [1,2,3,4]},
+      {"waveNum": 10, "zombies": 50,  "time": 12, "spawns": [1,2,3,4]}
     
     ]
 }

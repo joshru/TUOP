@@ -51,7 +51,8 @@ StatTrack.prototype.draw = function(ctx) {
         ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
     }
 
-    if (globals.waveNumber === 10) {
+    if (globals.waveNumber === globals.currentLevelInfo.waves.length) {
+        //console.log("Final wave reached, game over");
         this.game.gameStates.GAMEOVER = true;
 
         /* for replaying */
@@ -84,7 +85,7 @@ StatTrack.prototype.draw = function(ctx) {
     /* Display Wave and Kills */
     ctx.font = "30px Courier New";
     ctx.fillStyle = "white";
-    ctx.fillText("Wave: " + (globals.waveNumber + 1), 200, 60);
+    ctx.fillText("Wave: " + (globals.waveNumber) + "/" + (globals.currentLevelInfo.totalWaves - 1), 200, 60);
     ctx.fillText("Kills: " + globals.killCount, 10, 60);
 
     function restartGame(event) {

@@ -5,7 +5,7 @@ var globals = {
     clickPosition: {x: 0, y: 0},
     clickHoldPosition: {x: 0, y: 0},
     fibs: {fib1: 0, fib2: 1, currFib: 1},
-    waveNumber: 0,
+    waveNumber: 1,
     killCount: 0,
     powerUpTime: {godlike: 0},
     zombieDeathCount: 0,
