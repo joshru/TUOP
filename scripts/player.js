@@ -284,7 +284,7 @@ Player.prototype.checkForWeaponSwap = function () {
 };
 
 Player.prototype.throwGrenade = function () {
-    var startX = this.x + (this.animations.hgun_idle.frameWidth * this.scale);
+    var startX = this.x + (this.animations.hgun_idle.frameWidth * this.scale) / 2;
     var startY = this.y + (this.animations.hgun_idle.frameWidth * this.scale) / 2;
 
     this.game.addEntity(new Grenade(startX, startY, globals.mousePosition.x, globals.mousePosition.y, this.game));
@@ -354,8 +354,8 @@ Player.prototype.draw = function (ctx) {
         //}
 
         //Check for collisions with zombies
-        for (var i = 0; i < this.game.entities.length; i++) {
-            var ent = this.game.entities[i];
+        for (var i = 0; i < this.game.zombies.length; i++) {
+            var ent = this.game.zombies[i];
             if (ent.name === "Zombie" && !ent.isDead) {
                 var currentZombie = this.hitbox.getCollisionInfo(ent);
                 if (currentZombie.hit) {

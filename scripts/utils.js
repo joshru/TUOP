@@ -56,3 +56,32 @@ function calculateVelocity(sX, sY, eX, eY) {
 
     return {x: xVel, y: yVel};
 }
+/**
+ * reads a text file into a variable
+ * @param fileName
+ * @shoutout Majid Laissi @stackoverflow
+ */
+function readTextFile(fileName) {
+    var rawFile = new XMLHttpRequest();
+    var allText = "";
+    rawFile.open("GET", fileName, false);
+    rawFile.onreadystatechange = function() {
+
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status === 0) {
+                allText = rawFile.responseText;
+            }
+        }
+
+    };
+    rawFile.send(null);
+    return allText;
+}
+
+function jsonToObject(jsonToParse) {
+    return JSON.parse(jsonToParse);
+}
+
+function jsonFileToObject(fileName) {
+    return jsonToObject(readTextFile(fileName));
+}

@@ -22,6 +22,8 @@ Map.prototype.assignMapProperties = function() {
     switch(this.name) {
 
         case 'lab':
+
+            console.log("Lab map successfully recognized and created");
             this.width = 2048;
             this.height = 2048;
 
@@ -29,6 +31,8 @@ Map.prototype.assignMapProperties = function() {
             this.spawnPoints.push({x: 1970, y: 80});
             this.spawnPoints.push({x: 80, y: 1960});
             this.spawnPoints.push({x: 1970, y: 1960});
+            this.spawnPoints.push({x: this.width / 2, y: this.height / 2});
+
 
             this.bossSpawns.push({x: 1020, y: 1530});
             this.bossSpawns.push({x: 1026, y: 510});

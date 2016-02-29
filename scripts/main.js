@@ -5,13 +5,15 @@ var globals = {
     clickPosition: {x: 0, y: 0},
     clickHoldPosition: {x: 0, y: 0},
     fibs: {fib1: 0, fib2: 1, currFib: 1},
-    wave: 0,
+    waveNumber: 0,
     killCount: 0,
     powerUpTime: {godlike: 0},
     zombieDeathCount: 0,
     mute: true,
     debug: false,
-    SPAWNER: null
+    SPAWNER: null,
+    STATETRACKER: null,
+    currentLevelInfo:  jsonFileToObject("./waveInfo/realWave1.json")
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -208,7 +210,7 @@ Background.prototype.draw = function (ctx) {
     /* Display Wave and Kills */
     ctx.font = "30px Courier New";
     ctx.fillStyle = "white";
-    ctx.fillText("Wave: " + globals.wave, 200, 60);
+    ctx.fillText("Wave: " + globals.waveNumber, 200, 60);
     ctx.fillText("Kills: " + globals.killCount, 10, 60);
 
     Entity.prototype.draw.call(this);
@@ -433,10 +435,15 @@ function startGame() {
             var map = new Map('lab','./img/terrain/LabMap.png');
             globals.SPAWNER = new Spawner(gameEngine, map);
 
-            //gameEngine.addEntity(globals.background);
-            //gameEngine.addZombie(new Zombie(gameEngine));
+
+            gameEngine.addZombie(new Zombie(gameEngine));
+            gameEngine.addZombie(new Zombie(gameEngine));
+            gameEngine.addZombie(new Zombie(gameEngine));
+
+
+            //      gameEngine.addEntity(globals.STATETRACKER);
             gameEngine.addEntity(globals.background);
-            gameEngine.addEntity(new Zombie(gameEngine));
+          //  gameEngine.addEntity(new Zombie(gameEngine)); TODO maybe re add me
             //gameEngine.addEntity(new PowerUp(gameEngine, {x: 900, y: 900}, "hp")); //for testing on scrolling map
             gameEngine.addEntity(globals.player);
 
