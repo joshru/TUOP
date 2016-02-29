@@ -440,7 +440,7 @@ function startGame() {
             gameEngine.addZombie(new Zombie(gameEngine));
             gameEngine.addZombie(new Zombie(gameEngine));
 
-
+//
             //      gameEngine.addEntity(globals.STATETRACKER);
             gameEngine.addEntity(globals.background);
           //  gameEngine.addEntity(new Zombie(gameEngine)); TODO maybe re add me
