@@ -7,6 +7,8 @@
  * @param scale
  * @constructor
  */
+var CONVERT_TO_SEC = 1000;
+
 function Player(game, scale) {
     this.game = game;
     this.name = "Player";
@@ -20,6 +22,7 @@ function Player(game, scale) {
     this.weaponShotDelay = .5;
 
     this.lastShotFired = Date.now();
+    this.lastHitTaken = Date.now();
     this.currentFiringMode = "full auto";
 
     this.audio = document.getElementById('soundFX');
@@ -214,7 +217,7 @@ Player.prototype.update = function () {
 
         var currentTime = Date.now();
 
-        if ((currentTime - this.lastShotFired) / 1000 > this.weaponShotDelay) {
+        if ((currentTime - this.lastShotFired) / CONVERT_TO_SEC > this.weaponShotDelay) {
             this.shoot(globals.mousePosition.x, globals.mousePosition.y, this.currentFiringMode);
             this.lastShotFired = Date.now();
         }
@@ -254,7 +257,7 @@ Player.prototype.checkForWeaponSwap = function () {
     if (Key.isDown(Key.TWO)) {
         this.states.CURRENT_GUN = 'assault rifle';
         console.log("assault rifle equipped");
-        this.weaponShotDelay = 0.1;
+        this.weaponShotDelay = 0.15;
         this.currentFiringMode = "full auto";
 
     }
@@ -378,8 +381,13 @@ Player.prototype.draw = function (ctx) {
                         this.audio.play();
                     }
 
-                    if (!this.godlike)
-                        this.health -= 5;
+                    var currentTime = Date.now();
+
+                    if ((currentTime - this.lastHitTaken) / CONVERT_TO_SEC > 0.4) {
+                        if (!this.godlike)
+                            this.health -= 5;
+                        this.lastHitTaken = Date.now();
+                    }
 
                     if (this.health <= 0) {
                         if (!globals.mute) {
@@ -388,6 +396,7 @@ Player.prototype.draw = function (ctx) {
                         }
                         this.removeFromWorld = true;
                     }
+
                 }
             }
         }
