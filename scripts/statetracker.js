@@ -3,7 +3,7 @@
  */
 function StateTracker(game) {
     this.game = game;
-    this.totalWaves = 10;
+    this.totalWaves = 9;
     this.currentWave = 0;
     this.zombiesPerWave = 3;
     this.waveTime = 15;
@@ -57,7 +57,7 @@ StateTracker.prototype.checkWaveFinished = function() {
 
 StateTracker.prototype.spawnNewWave = function() {
     this.currentWave++;
-    globals.SPAWNER.spawnWave(this.zombiesPerWave);
+    if (this.currentWave <= this.totalWaves) globals.SPAWNER.spawnWave(this.zombiesPerWave);
     this.zombiesSpawned += this.zombiesPerWave;
     this.zombiesPerWave += 3;
 

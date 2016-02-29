@@ -125,6 +125,10 @@ GameEngine.prototype.addEntity = function (entity) {
     this.entities.push(entity);
 };
 
+GameEngine.prototype.addHUD = function(HUD) {
+    this.hud = HUD;
+};
+
 GameEngine.prototype.addZombie = function(zombie) {
     console.log("added zombie");
     this.zombies.push(zombie);
@@ -151,7 +155,10 @@ GameEngine.prototype.draw = function () {
  * Calls draw on all elements of a given array
  * @param array of entities
  */
-GameEngine.prototype.drawEntitiesIn = function(array) { for (var i = 0; i < array.length; i++) array[i].draw(this.ctx); };
+GameEngine.prototype.drawEntitiesIn = function(array) {
+    for (var i = 0; i < array.length; i++) array[i].draw(this.ctx);
+    this.hud.draw(this.ctx);
+};
 /**
  * Calls update on all elements in a given array
  * @param array of entities

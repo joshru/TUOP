@@ -14,8 +14,8 @@ function PowerUp(game, other, type) {
     this.name = "PowerUp";
     this.radius = 25;
     this.type = type;
-    this.x = other.screenX;
-    this.y = other.screenY;
+    this.x = other.x;
+    this.y = other.y;
     this.sprite = null;
     this.audio = document.getElementById('soundFX');
 
@@ -116,6 +116,6 @@ PowerUp.prototype.convertToOffScreen = function() {
     var convert = screenToWorld(this.screenX, this.screenY);
     this.worldX = convert.x;
     this.worldY = convert.y;
-    this.hitbox.updateXY(this.worldX + (this.radius / 2),
-        this.worldY + (this.radius / 2));
+    this.hitbox.updateXY(this.screenX + (this.radius / 2),
+        this.screenY + (this.radius / 2));
 };

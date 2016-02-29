@@ -384,7 +384,7 @@ Player.prototype.draw = function (ctx) {
                             this.audio.play();
                         }
 
-                        if (!this.godlike)
+                        if (!this.godlike && this.health > 0)
                             this.health -= 5;
                         this.lastHitTaken = Date.now();
                     }

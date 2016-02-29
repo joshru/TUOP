@@ -151,86 +151,86 @@ Background.prototype.draw = function (ctx) {
 
     //ctx.fillText("Mute me", 10, 80).ondblclick.apply(document.getElementById("soundFX").muted = true);
 
-    /* Screen get's bloodier */
-    opacity += 0.3 - (globals.player.health / 100);
-    ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "30px Courier New";
-    ctx.fillStyle = "white";
-    ctx.fillText("Player Health: " + globals.player.health, 10, 30);
-
-    /* Death Scene */
-    if (globals.player.health <= 0) {
-        ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white";
-        ctx.font = "50px Courier New";
-        ctx.fillText("YOU DEAD HOMIE rip", 120, canvas.height / 2 - 50);
-        // line below stops updating the game (we can keep this or lose this).
-        this.game.gameStates.GAMEOVER = true;
-
-        /* for replaying */
-        var startOrReplay = {
-            x: 320,
-            y: canvas.height / 2,
-            w: 150,
-            h: 30
-        };
-
-        canvas.addEventListener("mousedown", restartGame, false);
-
-        ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
-    }
-
-    if (globals.waveNumber === 1) {
-        this.game.gameStates.GAMEOVER = true;
-
-        /* for replaying */
-        var startOrReplay = {
-            x: 320,
-            y: canvas.height / 2,
-            w: 150,
-            h: 30
-        };
-
-        canvas.addEventListener("mousedown", restartGame, false);
-
-        ctx.fillStyle = "rgba(0, 195, 0, " + 0.5 + ")";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white";
-        ctx.font = "50px Courier New";
-        ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
-        ctx.fillText("YOU WIN!", startOrReplay.x - 25, startOrReplay.y - 50);
-    }
-
-    /* Display Godlike */
-    if (globals.player.godlike) {
-        ctx.fillStyle = "rgba(255, 255, 58, " + 0.15 + ")";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "30px Courier New";
-        ctx.fillStyle = "white";
-        ctx.fillText("GODLIKE: " + globals.powerUpTime.godlike, 10, 90);
-    }
-
-    /* Display Wave and Kills */
-    ctx.font = "30px Courier New";
-    ctx.fillStyle = "white";
-    ctx.fillText("Wave: " + globals.waveNumber, 200, 60);
-    ctx.fillText("Kills: " + globals.killCount, 10, 60);
-
-    function restartGame(event) {
-        console.log("testing");
-        var rect = canvas.getBoundingClientRect();
-        var canvas_x = Math.round(event.clientX - rect.left);
-        var canvas_y = Math.round(event.clientY - rect.top);
-
-        if (canvas_x >= startOrReplay.x && canvas_x <= startOrReplay.x + startOrReplay.w &&
-            canvas_y >= startOrReplay.y - startOrReplay.h && canvas_y <= startOrReplay.y) {
-            startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
-            // reloads page - restart all states and canvas is much more complicated
-            location.reload();
-        }
-    }
+    ///* Screen get's bloodier */
+    //opacity += 0.3 - (globals.player.health / 100);
+    //ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
+    //ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //ctx.font = "30px Courier New";
+    //ctx.fillStyle = "white";
+    //ctx.fillText("Player Health: " + globals.player.health, 10, 30);
+    //
+    ///* Death Scene */
+    //if (globals.player.health <= 0) {
+    //    ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
+    //    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //    ctx.fillStyle = "white";
+    //    ctx.font = "50px Courier New";
+    //    ctx.fillText("YOU DEAD HOMIE rip", 120, canvas.height / 2 - 50);
+    //    // line below stops updating the game (we can keep this or lose this).
+    //    this.game.gameStates.GAMEOVER = true;
+    //
+    //    /* for replaying */
+    //    var startOrReplay = {
+    //        x: 320,
+    //        y: canvas.height / 2,
+    //        w: 150,
+    //        h: 30
+    //    };
+    //
+    //    canvas.addEventListener("mousedown", restartGame, false);
+    //
+    //    ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
+    //}
+    //
+    //if (globals.waveNumber === 9) {
+    //    this.game.gameStates.GAMEOVER = true;
+    //
+    //    /* for replaying */
+    //    var startOrReplay = {
+    //        x: 320,
+    //        y: canvas.height / 2,
+    //        w: 150,
+    //        h: 30
+    //    };
+    //
+    //    canvas.addEventListener("mousedown", restartGame, false);
+    //
+    //    ctx.fillStyle = "rgba(0, 195, 0, " + 0.5 + ")";
+    //    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //    ctx.fillStyle = "white";
+    //    ctx.font = "50px Courier New";
+    //    ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
+    //    ctx.fillText("YOU WIN!", startOrReplay.x - 25, startOrReplay.y - 50);
+    //}
+    //
+    ///* Display Godlike */
+    //if (globals.player.godlike) {
+    //    ctx.fillStyle = "rgba(255, 255, 58, " + 0.15 + ")";
+    //    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //    ctx.font = "30px Courier New";
+    //    ctx.fillStyle = "white";
+    //    ctx.fillText("GODLIKE: " + globals.powerUpTime.godlike, 10, 90);
+    //}
+    //
+    ///* Display Wave and Kills */
+    //ctx.font = "30px Courier New";
+    //ctx.fillStyle = "white";
+    //ctx.fillText("Wave: " + (globals.waveNumber + 1), 200, 60);
+    //ctx.fillText("Kills: " + globals.killCount, 10, 60);
+    //
+    //function restartGame(event) {
+    //    console.log("testing");
+    //    var rect = canvas.getBoundingClientRect();
+    //    var canvas_x = Math.round(event.clientX - rect.left);
+    //    var canvas_y = Math.round(event.clientY - rect.top);
+    //
+    //    if (canvas_x >= startOrReplay.x && canvas_x <= startOrReplay.x + startOrReplay.w &&
+    //        canvas_y >= startOrReplay.y - startOrReplay.h && canvas_y <= startOrReplay.y) {
+    //        startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
+    //        // reloads page - restart all states and canvas is much more complicated
+    //        location.reload();
+    //    }
+    //}
 
     Entity.prototype.draw.call(this);
 };
@@ -462,6 +462,9 @@ function startGame() {
           //  gameEngine.addEntity(new Zombie(gameEngine)); TODO maybe re add me
             //gameEngine.addEntity(new PowerUp(gameEngine, {x: 900, y: 900}, "hp")); //for testing on scrolling map
             gameEngine.addEntity(globals.player);
+            var ST = new StatTrack(gameEngine);
+            gameEngine.addHUD(ST);
+
 
             gameEngine.init(ctx);
             gameEngine.start();

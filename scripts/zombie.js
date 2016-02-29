@@ -16,7 +16,7 @@ function Zombie(game) {
     this.scale = 0.3;
     this.speed = 5;
 
-    this.radius = 20;
+    this.radius = 30;
     this.ground = 500;
 
     this.x = randomInt(1200); //hardcoded for prototype zombie
@@ -34,8 +34,8 @@ function Zombie(game) {
     //this.worldY = 1600;
 
 
-    console.log("spawning zombie at screen coords: " + this.screenX + ", " + this.screenY);
-    console.log("spawning zombie at world coords: " + this.worldX + ", " + this.worldX);
+    //console.log("spawning zombie at screen coords: " + this.screenX + ", " + this.screenY);
+    //console.log("spawning zombie at world coords: " + this.worldX + ", " + this.worldX);
 
 
 
@@ -207,7 +207,6 @@ Zombie.prototype.findPlayerDirection = function() {
 
 
 Zombie.prototype.removeAndReplace = function() {
-
     this.removeFromWorld = true;
     ++globals.zombieDeathCount;
     ++globals.killCount;
@@ -283,7 +282,7 @@ Zombie.prototype.spawnNewWaveRedux = function() {
                 spawnCoords.x += randomInt(10);
                 spawnCoords.y += randomInt(10);
 
-                console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")");
+                //console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")");
                  globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
 
 
@@ -323,7 +322,7 @@ Zombie.prototype.spawnNewWave = function() {
             spawnCoords.y += randomInt(25);
 
 
-            console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")" );
+            //console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")" );
 
             globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
 
@@ -350,8 +349,8 @@ Zombie.prototype.convertToOffScreen = function() {
     var convert = screenToWorld(this.screenX, this.screenY);
     this.worldX = convert.x;
     this.worldY = convert.y;
-    this.hitbox.updateXY(this.worldX + (this.animations.idle.frameWidth / 2),
-        this.worldY + (this.animations.idle.frameHeight / 2));
+    this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
+        this.screenY + (this.animations.idle.frameHeight / 2));
 };
 
 /**
