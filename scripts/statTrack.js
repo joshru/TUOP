@@ -98,6 +98,7 @@ StatTrack.prototype.draw = function(ctx) {
             startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
             // reloads page - restart all states and canvas is much more complicated
             location.reload();
+            this.game.gameStates.GAMEOVER = false;
         }
     }
 };
