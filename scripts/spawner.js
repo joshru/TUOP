@@ -43,6 +43,12 @@ Spawner.prototype.spawnZombie = function(x, y) {
     this.game.addZombie(zombo);
     //this.game.addEntity(zombo);
 };
+
+
+Spawner.prototype.spawnZombieRandomPos = function() {
+    this.game.addZombie(this.game);
+};
+
 /**
  * Reassigns the map this spawner should use.
  * Allows the spawner to utilize map specific spawn points.
