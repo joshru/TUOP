@@ -418,6 +418,12 @@ function startGame() {
 
 
             var map = new Map('lab','./img/terrain/LabMap.png');
+
+            for (var i = 0; i < map.spawnPoints.length; i++) {
+                console.log("Available spawn points: " + map.spawnPoints[i].x + ", " + map.spawnPoints[i].y);
+
+            }
+
             globals.SPAWNER = new Spawner(gameEngine, map);
          //   globals.STATETRACKER = new StateTracker(gameEngine);
             //gameEngine.addEntity(globals.background);

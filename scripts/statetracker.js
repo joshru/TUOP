@@ -25,6 +25,7 @@ StateTracker.prototype.update = function() {
 
     if (waveFinished) {
         console.log("Waved finished, spawning new wave");
+        this.zombiesKilled = 0;
         this.spawnNewWave();
     }
 
@@ -51,7 +52,7 @@ StateTracker.prototype.checkGameOver = function() {
 };
 
 StateTracker.prototype.checkWaveFinished = function() {
-    return this.zombiesKilled === this.zombiesSpawned;
+    return this.zombiesKilled === this.zombiesPerWave;
 };
 
 StateTracker.prototype.spawnNewWave = function() {

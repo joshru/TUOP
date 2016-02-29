@@ -36,8 +36,9 @@ function Spawner(game, map) {
  */
 Spawner.prototype.spawnZombie = function(x, y) {
     var zombo = new Zombie(this.game);
-    zombo.x = x;
-    zombo.y = y;
+
+
+    zombo.setCoordinates(x, y);
 
     this.game.addZombie(zombo);
     //this.game.addEntity(zombo);

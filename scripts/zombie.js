@@ -34,7 +34,10 @@ function Zombie(game) {
     //this.worldY = 1600;
 
 
-    console.log("spawning zombie at: " + this.screenX + ", " + this.screenY);
+    console.log("spawning zombie at screen coords: " + this.screenX + ", " + this.screenY);
+    console.log("spawning zombie at world coords: " + this.worldX + ", " + this.worldX);
+
+
 
     // TODO create speedScale variable so zombies of different types can have different speeds
     // EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.
@@ -65,6 +68,20 @@ function Zombie(game) {
 
 Zombie.prototype = new Entity();
 Zombie.prototype.constructor = Zombie;
+
+
+
+Zombie.prototype.setCoordinates = function(x, y) {
+    this.x = x;
+    this.y = y;
+
+    var screen = worldToScreen(this.x, this.y);
+    var world  = screenToWorld(this.x, this.y);
+    this.screenX = screen.x;
+    this.screenY = screen.y;
+    this.worldX = world.x;
+    this.worldY = world.y;
+};
 
 /**
  * Update for the game loop
@@ -214,12 +231,92 @@ Zombie.prototype.removeAndReplace = function() {
 
         globals.zombieDeathCount = 0;
     }*/
-    this.spawnNewWave();
+    this.spawnNewWaveRedux();
 
 
 };
+/**
+ *
+ * @shoutout Scott Ogrin for the timeout loop
+ * @from scottiestech.info
+ */
+Zombie.prototype.spawnNewWaveRedux = function() {
+    if (globals.zombieDeathCount === globals.currentWaveInfo.waves[globals.wave].zombies) {
+        ++globals.wave;
+
+        var i = globals.currentWaveInfo.waves[globals.wave].zombies;
+        var j = 0;
+        (function theLoop(i) {
+            setTimeout(function () {
+
+                // DO SOMETHING WITH data AND stuff
+
+                var availableSpawns = globals.currentWaveInfo.waves[globals.wave].spawns; //TODO find what to do with me
 
 
+                var numSpawns = globals.currentWaveInfo.waves[globals.wave].spawns.length;
+
+                var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
+
+                //Move spawn point slightly so zombies aren't all spawning in the same position
+              //  spawnCoords.x += randomInt(10);
+              //  spawnCoords.y += randomInt(10);
+
+                console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")");
+
+                globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
+
+
+                if (--i) {                  // If i > 0, keep going
+                    theLoop(i);  // Call the loop again
+                }
+            }, 500);
+        })(i);
+
+        globals.zombieDeathCount = 0;
+
+    }
+};
+
+Zombie.prototype.spawnNewWaveTimed = function() {
+    if (globals.zombieDeathCount === globals.currentWaveInfo.waves[globals.wave].zombies) {
+        ++globals.wave;
+        var i = 0;
+        var lastSpawn = 0;
+        var j = 0;
+
+        while (i < globals.currentWaveInfo.waves[globals.wave].zombies) {
+            //Prevent all zombies from spawning at once
+            if ((Date.now() - lastSpawn) / 1000 > 2) { //2 seconds since last spawn
+
+                var availableSpawns = globals.currentWaveInfo.waves[globals.wave].spawns; //TODO find what to do with me
+
+
+                var numSpawns = 4;//globals.currentWaveInfo.waves[globals.wave].spawns.length;
+
+                var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
+
+                //Move spawn point slightly so zombies aren't all spawning in the same position
+               // spawnCoords.x += randomInt(10);
+               // spawnCoords.y += randomInt(10);
+
+                console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")" );
+
+                globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
+
+
+                i++;
+                lastSpawn = Date.now();
+            }
+
+
+
+        }
+
+        globals.zombieDeathCount = 0;
+
+    }
+};
 
 Zombie.prototype.spawnNewWave = function() {
     console.log("Zombies killed: " + globals.zombieDeathCount +  ", Total in wave: "
@@ -235,13 +332,20 @@ Zombie.prototype.spawnNewWave = function() {
 
            // var numSpawns = globals.SPAWNER.map.spawnPoints.length;
 
-            var numSpawns = globals.currentWaveInfo.waves[globals.wave].spawns.length;
+            var numSpawns = 4;//globals.currentWaveInfo.waves[globals.wave].spawns.length;
 
             var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
+
+
+            spawnCoords.x += randomInt(25);
+            spawnCoords.y += randomInt(25);
+
 
             console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")" );
 
             globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
+
+
 
 
         }
