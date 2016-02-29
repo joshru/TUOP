@@ -239,8 +239,8 @@ Zombie.prototype.removeAndReplace = function() {
 Zombie.prototype.spawnFibonacciWave = function() {
     if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
     if (globals.zombieDeathCount === globals.fibs.currFib) {
-        // see in Background.prototype.draw for wave counter
-        globals.wave++;
+        // see in Background.prototype.draw for waveNumber counter
+        globals.waveNumber++;
 
         if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
         //update previous and current fibonacci numbers
@@ -255,35 +255,40 @@ Zombie.prototype.spawnFibonacciWave = function() {
         globals.zombieDeathCount = 0;
     }
 };
-/**
+/** FLAGSHIP SPAWNING FUNCTION
+ * Spawns zombies at the currently active spawn points
+ * Uses a custom loop function to make sure zombies aren't all
+ * spawned at once.
+ *
  *
  * @shoutout Scott Ogrin for the timeout loop
  * @from scottiestech.info
  */
 Zombie.prototype.spawnNewWaveRedux = function() {
-    if (globals.zombieDeathCount === globals.currentWaveInfo.waves[globals.wave].zombies) {
-        ++globals.wave;
+    if (globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.waveNumber].zombies) {
+        ++globals.waveNumber;
 
-        var i = globals.currentWaveInfo.waves[globals.wave].zombies;
+        var i = globals.currentLevelInfo.waves[globals.waveNumber].zombies;
         var j = 0;
         (function theLoop(i) {
             setTimeout(function () {
 
                 // DO SOMETHING WITH data AND stuff
 
-                var availableSpawns = globals.currentWaveInfo.waves[globals.wave].spawns; //TODO find what to do with me
+                var availableSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns; //TODO find what to do with me
 
 
-                var numSpawns = globals.currentWaveInfo.waves[globals.wave].spawns.length;
+                var numSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns.length;
 
                 var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
 
                 //Move spawn point slightly so zombies aren't all spawning in the same position
+                //TODO subtract these values from spawn points on right side of map to prevent zombies from spawning
+                //out of bounds
                 spawnCoords.x += randomInt(10);
                 spawnCoords.y += randomInt(10);
 
                 console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")");
-               // if (random) globals.SPAWNER.spawnZombieRandomPos();
                  globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
 
 
@@ -301,20 +306,20 @@ Zombie.prototype.spawnNewWaveRedux = function() {
 
 
 Zombie.prototype.spawnNewWave = function() {
-    console.log("Zombies killed: " + globals.zombieDeathCount +  ", Total in wave: "
-        + globals.currentWaveInfo.waves[globals.wave].zombies);
+    console.log("Zombies killed: " + globals.zombieDeathCount +  ", Total in waveNumber: "
+        + globals.currentLevelInfo.waves[globals.waveNumber].zombies);
 
-    if (globals.zombieDeathCount === globals.currentWaveInfo.waves[globals.wave].zombies) {
-        ++globals.wave;
-        for (var i = 0; i < globals.currentWaveInfo.waves[globals.wave].zombies; i++) {
+    if (globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.waveNumber].zombies) {
+        ++globals.waveNumber;
+        for (var i = 0; i < globals.currentLevelInfo.waves[globals.waveNumber].zombies; i++) {
             var j = 0;
             //determine where to spawn zombie
 
-            var availableSpawns = globals.currentWaveInfo.waves[globals.wave].spawns;
+            var availableSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns;
 
            // var numSpawns = globals.SPAWNER.map.spawnPoints.length;
 
-            var numSpawns = 4;//globals.currentWaveInfo.waves[globals.wave].spawns.length;
+            var numSpawns = 4;//globals.currentLevelInfo.waves[globals.waveNumber].spawns.length;
 
             var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
 

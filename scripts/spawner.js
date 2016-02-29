@@ -59,7 +59,7 @@ Spawner.prototype.setCurrentMap = function(map) {
 };
 
 /**
- * Spawns a wave of zombies.
+ * Spawns a waveNumber of zombies.
  * @param amountToSpawn
  */
 Spawner.prototype.spawnWave = function(amountToSpawn) {

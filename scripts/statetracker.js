@@ -1,5 +1,5 @@
 /**
- * Created by Brandon on 2/26/2016.
+ * Created by Brandon on 2/26/2016. CURRENTLY UNUSED
  */
 function StateTracker(game) {
     this.game = game;
@@ -24,7 +24,7 @@ StateTracker.prototype.update = function() {
     var waveFinished = this.checkWaveFinished();
 
     if (waveFinished) {
-        console.log("Waved finished, spawning new wave");
+        console.log("Waved finished, spawning new waveNumber");
         this.zombiesKilled = 0;
         this.spawnNewWave();
     }
