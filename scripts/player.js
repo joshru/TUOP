@@ -376,14 +376,14 @@ Player.prototype.draw = function (ctx) {
                         this.x -= knockback;
                     }
 
-                    if (!globals.mute) {
-                        if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
-                        this.audio.play();
-                    }
-
                     var currentTime = Date.now();
 
                     if ((currentTime - this.lastHitTaken) / CONVERT_TO_SEC > 0.4) {
+                        if (!globals.mute) {
+                            if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
+                            this.audio.play();
+                        }
+
                         if (!this.godlike)
                             this.health -= 5;
                         this.lastHitTaken = Date.now();
