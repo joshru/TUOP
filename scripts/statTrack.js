@@ -72,14 +72,14 @@ StatTrack.prototype.draw = function(ctx) {
         ctx.fillText("YOU WIN!", startOrReplay.x - 25, startOrReplay.y - 50);
     }
 
-    /* Display Godlike */
-    if (globals.player.godlike) {
-        ctx.fillStyle = "rgba(255, 255, 58, " + 0.15 + ")";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "30px Courier New";
-        ctx.fillStyle = "white";
-        ctx.fillText("GODLIKE: " + globals.powerUpTime.godlike, 10, 90);
-    }
+    ///* Display Godlike */
+    //if (globals.player.godlike) {
+    //    ctx.fillStyle = "rgba(255, 255, 58, " + 0.15 + ")";
+    //    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //    ctx.font = "30px Courier New";
+    //    ctx.fillStyle = "white";
+    //    ctx.fillText("GODLIKE: " + globals.powerUpTime.godlike, 10, 90);
+    //}
 
     /* Display Wave and Kills */
     ctx.font = "30px Courier New";
