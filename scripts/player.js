@@ -39,8 +39,8 @@ function Player(game, scale) {
     this.animations.hgun_idle =  new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_idle.png"),  0, 0, 258, 220, 0.2,  1, true, false);
     this.animations.hgun_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/hgun_flash.png"), 0, 0, 258, 220, 0.03, 1, true, false);
 
-    this.animations.rifle_idle =  new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_idle.png"),  0, 0, 313, 207, 0.2, 1, true, false);
-    this.animations.rifle_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_flash.png"), 0, 0, 375, 209, 0.1, 1, true, false);
+    this.animations.rifle_idle =  new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_idle - Copy.png"),  0, 0, 375, 209, 0.1, 1, true, false);
+    this.animations.rifle_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_flash.png"),        0, 0, 375, 209, 0.1, 1, true, false);
 
     this.animations.shgun_idle =  new Animation(ASSET_MANAGER.getAsset("./img/player/shgun_idle.png"),  0, 0, 330, 206, 0.2, 1, true, false);
     this.animations.shgun_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/shgun_flash.png"), 0, 0, 330, 206, 0.2, 1, true, false);

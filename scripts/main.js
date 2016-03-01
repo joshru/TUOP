@@ -56,6 +56,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy, type) {
         index -= Math.floor((this.spriteSheet.width - this.startX) / this.frameWidth);
         vindex++;
     }
+
     while ((index + 1) * this.frameWidth > this.spriteSheet.width) {
         index -= Math.floor(this.spriteSheet.width / this.frameWidth);
         vindex++;
@@ -369,6 +370,7 @@ ASSET_MANAGER.queueDownload("./img/player/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/player/hgun_flash.png");
 
 ASSET_MANAGER.queueDownload("./img/player/rifle_idle.png");
+ASSET_MANAGER.queueDownload("./img/player/rifle_idle - Copy.png");
 ASSET_MANAGER.queueDownload("./img/player/rifle_flash.png");
 
 ASSET_MANAGER.queueDownload("./img/player/shgun_idle.png");
