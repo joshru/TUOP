@@ -38,6 +38,29 @@ Map.prototype.assignMapProperties = function() {
             this.bossSpawns.push({x: 1026, y: 510});
 
             break;
+
+
+        case "altLab":
+            console.log("Secondary lab map successfully recognized and created.");
+            this.width = 2048;
+            this.height = 2048;
+
+            this.spawnPoints.push({x: 928, y: 961});
+            this.spawnPoints.push({x: 991, y: 956});
+            this.spawnPoints.push({x: 1055, y: 955});
+            this.spawnPoints.push({x: 1060, y: 1024});
+            this.spawnPoints.push({x: 1057, y: 1087});
+            this.spawnPoints.push({x: 990, y: 1090});
+            this.spawnPoints.push({x: 934, y: 1085});
+            this.spawnPoints.push({x: 927, y: 1028});
+
+            this.bossSpawns.push({x: 991, y: 1024});
+
+
+
+
+            break;
+
         default:
             break;
     }

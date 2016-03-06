@@ -373,6 +373,8 @@ ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
 ASSET_MANAGER.queueDownload("./img/terrain/2048_grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/LabMap.png");
+ASSET_MANAGER.queueDownload("./img/terrain/lab2.png");
+
 
 
 
@@ -449,6 +451,7 @@ function startGame() {
             gameEngine.gameStates.GAMEOVER = false;
 
             var map = new Map('lab','./img/terrain/LabMap.png');
+            var map2 = new map('altLab', './img/terrain/lab2.png');
             globals.SPAWNER = new Spawner(gameEngine, map);
 
 
