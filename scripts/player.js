@@ -46,7 +46,7 @@ function Player(game, scale) {
     this.animations.rifle_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/rifle_flash.png"), 0, 0, 375, 209, 0.1, 1, true, false);
 
     this.animations.shgun_idle =  new Animation(ASSET_MANAGER.getAsset("./img/player/shgun_idle.png"),  0, 0, 330, 206, 0.2, 1, true, false);
-    this.animations.shgun_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/shgun_flash.png"), 0, 0, 330, 206, 0.2, 1, true, false);
+    this.animations.shgun_shoot = new Animation(ASSET_MANAGER.getAsset("./img/player/shgun_flash.png"), 0, 0, 330, 206, 0.1, 1, true, false);
 
     this.animations.idleFeet = new Animation(ASSET_MANAGER.getAsset("./img/player/idle_feet.png"),   0, 0, 132, 155, 0.2,   1, true, false);
     this.animations.runFeet =  new Animation(ASSET_MANAGER.getAsset("./img/player/moving_feet.png"), 0, 0, 204, 124, 0.05, 20, true, false);
@@ -182,7 +182,7 @@ Player.prototype.update = function () {
         this.y + (this.animations.hgun_idle.frameHeight * this.scale) / 2);
 
     //console.log("player x: " + this.x + " | player y: " + this.y);
-    if (this.states.CURRENT_GUN != 'sniper') this.drawLazer = false;
+    if (this.states.CURRENT_GUN !== 'sniper') this.drawLazer = false;
 
     //if (!Key.keyPressed()) this.state = this.states.IDLE;
 
@@ -365,15 +365,19 @@ Player.prototype.draw = function (ctx) {
 
                     if (currentZombie.dirs.top) {
                         this.y -= knockback;
+                        globals.background.y += knockback;
                     }
                     if (currentZombie.dirs.right) {
                         this.x += knockback;
+                        globals.background.x -= knockback;
                     }
                     if (currentZombie.dirs.down) {
                         this.y += knockback;
+                        globals.background.y -= knockback;
                     }
                     if (currentZombie.dirs.left) {
                         this.x -= knockback;
+                        globals.background.x += knockback;
                     }
 
                     var currentTime = Date.now();
