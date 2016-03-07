@@ -69,7 +69,7 @@ Spawner.prototype.setCurrentMap = function(map) {
  * @shoutout Scott Ogrin for the timeout loop
  * @from scottiestech.info
  * */
-Spawner.prototype.spawnNewWave = function() {
+Spawner.prototype.spawnNewWave = function(random) {
     if (globals.waveNumber < globals.currentLevelInfo.waves.length ) {
         var i = globals.currentLevelInfo.waves[globals.waveNumber].zombies;
         var j = 0;
@@ -83,7 +83,11 @@ Spawner.prototype.spawnNewWave = function() {
                 var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[spawnOptions[j++ % numSpawns] - 1];
 
                 //console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")");
-                that.spawnZombie(spawnCoords.x, spawnCoords.y);
+
+                var randomCoords = {x: randomInt(globals.background.bg.width), y: randomInt(globals.background.bg.height)};
+
+                if (random) that.spawnZombie(randomCoords.x, randomCoords.y);
+                else that.spawnZombie(spawnCoords.x, spawnCoords.y);
 
                 if (--i) {                  // If i > 0, keep going
                     theLoop(i);  // Call the loop again
@@ -103,7 +107,7 @@ Spawner.prototype.update = function() {
         || (Date.now() - this.waveStartTime) / 1000 > globals.currentLevelInfo.waves[globals.waveNumber].time) {
 
         globals.waveNumber++;
-        this.spawnNewWave();
+        this.spawnNewWave(true);
 
     }
 };
