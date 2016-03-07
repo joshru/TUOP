@@ -47,6 +47,13 @@ function distance(a, b) {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
+function screenDistance(a, b) {
+    var dx = Math.abs(a.screenX - b.screenX);
+    var dy = Math.abs(a.screenY - b.screenY);
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+
 function calculateVelocity(sX, sY, eX, eY) {
     var dx = eX - sX;
     var dy = eY - sY;
