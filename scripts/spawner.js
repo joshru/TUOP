@@ -23,10 +23,11 @@ function Spawner(game, map) {
     };
 
     this.game = game;
-  //  this.protoZombie = new Zombie(game);
     this.spawnPoints = [];
     this.activeSpawns = 1;
     this.totalSpawns = 4;
+
+    this.waveStartTime;
 
 }
 /**
@@ -91,12 +92,15 @@ Spawner.prototype.spawnNewWave = function() {
         })(i);
 
         globals.zombieDeathCount = 0;
-
+        this.waveStartTime = Date.now();
     }
 };
 
 Spawner.prototype.update = function() {
-    if (globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.waveNumber].zombies) {
+
+
+    if (globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.waveNumber].zombies
+        || (Date.now() - this.waveStartTime) / 1000 > globals.currentLevelInfo.waves[globals.waveNumber].time) {
 
         globals.waveNumber++;
         this.spawnNewWave();
