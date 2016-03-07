@@ -380,6 +380,8 @@ ASSET_MANAGER.queueDownload("./img/terrain/2048_grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/LabMap.png");
 ASSET_MANAGER.queueDownload("./img/terrain/lab2.png");
 
+// Enemies
+ASSET_MANAGER.queueDownload("./img/Enemies/bosszombie.png");
 
 
 
@@ -451,6 +453,8 @@ function startGame() {
             canvas_y >= startOrReplay.y - startOrReplay.h && canvas_y <= startOrReplay.y) {
             startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
             var gameEngine = new GameEngine();
+            globals.SPAWNER = new Spawner(gameEngine, null);
+
             globals.player = new Player(gameEngine, 0.5);
 
             globals.background = new Background(gameEngine);
@@ -458,25 +462,13 @@ function startGame() {
 
             gameEngine.gameStates.GAMEOVER = false;
 
-           // var map = new Map('lab','./img/terrain/LabMap.png');
-           // var map2 = new Map('altLab', './img/terrain/lab2.png');
-
-            //globals.background.setBGImage(map2.path);
-
-            globals.SPAWNER = new Spawner(gameEngine, null);
-
             setCurrentMap('altLab');
 
-            //gameEngine.addZombie(new Zombie(gameEngine));
-            //gameEngine.addZombie(new Zombie(gameEngine));
-            //gameEngine.addZombie(new Zombie(gameEngine));
             globals.SPAWNER.spawnNewWave();
 
-//
-            //      gameEngine.addEntity(globals.STATETRACKER);
+
             gameEngine.addEntity(globals.background);
-          //  gameEngine.addEntity(new Zombie(gameEngine)); TODO maybe re add me
-            //gameEngine.addEntity(new PowerUp(gameEngine, {x: 900, y: 900}, "hp")); //for testing on scrolling map
+
             gameEngine.addEntity(globals.player);
             var ST = new StatTrack(gameEngine);
             gameEngine.addHUD(ST);
