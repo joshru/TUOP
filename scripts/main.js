@@ -5,7 +5,7 @@ var globals = {
     clickPosition: {x: 0, y: 0},
     clickHoldPosition: {x: 0, y: 0},
     fibs: {fib1: 0, fib2: 1, currFib: 1},
-    waveNumber: 1,
+    waveNumber: 0,
     killCount: 0,
     powerUpTime: {godlike: 0},
     zombieDeathCount: 0,
@@ -451,13 +451,14 @@ function startGame() {
             gameEngine.gameStates.GAMEOVER = false;
 
             var map = new Map('lab','./img/terrain/LabMap.png');
-            var map2 = new map('altLab', './img/terrain/lab2.png');
+            var map2 = new Map('altLab', './img/terrain/lab2.png');
             globals.SPAWNER = new Spawner(gameEngine, map);
 
 
-            gameEngine.addZombie(new Zombie(gameEngine));
-            gameEngine.addZombie(new Zombie(gameEngine));
-            gameEngine.addZombie(new Zombie(gameEngine));
+            //gameEngine.addZombie(new Zombie(gameEngine));
+            //gameEngine.addZombie(new Zombie(gameEngine));
+            //gameEngine.addZombie(new Zombie(gameEngine));
+            globals.SPAWNER.spawnNewWave();
 
 //
             //      gameEngine.addEntity(globals.STATETRACKER);

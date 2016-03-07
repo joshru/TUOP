@@ -224,7 +224,7 @@ Zombie.prototype.removeAndReplace = function() {
     }
 
 
-    this.spawnNewWaveRedux();
+    //this.spawnNewWaveRedux();
 
 
 };
@@ -257,7 +257,6 @@ Zombie.prototype.spawnFibonacciWave = function() {
  *
  * @shoutout Scott Ogrin for the timeout loop
  * @from scottiestech.info
- */
 Zombie.prototype.spawnNewWaveRedux = function() {
     if (globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.waveNumber].zombies) {
 
@@ -298,7 +297,7 @@ Zombie.prototype.spawnNewWaveRedux = function() {
             globals.zombieDeathCount = 0;
         }
     }
-};
+};*/
 
 
 

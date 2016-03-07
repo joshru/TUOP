@@ -208,7 +208,7 @@ GameEngine.prototype.update = function () {
     this.removeFinishedFrom(this.bullets);
     this.removeFinishedFrom(this.zombies);
 
-
+    globals.SPAWNER.update(); //To check if spawn needs to occur
 };
 
 GameEngine.prototype.loop = function () {
