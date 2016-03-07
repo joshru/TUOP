@@ -53,6 +53,13 @@ function screenDistance(a, b) {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
+function worldDistance(a, b) {
+    var dx = Math.abs(a.worldX - b.worldX);
+    var dy = Math.abs(a.worldY - b.worldY);
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+
 
 function calculateVelocity(sX, sY, eX, eY) {
     var dx = eX - sX;

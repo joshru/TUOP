@@ -23,9 +23,6 @@ function Grenade(startX, startY, targetX, targetY, game) {
     Entity.call(this, game, this.worldX, this.worldY);
 }
 
-
-
-
 Grenade.prototype = new Entity();
 Grenade.prototype.constructor = Grenade;
 
@@ -41,8 +38,8 @@ Grenade.prototype.update = function() {
         this.x += this.velocity.x * this.speed;
         this.y += this.velocity.y * this.speed;
 
-        this.updateCoords();
-        console.log("I'm a grenade, my position is: (" + this.worldX + "," + this.worldY + ")");
+        //this.updateCoords();
+        //console.log("I'm a grenade, my position is: (" + this.worldX + "," + this.worldY + ")");
         this.speed -= 1;
     }
    // console.log("I'm a grenade, my screen position is : (" + this.s)

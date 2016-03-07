@@ -453,6 +453,7 @@ function startGame() {
             canvas_y >= startOrReplay.y - startOrReplay.h && canvas_y <= startOrReplay.y) {
             startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
             var gameEngine = new GameEngine();
+
             globals.SPAWNER = new Spawner(gameEngine, null);
 
             globals.player = new Player(gameEngine, 0.5);
@@ -462,7 +463,7 @@ function startGame() {
 
             gameEngine.gameStates.GAMEOVER = false;
 
-            setCurrentMap('lab');
+            setCurrentMap('altLab');
 
             globals.SPAWNER.spawnNewWave();
 

@@ -116,7 +116,7 @@ Zombie.prototype.update = function () {
         this.x += this.velocity.x * this.game.clockTick;
         this.y += this.velocity.y * this.game.clockTick;
 
-        console.log("I'm a zombie my hitbox position is (" + this.hitbox.x + "," + this.hitbox.y + ")");
+        //console.log("I'm a zombie my hitbox position is (" + this.hitbox.x + "," + this.hitbox.y + ")");
         this.updateCoords(); //testing
 
         this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
