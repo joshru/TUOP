@@ -462,7 +462,7 @@ function startGame() {
 
             gameEngine.gameStates.GAMEOVER = false;
 
-            setCurrentMap('altLab');
+            setCurrentMap('lab');
 
             globals.SPAWNER.spawnNewWave();
 

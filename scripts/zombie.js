@@ -116,6 +116,7 @@ Zombie.prototype.update = function () {
         this.x += this.velocity.x * this.game.clockTick;
         this.y += this.velocity.y * this.game.clockTick;
 
+        console.log("I'm a zombie my hitbox position is (" + this.hitbox.x + "," + this.hitbox.y + ")");
         this.updateCoords(); //testing
 
         this.hitbox.updateXY(this.screenX + (this.animations.idle.frameWidth / 2),
@@ -249,55 +250,6 @@ Zombie.prototype.spawnFibonacciWave = function() {
         globals.zombieDeathCount = 0;
     }
 };
-/** FLAGSHIP SPAWNING FUNCTION
- * Spawns zombies at the currently active spawn points
- * Uses a custom loop function to make sure zombies aren't all
- * spawned at once.
- *
- *
- * @shoutout Scott Ogrin for the timeout loop
- * @from scottiestech.info
-Zombie.prototype.spawnNewWaveRedux = function() {
-    if (globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.waveNumber].zombies) {
-
-        ++globals.waveNumber;
-
-        if (globals.waveNumber < globals.currentLevelInfo.waves.length ) {
-            var i = globals.currentLevelInfo.waves[globals.waveNumber].zombies;
-            var j = 0;
-            //timeout based "for" loop of sorts
-            (function theLoop(i) {
-                setTimeout(function () {
-
-                    // DO SOMETHING WITH data AND stuff
-
-                    var availableSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns; //TODO find what to do with me
-
-
-                    var numSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns.length;
-
-                    var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
-
-                    //Move spawn point slightly so zombies aren't all spawning in the same position
-                    //TODO subtract these values from spawn points on right side of map to prevent zombies from spawning
-                    //out of bounds
-                    spawnCoords.x += randomInt(10);
-                    spawnCoords.y += randomInt(10);
-
-                    //console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")");
-                    globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
-
-
-                    if (--i) {                  // If i > 0, keep going
-                        theLoop(i);  // Call the loop again
-                    }
-                }, 300); //ms delay
-            })(i);
-
-            globals.zombieDeathCount = 0;
-        }
-    }
-};*/
 
 
 

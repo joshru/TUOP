@@ -28,7 +28,7 @@ function Spawner(game, map) {
     this.totalSpawns = 4;
 
     this.waveStartTime;
-
+    this.randomSpawn = false;
 }
 /**
  * Spawns a zombie at a given location.
@@ -99,7 +99,9 @@ Spawner.prototype.spawnNewWave = function(random) {
         this.waveStartTime = Date.now();
     }
 };
-
+/**
+ * checks whether or not a new wave should be spawned
+ */
 Spawner.prototype.update = function() {
 
 
@@ -107,8 +109,18 @@ Spawner.prototype.update = function() {
         || (Date.now() - this.waveStartTime) / 1000 > globals.currentLevelInfo.waves[globals.waveNumber].time) {
 
         globals.waveNumber++;
-        this.spawnNewWave(true);
+
+        /*Change to false to have zombies spawn from spawn points*/
+        this.spawnNewWave(this.randomSpawn);
 
     }
+};
+
+Spawner.prototype.setRandomSpawnMode = function () {
+    this.randomSpawn = true;
+};
+
+Spawner.prototype.setSpawnPointMode = function() {
+    this.randomSpawn = false;
 };
 

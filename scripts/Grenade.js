@@ -36,9 +36,16 @@ Grenade.prototype.update = function() {
     if (this.speed > 0) {
         this.screenX += this.velocity.x * this.speed;
         this.screenY += this.velocity.y * this.speed;
+
+        //careful
+        this.x += this.velocity.x * this.speed;
+        this.y += this.velocity.y * this.speed;
+
+        this.updateCoords();
+        console.log("I'm a grenade, my position is: (" + this.worldX + "," + this.worldY + ")");
         this.speed -= 1;
     }
-
+   // console.log("I'm a grenade, my screen position is : (" + this.s)
     if (this.checkEnemyCollision() || (Date.now() - this.thrownTime) / 1000 > this.timeToExplode) {
         this.explode();
         this.removeFromWorld = true;
@@ -48,6 +55,15 @@ Grenade.prototype.update = function() {
 
 
     Entity.prototype.update.call(this);
+};
+
+Grenade.prototype.updateCoords = function() {
+    var screen = worldToScreen(this.x, this.y);
+    var world  = screenToWorld(this.x, this.y);
+    this.screenX = screen.x;
+    this.screenY = screen.y;
+    this.worldX = world.x;
+    this.worldY = world.y;
 };
 
 Grenade.prototype.draw = function(ctx) {
@@ -67,7 +83,7 @@ Grenade.prototype.explode = function() {
 
         if (currentEnt.name === 'Zombie') {
 
-            if (distance(this, currentEnt) < this.explosionRadius + currentEnt.hitbox.radius) {
+            if (distance(this, currentEnt.hitbox) < this.explosionRadius + currentEnt.hitbox.radius) {
                 currentEnt.health -= this.damage;
             }
 
@@ -96,7 +112,7 @@ Grenade.prototype.checkEnemyCollision = function() {
 
 
 Grenade.prototype.isCollidingWith = function(other) {
-    return distance(this, other) < this.radius + other.hitbox.radius;
+    return screenDistance(this, other.hitbox) < this.radius + other.hitbox.radius;
 };
 
 Grenade.prototype.convertToOnScreen = function() {
