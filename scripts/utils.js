@@ -85,3 +85,24 @@ function jsonToObject(jsonToParse) {
 function jsonFileToObject(fileName) {
     return jsonToObject(readTextFile(fileName));
 }
+
+function setCurrentMap(mapName) {
+    var map;
+    switch (mapName) {
+        case 'lab':
+            map = new Map(mapName, './img/terrain/LabMap.png');
+            globals.currentLevelInfo = jsonFileToObject('./waveInfo/realWave1.json');
+            break;
+        case 'altLab':
+            map = new Map(mapName, './img/terrain/lab2.png');
+            globals.currentLevelInfo = jsonFileToObject('./waveInfo/lab2info.json');
+            break;
+
+        default:
+
+            break;
+    }
+    globals.SPAWNER.setCurrentMap(map);
+    globals.background.setBGImage(map.path);
+
+}

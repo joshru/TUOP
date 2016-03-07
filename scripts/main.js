@@ -453,18 +453,19 @@ function startGame() {
             var gameEngine = new GameEngine();
             globals.player = new Player(gameEngine, 0.5);
 
+            globals.background = new Background(gameEngine);
 
 
             gameEngine.gameStates.GAMEOVER = false;
 
-            var map = new Map('lab','./img/terrain/LabMap.png');
-            var map2 = new Map('altLab', './img/terrain/lab2.png');
+           // var map = new Map('lab','./img/terrain/LabMap.png');
+           // var map2 = new Map('altLab', './img/terrain/lab2.png');
 
-            globals.background = new Background(gameEngine);
-            globals.background.setBGImage(map2.path);
+            //globals.background.setBGImage(map2.path);
 
-            globals.SPAWNER = new Spawner(gameEngine, map2);
+            globals.SPAWNER = new Spawner(gameEngine, null);
 
+            setCurrentMap('altLab');
 
             //gameEngine.addZombie(new Zombie(gameEngine));
             //gameEngine.addZombie(new Zombie(gameEngine));
