@@ -109,7 +109,15 @@ Spawner.prototype.spawnWave = function(amountToSpawn) {
 
 };
 
-
+/** FLAGSHIP SPAWNING FUNCTION
+ * Spawns zombies at the currently active spawn points
+ * Uses a custom loop function to make sure zombies aren't all
+ * spawned at once.
+ *
+ *
+ * @shoutout Scott Ogrin for the timeout loop
+ * @from scottiestech.info
+ * */
 Spawner.prototype.spawnNewWave = function() {
     if (globals.waveNumber < globals.currentLevelInfo.waves.length ) {
         var i = globals.currentLevelInfo.waves[globals.waveNumber].zombies;
@@ -121,17 +129,10 @@ Spawner.prototype.spawnNewWave = function() {
 
                 var numSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns.length;
                 var spawnOptions = globals.currentLevelInfo.waves[globals.waveNumber].spawns;
-                var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[spawnOptions[j % numSpawns]];
-
-                //Move spawn point slightly so zombies aren't all spawning in the same position
-                //TODO subtract these values from spawn points on right side of map to prevent zombies from spawning
-                //out of bounds
-               // spawnCoords.x += randomInt(10);
-                //spawnCoords.y += randomInt(10);
+                var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[spawnOptions[j++ % numSpawns] - 1];
 
                 //console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")");
                 that.spawnZombie(spawnCoords.x, spawnCoords.y);
-
 
                 if (--i) {                  // If i > 0, keep going
                     theLoop(i);  // Call the loop again

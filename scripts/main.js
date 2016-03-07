@@ -13,7 +13,7 @@ var globals = {
     debug: false,
     SPAWNER: null,
     STATETRACKER: null,
-    currentLevelInfo:  jsonFileToObject("./waveInfo/realWave1.json")
+    currentLevelInfo:  jsonFileToObject("./waveInfo/lab2info.json")
 };
 
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
@@ -95,9 +95,9 @@ function Background(game) {
     this.y = 0;
     this.scrolling = false;
     this.radius = 0;
-    this.bg = ASSET_MANAGER.getAsset("./img/terrain/LabMap.png");
-    this.width = this.bg.width;
-    this.height = this.bg.height;
+  //  this.bg = ASSET_MANAGER.getAsset("./img/terrain/LabMap.png");
+ //   this.width = this.bg.width;
+   // this.height = this.bg.height;
 
     //Entity.call(this, game, 0, 400);
 }
@@ -141,6 +141,11 @@ Background.prototype.update = function () {
         }
     }
     //console.log("bg x: " + this.x + " | bg y: " + this.y);
+};
+Background.prototype.setBGImage = function(imagePath) {
+  this.bg = ASSET_MANAGER.getAsset(imagePath);
+    this.width = this.bg.width;
+    this.height = this.bg.height;
 };
 
 Background.prototype.draw = function (ctx) {
@@ -447,12 +452,18 @@ function startGame() {
             startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
             var gameEngine = new GameEngine();
             globals.player = new Player(gameEngine, 0.5);
-            globals.background = new Background(gameEngine);
+
+
+
             gameEngine.gameStates.GAMEOVER = false;
 
             var map = new Map('lab','./img/terrain/LabMap.png');
             var map2 = new Map('altLab', './img/terrain/lab2.png');
-            globals.SPAWNER = new Spawner(gameEngine, map);
+
+            globals.background = new Background(gameEngine);
+            globals.background.setBGImage(map2.path);
+
+            globals.SPAWNER = new Spawner(gameEngine, map2);
 
 
             //gameEngine.addZombie(new Zombie(gameEngine));
