@@ -119,14 +119,9 @@ Spawner.prototype.spawnNewWave = function() {
         (function theLoop(i) {
             setTimeout(function () {
 
-                // DO SOMETHING WITH data AND stuff
-
-                var availableSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns; //TODO find what to do with me
-
-
                 var numSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns.length;
-
-                var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
+                var spawnOptions = globals.currentLevelInfo.waves[globals.waveNumber].spawns;
+                var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[spawnOptions[j % numSpawns]];
 
                 //Move spawn point slightly so zombies aren't all spawning in the same position
                 //TODO subtract these values from spawn points on right side of map to prevent zombies from spawning
