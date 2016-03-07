@@ -41,7 +41,6 @@ Spawner.prototype.spawnZombie = function(x, y) {
     zombo.setCoordinates(x, y);
 
     this.game.addZombie(zombo);
-    //this.game.addEntity(zombo);
 };
 
 
@@ -58,56 +57,7 @@ Spawner.prototype.setCurrentMap = function(map) {
     this.currentMap = map;
 };
 
-/**
- * Spawns a waveNumber of zombies.
- * @param amountToSpawn
- */
-Spawner.prototype.spawnWave = function(amountToSpawn) {
 
-    var numSpawned = 0;
-    var lastSpawn = 0;
-
-    shuffle(this.currentMap.spawnPoints);//TODO play around with where to put this
-
-    //Zombies left to spawn
-   /* while (numSpawned < amountToSpawn) {
-        //Spawn Delay: prevents all zombies from starting out in a dog pile
-        // Should create a follow the leader effect.
-       // var timePassed = (Date.now() - lastSpawn) / 1000;
-        //if (timePassed > .8) {
-            //Rearrange the order of spawn points
-            //Cheat code method for choosing 'activeSpawn' amount of random spawn points without having to
-            //keep track of indices
-
-            for (var i = 0; i < this.activeSpawns; i++) {
-                this.spawnZombie(coords.x, coords.y);
-
-                console.log("Spawner spawned zombie at " + coords.x + " , " + coords.y);
-
-                numSpawned++;
-             //   lastSpawn = Date.now();
-
-                if (numSpawned >= amountToSpawn) break;
-            }
-
-        //}
-
-
-    }*/
-
-    for (var i = 0; i < amountToSpawn; i++) {
-        console.log("Number spawned: " + (i + 1) + " , amount needed" + amountToSpawn);
-
-        var randoIndex = randomInt(globals.SPAWNER.activeSpawns);
-
-        var coords = this.currentMap.spawnPoints[randoIndex];
-
-        this.spawnZombie(coords.x, coords.y);
-
-    }
-
-
-};
 
 /** FLAGSHIP SPAWNING FUNCTION
  * Spawns zombies at the currently active spawn points
