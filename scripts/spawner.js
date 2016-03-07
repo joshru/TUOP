@@ -104,15 +104,19 @@ Spawner.prototype.spawnNewWave = function(random) {
  */
 Spawner.prototype.update = function() {
 
+    var waveOver = (Date.now() - this.waveStartTime) / 1000 > globals.currentLevelInfo.waves[globals.waveNumber].time;
+    var lastWave = globals.waveNumber === globals.currentLevelInfo.waves.length - 1;
 
     if (globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.waveNumber].zombies
-        || (Date.now() - this.waveStartTime) / 1000 > globals.currentLevelInfo.waves[globals.waveNumber].time) {
+        || waveOver ) {
 
-        globals.waveNumber++;
 
-        /*Change to false to have zombies spawn from spawn points*/
-        this.spawnNewWave(this.randomSpawn);
+        if (!lastWave) {
+            globals.waveNumber++;
 
+            /*Change to false to have zombies spawn from spawn points*/
+            this.spawnNewWave(this.randomSpawn);
+        }
     }
 };
 

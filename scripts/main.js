@@ -463,7 +463,9 @@ function startGame() {
 
             gameEngine.gameStates.GAMEOVER = false;
 
-            setCurrentMap('altLab');
+
+            /*change to 'altLab' to change to second map*/
+            setCurrentMap('lab');
 
             globals.SPAWNER.spawnNewWave();
 

@@ -30,12 +30,7 @@ function Zombie(game) {
     this.screenY = screen.y;
     this.worldX = world.x;
     this.worldY = world.y;
-    //this.worldX = 1600;
-    //this.worldY = 1600;
 
-
-    //console.log("spawning zombie at screen coords: " + this.screenX + ", " + this.screenY);
-    //console.log("spawning zombie at world coords: " + this.worldX + ", " + this.worldX);
 
 
 

@@ -75,25 +75,25 @@ Grenade.prototype.draw = function(ctx) {
 };
 
 Grenade.prototype.explode = function() {
-    for (var i = 0; i < this.game.entities.length; i++) {
-        var currentEnt = this.game.entities[i];
+    for (var i = 0; i < this.game.zombies.length; i++) {
+        var currentEnt = this.game.zombies[i];
 
-        if (currentEnt.name === 'Zombie') {
+       // if (currentEnt.name === 'Zombie') {
 
-            if (distance(this, currentEnt.hitbox) < this.explosionRadius + currentEnt.hitbox.radius) {
+            if (screenDistance(this, currentEnt) < this.explosionRadius + currentEnt.hitbox.radius) {
                 currentEnt.health -= this.damage;
             }
 
-        }
+      //  }
 
     }
 };
 
 Grenade.prototype.checkEnemyCollision = function() {
-    for (var i = 0; i < this.game.entities.length; i++) {
-        var currentEnt = this.game.entities[i];
+    for (var i = 0; i < this.game.zombies.length; i++) {
+        var currentEnt = this.game.zombies[i];
 
-        if (currentEnt.name === 'Zombie') {
+      //  if (currentEnt.name === 'Zombie') {
 
             if (this.isCollidingWith(currentEnt)) {
                 console.log("I got hit by a grenade");
@@ -101,7 +101,7 @@ Grenade.prototype.checkEnemyCollision = function() {
                 return true;
             }
 
-        }
+       // }
 
     }
     return false;
@@ -109,7 +109,7 @@ Grenade.prototype.checkEnemyCollision = function() {
 
 
 Grenade.prototype.isCollidingWith = function(other) {
-    return screenDistance(this, other.hitbox) < this.radius + other.hitbox.radius;
+    return screenDistance(this, other) < this.radius + other.hitbox.radius;
 };
 
 Grenade.prototype.convertToOnScreen = function() {
