@@ -53,31 +53,8 @@ PowerUp.prototype.constructor = PowerUp;
  */
 PowerUp.prototype.update = function () {
     this.convertToOnScreen();
-    // drops HP accordingly
+
     this.hitbox.updateXY(this.screenX + this.sprite.width / 2, this.screenY + this.sprite.height / 2);
-
-
-    // Player picks up power up
-  /*  if (this.isCollidingWith(globals.player)) {
-        switch (this.type) {
-            case "hp":
-                globals.player.health += 10;
-                this.audio.src = "./sound/hpup.wav";
-                break;
-            case "godlike":
-                globals.player.godlike = true;
-                globals.powerUpTime.godlike += 20;
-                this.audio.src = "./sound/godlike.wav";
-                break;
-        }
-
-            if (!globals.mute) {
-                this.audio.play();
-            }
-
-            if (!this.removeFromWorld) this.removeFromWorld = true;
-
-    }*/
 };
 
 PowerUp.prototype.draw = function (ctx) {

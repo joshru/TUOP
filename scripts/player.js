@@ -428,12 +428,17 @@ Player.prototype.grabPowerups = function () {
             if (this.hitbox.getCollisionInfo(current).hit) {
                 switch (current.type) {
                     case "hp":
-                        this.health += 10;
-                        current.audio.src = "./sound/hpup.wav";
+                        if (this.health < 200) {
+                            if (this.health === 195)
+                                this.health += 5;
+                            else
+                                this.health += 10;
+                                current.audio.src = "./sound/hpup.wav";
+                        }
                         break;
                     case "godlike":
                         this.godlike = true;
-                        globals.powerUpTime.godlike += 10;
+                        globals.powerUpTime.godlike += 5;
                         current.audio.src = "./sound/godlike.wav";
                         break;
                 }

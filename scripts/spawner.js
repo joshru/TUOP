@@ -38,6 +38,7 @@ function Spawner(game, map) {
 Spawner.prototype.spawnZombie = function(x, y) {
     var zombo = new Zombie(this.game);
 
+    zombo.speedScale += globals.waveNumber * 50;
 
     zombo.setCoordinates(x, y);
 
@@ -74,6 +75,7 @@ Spawner.prototype.spawnNewWave = function(random) {
         var i = globals.currentLevelInfo.waves[globals.waveNumber].zombies;
         var j = 0;
         var that = this;
+
         //timeout based "for" loop of sorts
         (function theLoop(i) {
             setTimeout(function () {
