@@ -327,7 +327,7 @@ Player.prototype.draw = function (ctx) {
     }
 
     if (this.state === this.states.SHOOTING) {
-        if (noKeyPressed()) this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + runOffsetX, this.y + runOffsetY, this.scale);
+        if (!noKeyPressed()) this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + runOffsetX, this.y + runOffsetY, this.scale);
         else this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, this.x + idleOffsetX, this.y + idleOffsetY, this.scale);
         if (this.states.CURRENT_GUN === 'pistol') currAnim = this.animations.hgun_shoot;
         if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_shoot;
@@ -478,7 +478,7 @@ Player.prototype.isCollidingWith = function (entity) {
 
 
 function noKeyPressed() {
-    return Key.isDown(Key.RIGHT) && Key.isDown(Key.LEFT) && Key.isDown(Key.UP) && Key.isDown(Key.DOWN)
+    return !Key.isDown(Key.RIGHT) && !Key.isDown(Key.LEFT) && !Key.isDown(Key.UP) && !Key.isDown(Key.DOWN)
 }
 
 /**
