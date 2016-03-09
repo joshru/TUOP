@@ -379,6 +379,7 @@ ASSET_MANAGER.queueDownload("./img/terrain/Test lab.png");
 ASSET_MANAGER.queueDownload("./img/terrain/2048_grass.png");
 ASSET_MANAGER.queueDownload("./img/terrain/LabMap.png");
 ASSET_MANAGER.queueDownload("./img/terrain/lab2.png");
+ASSET_MANAGER.queueDownload("./img/terrain/bossroom reloaded.png");
 
 // Enemies
 ASSET_MANAGER.queueDownload("./img/Enemies/bosszombie.png");
@@ -465,7 +466,7 @@ function startGame() {
 
 
             /*change to 'altLab' to change to second map*/
-            setCurrentMap('lab');
+            setCurrentMap('bossroom');
 
             globals.SPAWNER.spawnNewWave();
 

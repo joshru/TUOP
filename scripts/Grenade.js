@@ -109,7 +109,7 @@ Grenade.prototype.checkEnemyCollision = function() {
 
 
 Grenade.prototype.isCollidingWith = function(other) {
-    return screenDistance(this, other) < this.radius + other.hitbox.radius;
+    return screenDistance(this, other) < this.radius + other.radius;
 };
 
 Grenade.prototype.convertToOnScreen = function() {

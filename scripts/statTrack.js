@@ -85,7 +85,7 @@ StatTrack.prototype.draw = function(ctx) {
     /* Display Wave and Kills */
     ctx.font = "30px Courier New";
     ctx.fillStyle = "white";
-    ctx.fillText("Wave: " + (globals.waveNumber) + "/" + (globals.currentLevelInfo.totalWaves - 1), 200, 60);
+    ctx.fillText("Wave: " + (globals.waveNumber + 1) + "/" + (globals.currentLevelInfo.totalWaves ), 200, 60);
     ctx.fillText("Kills: " + globals.killCount, 10, 60);
 
     function restartGame(event) {

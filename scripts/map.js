@@ -60,6 +60,13 @@ Map.prototype.assignMapProperties = function() {
 
 
             break;
+        case 'bossroom':
+            console.log("bossroom map selected");
+
+            this.width = 2400;
+            this.height = 2400;
+
+            break;
 
         default:
             break;

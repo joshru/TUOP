@@ -111,7 +111,10 @@ function setCurrentMap(mapName) {
             map = new Map(mapName, './img/terrain/lab2.png');
             globals.currentLevelInfo = jsonFileToObject('./waveInfo/lab2info.json');
             break;
-
+        case 'bossroom':
+            map = new Map(mapName, './img/terrain/bossroom reloaded.png');
+            globals.currentLevelInfo = jsonFileToObject('./waveInfo/realWave1.json'); //TODO create level info for this map
+            break;
         default:
 
             break;

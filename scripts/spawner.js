@@ -28,7 +28,7 @@ function Spawner(game, map) {
     this.totalSpawns = 4;
 
     this.waveStartTime;
-    this.randomSpawn = false;
+    this.randomSpawn = true;
 }
 /**
  * Spawns a zombie at a given location.
