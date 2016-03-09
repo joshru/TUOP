@@ -9,6 +9,7 @@ function Map(name, path) {
     this.height = height;*/
     this.spawnPoints = [];
     this.bossSpawns = [];
+    this.boundingBoxes = [];
 
     this.assignMapProperties();
 
@@ -19,6 +20,12 @@ function Map(name, path) {
  *
  */
 Map.prototype.assignMapProperties = function() {
+    this.assignSpawns();
+    this.assignBoundingBoxes();
+
+};
+
+Map.prototype.assignSpawns = function() {
     switch(this.name) {
 
         case 'lab':
@@ -71,5 +78,31 @@ Map.prototype.assignMapProperties = function() {
         default:
             break;
     }
-
 };
+
+Map.prototype.assignBoundingBoxes = function() {
+    switch(this.name) {
+
+        case 'lab':
+
+
+
+            break;
+
+
+        case "altLab":
+
+
+
+
+
+            break;
+        case 'bossroom':
+
+
+            break;
+
+        default:
+            break;
+    }
+}
