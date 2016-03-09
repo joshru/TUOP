@@ -69,7 +69,7 @@ GameEngine.prototype.start = function () {
 };
 
 GameEngine.prototype.startInput = function () {
-    console.log('Starting input');
+    //console.log('Starting input');
     var that = this;
 
     this.ctx.canvas.addEventListener("keydown", function (e) {
@@ -117,11 +117,11 @@ GameEngine.prototype.startInput = function () {
 
     }, false);
 
-    console.log('Input started');
+    //console.log('Input started');
 };
 
 GameEngine.prototype.addEntity = function (entity) {
-    console.log('added entity');
+    //console.log('added entity');
     this.entities.push(entity);
 };
 
@@ -130,7 +130,7 @@ GameEngine.prototype.addHUD = function(HUD) {
 };
 
 GameEngine.prototype.addZombie = function(zombie) {
-    console.log("added zombie");
+    //console.log("added zombie");
     this.zombies.push(zombie);
 };
 

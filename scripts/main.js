@@ -410,6 +410,8 @@ ASSET_MANAGER.queueDownload("./img/ammo/proj_25.png");
 ASSET_MANAGER.queueDownload("./img/ammo/shell_10.png");
 ASSET_MANAGER.queueDownload("./img/ammo/bullet.jpg");
 
+ASSET_MANAGER.queueDownload("./img/effects/explosion.png");
+
 
 // splash screen
 ASSET_MANAGER.queueDownload("./img/welcome-splash800.png");
@@ -468,7 +470,7 @@ function startGame() {
 
 
             /*change to 'altLab' to change to second map*/
-            setCurrentMap('bossroom');
+            setCurrentMap('altLab');
 
             globals.SPAWNER.spawnNewWave();
 

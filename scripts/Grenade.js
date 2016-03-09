@@ -1,5 +1,6 @@
 /**
  * Created by Brandon on 2/26/2016.
+ * Modified by Josh on 3/9/2016
  */
 function Grenade(startX, startY, targetX, targetY, game) {
     this.x = startX;
@@ -19,6 +20,11 @@ function Grenade(startX, startY, targetX, targetY, game) {
 
     this.thrownTime = Date.now();
     this.timeToExplode = 3;
+
+    this.animation = {};
+    this.animation.explode = new Animation(ASSET_MANAGER.getAsset("./img/effects/explosion.png"), 0, 0, 64, 64, 1, 16, false, false);
+
+    this.pop = (Date.now() - this.thrownTime) / 1000 > this.timeToExplode;
 
     Entity.call(this, game, this.worldX, this.worldY);
 }
@@ -42,10 +48,13 @@ Grenade.prototype.update = function() {
         //console.log("I'm a grenade, my position is: (" + this.worldX + "," + this.worldY + ")");
         this.speed -= 1;
     }
+    //this.pop = (Date.now() - this.thrownTime) / 1000 > this.timeToExplode;
    // console.log("I'm a grenade, my screen position is : (" + this.s)
-    if (this.checkEnemyCollision() || (Date.now() - this.thrownTime) / 1000 > this.timeToExplode) {
+    if (/*this.checkEnemyCollision() || */(Date.now() - this.thrownTime) / 1000 > this.timeToExplode) {
+        //console.log((Date.now() - this.thrownTime) / 1000 > this.timeToExplode);
+        this.pop = true;
         this.explode();
-        this.removeFromWorld = true;
+        //this.removeFromWorld = true;
     }
 
 
@@ -65,13 +74,19 @@ Grenade.prototype.updateCoords = function() {
 
 Grenade.prototype.draw = function(ctx) {
     this.convertToOffScreen();
-    ctx.save();
-    ctx.beginPath();
-    ctx.fillStyle = "#979748";
-    ctx.arc(this.screenX, this.screenY, this.radius, 0, Math.PI * 2, false);
-    ctx.fill();
-    ctx.closePath();
-    ctx.restore();
+    if (Math.ceil((Date.now() - this.thrownTime) / 1000) > this.timeToExplode) {
+        ctx.clearRect(this.screenX, this.screenY, this.radius, this.radius);
+        this.animation.explode.drawFrame(this.game.clockTick, ctx, this.screenX - 64, this.screenY - 64, 2);
+        this.removeFromWorld = true;
+    } else {
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = "#979748";
+        ctx.arc(this.screenX, this.screenY, this.radius, 0, Math.PI * 2, false);
+        ctx.fill();
+        ctx.closePath();
+        ctx.restore();
+    }
 };
 
 Grenade.prototype.explode = function() {
@@ -85,8 +100,8 @@ Grenade.prototype.explode = function() {
             }
 
       //  }
-
     }
+
 };
 
 Grenade.prototype.checkEnemyCollision = function() {
@@ -96,7 +111,7 @@ Grenade.prototype.checkEnemyCollision = function() {
       //  if (currentEnt.name === 'Zombie') {
 
             if (this.isCollidingWith(currentEnt)) {
-                console.log("I got hit by a grenade");
+                //console.log("I got hit by a grenade");
                 currentEnt.health -= this.damage;
                 return true;
             }
