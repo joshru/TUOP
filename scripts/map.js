@@ -84,6 +84,12 @@ Map.prototype.assignBoundingBoxes = function() {
     switch(this.name) {
 
         case 'lab':
+            this.boundingBoxes.push({x: 0,y:0, w:2048,h:32});
+            this.boundingBoxes.push({x: 0,y:0, w:32,h:2048});
+            this.boundingBoxes.push({x: 0,y:2016, w:2048,h:32});
+            this.boundingBoxes.push({x: 2016,y:0, w:32,h:2048});
+
+
 
 
 

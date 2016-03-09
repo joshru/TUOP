@@ -172,6 +172,20 @@ Player.prototype.handleMovementInput = function () {
 
     //this.updateZombies(bgX, bgY);
 };
+
+
+Player.prototype.collideBoundingBoxes = function() {
+    var collisions = [];
+    for (var i = 0; i < globals.SPAWNER.currentMap.boundingBoxes; i++) {
+        var current = globals.SPAWNER.currentMap.boundingBoxes[i];
+        if (circleRectCollision(this.hitbox, current).dir) collisions.push(circleRectCollision(this.hitbox, current)); //TODO make variable
+
+    }
+    return collisions;
+};
+
+
+
 /**
  * Update for the game loop
  */
