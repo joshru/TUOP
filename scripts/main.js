@@ -109,8 +109,10 @@ Background.prototype.update = function () {
     var stepDist = 5;
     //console.log("bg x: " + this.x + " | bg y: " + this.y);
     if (Key.isDown(Key.RIGHT)) {
-        if (this.x >= -this.width + this.game.ctx.canvas.width + stepDist) {
+        if (this.x >= -this.width + this.game.ctx.canvas.width + stepDist) { //TODO testing
+        //if (this.x >= -this.width + globals.background.bg.width + stepDist) {
             //this.scrolling = true;
+
             this.x -= stepDist;
         } else {
             //this.scrolling = false;
