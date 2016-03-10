@@ -359,7 +359,7 @@ Player.prototype.draw = function (ctx) {
             ctx.font = "12px Courier New";
             ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
             ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.x, this.y + 20);
-            ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldX), this.x, this.y + 30);
+            ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldY), this.x, this.y + 30);
         }
 
         //if (this.state === this.states.RELOADING) {
@@ -377,19 +377,19 @@ Player.prototype.draw = function (ctx) {
 
                     var knockback = 20;
 
-                    if (currentZombie.dirs.top) {
+                    if (currentZombie.dirs.top && !this.hitbox.collideTop()) {
                         this.y -= knockback;
                         globals.background.y += knockback;
                     }
-                    if (currentZombie.dirs.right) {
+                    if (currentZombie.dirs.right && !this.hitbox.collideRight()) {
                         this.x += knockback;
                         globals.background.x -= knockback;
                     }
-                    if (currentZombie.dirs.down) {
+                    if (currentZombie.dirs.down && !this.hitbox.collideBottom()) {
                         this.y += knockback;
                         globals.background.y -= knockback;
                     }
-                    if (currentZombie.dirs.left) {
+                    if (currentZombie.dirs.left && !this.hitbox.collideLeft()) {
                         this.x -= knockback;
                         globals.background.x += knockback;
                     }

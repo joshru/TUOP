@@ -29,7 +29,7 @@ Hitbox.prototype.collideLeft = function () {
 };
 
 Hitbox.prototype.collideRight = function () {
-    return (globals.player.worldX + this.radius) > globals.background.bg.width - 32;
+    return (globals.player.worldX + this.radius) > globals.background.bg.width - globals.player.radius * 2 * globals.player.scale ;
 };
 
 Hitbox.prototype.collideTop = function () {
@@ -37,7 +37,7 @@ Hitbox.prototype.collideTop = function () {
 };
 
 Hitbox.prototype.collideBottom = function () {
-    return (globals.player.worldY + this.radius) > globals.background.bg.height - 32;
+    return (globals.player.worldY + this.radius) > globals.background.bg.height - globals.player.radius * 2 * globals.player.scale;
 };
 
 Hitbox.prototype.update = function () {
