@@ -468,7 +468,7 @@ function startGame() {
 
 
             /*change to 'altLab' to change to second map*/
-            setCurrentMap('lab');
+            setCurrentMap('bossroom');
 
             globals.SPAWNER.spawnNewWave();
 
