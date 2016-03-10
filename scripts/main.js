@@ -48,6 +48,7 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy, type) {
         index -= Math.floor((this.spriteSheet.width - this.startX) / this.frameWidth);
         vindex++;
     }
+
     while ((index + 1) * this.frameWidth > this.spriteSheet.width) {
         index -= Math.floor(this.spriteSheet.width / this.frameWidth);
         vindex++;
@@ -391,6 +392,12 @@ ASSET_MANAGER.queueDownload("./img/Enemies/bosszombie.png");
 // animations
 ASSET_MANAGER.queueDownload("./img/player/hgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/player/hgun_move.png");
+
+ASSET_MANAGER.queueDownload("./img/player/hgun_idle_norm.png");
+ASSET_MANAGER.queueDownload("./img/player/hgun_flash_norm.png");
+ASSET_MANAGER.queueDownload("./img/player/shgun_idle_norm.png");
+ASSET_MANAGER.queueDownload("./img/player/shgun_flash_norm.png");
+
 ASSET_MANAGER.queueDownload("./img/player/hgun_reload.png");
 ASSET_MANAGER.queueDownload("./img/player/hgun_shoot.png");
 ASSET_MANAGER.queueDownload("./img/player/hgun_flash.png");
@@ -403,6 +410,11 @@ ASSET_MANAGER.queueDownload("./img/player/shgun_flash.png");
 
 ASSET_MANAGER.queueDownload("./img/player/moving_feet.png");
 ASSET_MANAGER.queueDownload("./img/player/idle_feet.png");
+ASSET_MANAGER.queueDownload("./img/player/test_foot.png");
+ASSET_MANAGER.queueDownload("./img/player/run_feet_norm.png");
+ASSET_MANAGER.queueDownload("./img/player/idle_feet_norm.png");
+
+ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie.png");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie_move.png");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie_death.png");
