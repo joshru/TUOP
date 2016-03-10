@@ -131,7 +131,7 @@ Player.prototype.handleMovementInput = function () {
     var centerX = this.game.ctx.canvas.width / 2;
     var centerY = this.game.ctx.canvas.height / 2;
 
-    if (Key.isDown(Key.RIGHT)) {
+    if (Key.isDown(Key.RIGHT) && !this.hitbox.collideRight()) {
         this.state = this.states.MOVING;
         if (bgX === -1248 || this.hitbox.x < centerX) {
             globals.background.scrolling = false;
@@ -141,7 +141,7 @@ Player.prototype.handleMovementInput = function () {
             this.move(this.scrollStep, 0);
         }
     }
-    if (Key.isDown(Key.LEFT)) {
+    if (Key.isDown(Key.LEFT) && !this.hitbox.collideLeft()) {
         this.state = this.states.MOVING;
         if (bgX === 0 || this.hitbox.x > centerX) {
             globals.background.scrolling = false;
@@ -151,7 +151,7 @@ Player.prototype.handleMovementInput = function () {
             this.move(-this.scrollStep, 0);
         }
     }
-    if (Key.isDown(Key.UP)) {
+    if (Key.isDown(Key.UP) && !this.hitbox.collideTop()) {
         this.state = this.states.MOVING;
         if (bgY === 0 || this.hitbox.y > centerY) {
             globals.background.scrolling = false;
@@ -161,7 +161,7 @@ Player.prototype.handleMovementInput = function () {
             this.move(0, -this.scrollStep);
         }
     }
-    if (Key.isDown(Key.DOWN)) {
+    if (Key.isDown(Key.DOWN) && !this.hitbox.collideBottom()) {
         this.state = this.states.MOVING;
         if (bgY === -1248 || this.hitbox.y < centerY) {
             globals.background.scrolling = false;
@@ -178,6 +178,20 @@ Player.prototype.handleMovementInput = function () {
 
     //this.updateZombies(bgX, bgY);
 };
+
+
+Player.prototype.collideBoundingBoxes = function() {
+    var collisions = [];
+    for (var i = 0; i < globals.SPAWNER.currentMap.boundingBoxes; i++) {
+        var current = globals.SPAWNER.currentMap.boundingBoxes[i];
+        if (circleRectCollision(this.hitbox, current).dir) collisions.push(circleRectCollision(this.hitbox, current)); //TODO make variable
+
+    }
+    return collisions;
+};
+
+
+
 /**
  * Update for the game loop
  */
@@ -378,7 +392,7 @@ Player.prototype.draw = function (ctx) {
             ctx.font = "12px Courier New";
             ctx.fillText("x: " + Math.round(this.x) + " y: " + Math.round(this.y), this.x, this.y + 10);
             ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.x, this.y + 20);
-            ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldX), this.x, this.y + 30);
+            ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldY), this.x, this.y + 30);
         }
 
         //if (this.state === this.states.RELOADING) {
@@ -396,19 +410,19 @@ Player.prototype.draw = function (ctx) {
 
                     var knockback = 20;
 
-                    if (currentZombie.dirs.top) {
+                    if (currentZombie.dirs.top && !this.hitbox.collideTop()) {
                         this.y -= knockback;
                         globals.background.y += knockback;
                     }
-                    if (currentZombie.dirs.right) {
+                    if (currentZombie.dirs.right && !this.hitbox.collideRight()) {
                         this.x += knockback;
                         globals.background.x -= knockback;
                     }
-                    if (currentZombie.dirs.down) {
+                    if (currentZombie.dirs.down && !this.hitbox.collideBottom()) {
                         this.y += knockback;
                         globals.background.y -= knockback;
                     }
-                    if (currentZombie.dirs.left) {
+                    if (currentZombie.dirs.left && !this.hitbox.collideLeft()) {
                         this.x -= knockback;
                         globals.background.x += knockback;
                     }

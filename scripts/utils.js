@@ -100,6 +100,49 @@ function jsonFileToObject(fileName) {
     return jsonToObject(readTextFile(fileName));
 }
 
+/**
+ * Function to determine if a circle is colliding with a rectangle. Useful for detecting collisions between the
+ * player and any bounding rectangles designed to keep the player from noclipping through everything.
+ *
+ * @param circle
+ * @param rect
+ * @returns {boolean} collission detected or not
+ * @shoutout markE @from stackoverflow
+ */
+function circleRectCollision(circle, rect) {
+    var distX = Math.abs(circle.x - rect.x - rect.w / 2);
+    var distY = Math.abs(circle.y - rect.y - rect.h / 2);
+
+    if (distX > (rect.w / 2 + circle.radius)) return false;
+    if (distY > (rect.h / 2 + circle.radius)) return false;
+
+    if (distX <= (rect.w / 2)) return true;
+    if (distY <= (rect.h / 2)) return true;
+
+    var dx = distX - rect.w / 2;
+    var dy = distY - rect.h / 2;
+
+    /** testing*/
+    var collision = {
+        left: dx <= 0,
+        right: dx > 0,
+        up: dy <= 0,
+        down: dy > 0
+    };
+    var result =
+    {
+        dir: collision,
+        collide: (dx * dx + dy * dy <= (circle.radius * circle.radius))
+    };
+
+
+
+
+    return result;
+
+}
+
+
 function setCurrentMap(mapName) {
     var map;
     switch (mapName) {
