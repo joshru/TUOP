@@ -165,8 +165,11 @@ Zombie.prototype.checkForBulletWounds = function() {
 
         if (!bullet.spent && this.isCollidingWith(bullet)) {
             this.health -= bullet.damage;
-            bullet.spent = true;
-            bullet.removeFromWorld = true;
+
+            if (!bullet.penetration) {
+                bullet.spent = true;
+                bullet.removeFromWorld = true;
+            }
             if (globals.debug) console.log("You shot me!");
         }
     }
@@ -222,66 +225,6 @@ Zombie.prototype.removeAndReplace = function() {
 
     //this.spawnNewWaveRedux();
 
-
-};
-
-
-Zombie.prototype.spawnFibonacciWave = function() {
-    if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
-    if (globals.zombieDeathCount === globals.fibs.currFib) {
-        // see in Background.prototype.draw for waveNumber counter
-        globals.waveNumber++;
-
-        if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
-        //update previous and current fibonacci numbers
-        globals.fibs.fib1 = globals.fibs.fib2;
-        globals.fibs.fib2 = globals.fibs.currFib;
-        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
-        //Spawn current fib amount of zombies
-        for (var i = 0; i < globals.fibs.currFib; i++) {
-            globals.SPAWNER.spawnZombieRandomPos();
-        }
-
-        globals.zombieDeathCount = 0;
-    }
-};
-
-
-
-Zombie.prototype.spawnNewWave = function() {
-    console.log("Zombies killed: " + globals.zombieDeathCount +  ", Total in waveNumber: "
-        + globals.currentLevelInfo.waves[globals.waveNumber].zombies);
-
-    if (globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.waveNumber].zombies) {
-        ++globals.waveNumber;
-        for (var i = 0; i < globals.currentLevelInfo.waves[globals.waveNumber].zombies; i++) {
-            var j = 0;
-            //determine where to spawn zombie
-
-            var availableSpawns = globals.currentLevelInfo.waves[globals.waveNumber].spawns;
-
-           // var numSpawns = globals.SPAWNER.map.spawnPoints.length;
-
-            var numSpawns = 4;//globals.currentLevelInfo.waves[globals.waveNumber].spawns.length;
-
-            var spawnCoords = globals.SPAWNER.currentMap.spawnPoints[j++ % numSpawns];
-
-
-            spawnCoords.x += randomInt(25);
-            spawnCoords.y += randomInt(25);
-
-
-            //console.log("spawn coordinates chosen : (" + spawnCoords.x + "," + spawnCoords.y + ")" );
-
-            globals.SPAWNER.spawnZombie(spawnCoords.x, spawnCoords.y);
-
-
-
-
-        }
-        globals.zombieDeathCount = 0;
-
-    }
 
 };
 
@@ -361,11 +304,8 @@ Zombie.prototype.isCollidingWith = function (bullet) {
  * Takes care of behavior of moving the zombie onto the after-afterlife.
  */
 Zombie.prototype.die = function () {
-    // stops zombies and moves hitbox out of canvas
     this.isDead = true;
-    //this.removeFromWorld = true;
-    //this.hitbox.updateXY(undefined, undefined);
-    //this.hitbox.radius = undefined;
+
     this.velocity.x = 0;
     this.velocity.y = 0;
 

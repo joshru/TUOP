@@ -53,9 +53,10 @@ function Bullet(x, y, xVelocity, yVelocity, src, game) {
 
             break;
         case 'sniper':
-            this.speed = 70;
+            this.speed = 30;
             this.damage = 200;
             this.radius = 4;
+            this.penetration = true;
             this.animation = new Animation(ASSET_MANAGER.getAsset("./img/bullet.jpg"), 0, 0, 114, 114, .15, 1, true, false);
 
             break;

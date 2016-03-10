@@ -245,23 +245,6 @@ Player.prototype.update = function () {
     }
 
 
-  /*  if (this.game.mouseup) {
-        // mouseStillDown = false;
-        this.state = this.states.IDLE;
-    }*/
-
-
-    //if (this.animations.reloadPistol.isDone()) {
-    //    this.game.RELOAD = false;
-    //    this.animations.reloadPistol.elapsedTime = 0;
-    //    this.game.leftClick = false;
-    //} else
-    //if (!this.states.MOVING && !this.states.SHOOTING) {
-    //    this.state = this.states.IDLE;
-    //
-    //}
-
-
     Entity.prototype.update.call(this);
 
 };
@@ -292,7 +275,7 @@ Player.prototype.checkForWeaponSwap = function () {
 
     if (Key.isDown(Key.FOUR)) {
         this.states.CURRENT_GUN = 'sniper';
-        this.drawLazer = true;
+        //this.drawLazer = true;
 
         console.log("sniper equipped");
         this.weaponShotDelay = 1.5;

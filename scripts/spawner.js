@@ -101,6 +101,30 @@ Spawner.prototype.spawnNewWave = function(random) {
         this.waveStartTime = Date.now();
     }
 };
+
+
+Spawner.prototype.spawnFibonacciWave = function() {
+    if (globals.debug) console.log("Current Fib: " + globals.fibs.currFib + ", Death Count: " + globals.zombieDeathCount);
+    if (globals.zombieDeathCount === globals.fibs.currFib) {
+        // see in Background.prototype.draw for waveNumber counter
+        globals.waveNumber++;
+
+        if (globals.debug) console.log("killed goal reached, spawning " + globals.fibs.currFib + " zombies.");
+        //update previous and current fibonacci numbers
+        globals.fibs.fib1 = globals.fibs.fib2;
+        globals.fibs.fib2 = globals.fibs.currFib;
+        globals.fibs.currFib = globals.fibs.fib1 + globals.fibs.fib2;
+        //Spawn current fib amount of zombies
+        for (var i = 0; i < globals.fibs.currFib; i++) {
+            this.spawnZombieRandomPos();
+        }
+
+        globals.zombieDeathCount = 0;
+    }
+};
+
+
+
 /**
  * checks whether or not a new wave should be spawned
  */
