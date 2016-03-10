@@ -125,7 +125,7 @@ Player.prototype.handleMovementInput = function () {
     var centerX = this.game.ctx.canvas.width / 2;
     var centerY = this.game.ctx.canvas.height / 2;
 
-    if (Key.isDown(Key.RIGHT)) {
+    if (Key.isDown(Key.RIGHT) && !this.hitbox.collideRight()) {
         this.state = this.states.MOVING;
         if (bgX === -1248 || this.hitbox.x < centerX) {
             globals.background.scrolling = false;
@@ -135,7 +135,7 @@ Player.prototype.handleMovementInput = function () {
             this.move(this.scrollStep, 0);
         }
     }
-    if (Key.isDown(Key.LEFT)) {
+    if (Key.isDown(Key.LEFT) && !this.hitbox.collideLeft()) {
         this.state = this.states.MOVING;
         if (bgX === 0 || this.hitbox.x > centerX) {
             globals.background.scrolling = false;
@@ -145,7 +145,7 @@ Player.prototype.handleMovementInput = function () {
             this.move(-this.scrollStep, 0);
         }
     }
-    if (Key.isDown(Key.UP)) {
+    if (Key.isDown(Key.UP) && !this.hitbox.collideTop()) {
         this.state = this.states.MOVING;
         if (bgY === 0 || this.hitbox.y > centerY) {
             globals.background.scrolling = false;
@@ -155,7 +155,7 @@ Player.prototype.handleMovementInput = function () {
             this.move(0, -this.scrollStep);
         }
     }
-    if (Key.isDown(Key.DOWN)) {
+    if (Key.isDown(Key.DOWN) && !this.hitbox.collideBottom()) {
         this.state = this.states.MOVING;
         if (bgY === -1248 || this.hitbox.y < centerY) {
             globals.background.scrolling = false;
