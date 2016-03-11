@@ -30,6 +30,7 @@ StatTrack.prototype.draw = function(ctx) {
 
     /* Death Scene */
     if (globals.player.health <= 0) {
+        //this.game.restart();
         //ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
         //ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white";
@@ -48,11 +49,11 @@ StatTrack.prototype.draw = function(ctx) {
 
         canvas.addEventListener("mousedown", restartGame, false);
 
-        ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
+        ctx.fillText("Return to menu", startOrReplay.x, startOrReplay.y);
     }
 
     if (globals.waveNumber === globals.currentLevelInfo.waves.length-1
-        && globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.currentLevelInfo.waves.length-1].zombies) {
+        && globals.zombieDeathCount >= globals.currentLevelInfo.waves[globals.currentLevelInfo.waves.length-1].zombies) {
         //console.log("Final wave reached, game over");
         this.game.gameStates.GAMEOVER = true;
 
@@ -70,7 +71,7 @@ StatTrack.prototype.draw = function(ctx) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white";
         ctx.font = "50px Courier New";
-        ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
+        ctx.fillText("Return to menu", startOrReplay.x, startOrReplay.y);
         ctx.fillText("YOU WIN!", startOrReplay.x - 25, startOrReplay.y - 50);
     }
 
@@ -81,7 +82,7 @@ StatTrack.prototype.draw = function(ctx) {
     ctx.fillText("Kills: " + globals.killCount, 10, 60);
 
     function restartGame(event) {
-        console.log("testing");
+        //console.log("testing");
         var rect = canvas.getBoundingClientRect();
         var canvas_x = Math.round(event.clientX - rect.left);
         var canvas_y = Math.round(event.clientY - rect.top);

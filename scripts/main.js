@@ -269,7 +269,7 @@ window.addEventListener('keydown', function (event) {
 }, false);
 
 window.addEventListener('keypress', function (event) {
-    console.log(String.fromCharCode(event.keyCode) + " key pressed");
+   // console.log(String.fromCharCode(event.keyCode) + " key pressed");
     Key.onKeyTap(event);
 }, false);
 
@@ -300,6 +300,9 @@ muteButton.addEventListener('click', function() {
 
 // the "main" code begins here
 
+
+
+
 var ASSET_MANAGER = new AssetManager();
 
 // terrain
@@ -317,6 +320,7 @@ ASSET_MANAGER.queueDownload("./img/terrain/terrain_thumbnails/bossroom_thumb.png
 
 // Enemies
 ASSET_MANAGER.queueDownload("./img/Enemies/bosszombie.png");
+
 
 // animations
 ASSET_MANAGER.queueDownload("./img/player/hgun_idle.png");
@@ -443,7 +447,7 @@ function startGame() {
             globals.player = new Player(gameEngine, 0.5);
             globals.background = new Background(gameEngine);
             gameEngine.gameStates.GAMEOVER = false;
-            
+
             lab_box = {x: undefined, y: undefined, w: undefined, h: undefined};
             lab2_box = {x: undefined, y: undefined, w: undefined, h: undefined};
             bossroom_box = {x: undefined, y: undefined, w: undefined, h: undefined};

@@ -26,6 +26,11 @@ function PowerUp(game, other, type) {
     this.worldX = world.x;
     this.worldY = world.y;
 
+    this.spawnTime = Date.now() / 1000;
+
+    this.lifeSpan = 20;
+
+
     this.animations = {};
     //Assign attributes based on type
     //Will be more types later
@@ -53,6 +58,9 @@ PowerUp.prototype.constructor = PowerUp;
  */
 PowerUp.prototype.update = function () {
     this.convertToOnScreen();
+
+    if ((Date.now() / 1000 - this.spawnTime > this.lifeSpan)) this.removeFromWorld = true;
+
 
     this.hitbox.updateXY(this.screenX + this.sprite.width / 2, this.screenY + this.sprite.height / 2);
 };

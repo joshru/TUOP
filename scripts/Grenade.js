@@ -6,7 +6,7 @@ function Grenade(startX, startY, targetX, targetY, game) {
     this.x = startX;
     this.y = startY;
     this.velocity = calculateVelocity(startX, startY, targetX, targetY);
-    this.speed = 25; //playing with different values
+    this.speed = 18; //playing with different values
     this.radius = 5;
     this.explosionRadius = 150;
     this.damage = 100;
