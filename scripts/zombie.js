@@ -88,7 +88,6 @@ Zombie.prototype.update = function () {
     var minSpeed = 5;
     this.convertToOnScreen();
 
-
     //handle movement and stuff
     //TODO iron this out
     if (!this.isDead) {
@@ -211,14 +210,23 @@ Zombie.prototype.removeAndReplace = function() {
     ++globals.killCount;
 
     // TODO add more features for drops
-    var chance = randomInt(10) + 1;
-    if (chance > 8) {
+    var chance = Math.random();
+    if (chance > 4/5) {
         // TODO this will turn into a switch at some point to change types
         // TODO currently 20% chance of godlike, 80% hp
-        chance = randomInt(10) + 1;
-        if (chance > 2)
+        chance = Math.random();
+        if (chance < 2/5)
             this.game.addEntity(new PowerUp(this.game, this, "hp"));
-        else
+        else if (chance < 4/5) {
+            chance = Math.random();
+            console.log(chance);
+            if (chance < 1/3)
+                this.game.addEntity(new PowerUp(this.game, this, "assault-rifle"));
+            else if (chance < 2/3)
+                this.game.addEntity(new PowerUp(this.game, this, "shotgun"));
+            else
+                this.game.addEntity(new PowerUp(this.game, this, "sniper"));
+        } else
             this.game.addEntity(new PowerUp(this.game, this, "godlike"));
     }
 };

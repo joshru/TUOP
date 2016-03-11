@@ -192,9 +192,6 @@ Player.prototype.handleMovementInput = function () {
     if (!Key.isDown(Key.RIGHT) && !Key.isDown(Key.LEFT) && !Key.isDown(Key.UP) && !Key.isDown(Key.DOWN)) {
         this.state = this.states.IDLE;
     }
-
-
-    //this.updateZombies(bgX, bgY);
 };
 
 
@@ -207,8 +204,6 @@ Player.prototype.collideBoundingBoxes = function() {
     }
     return collisions;
 };
-
-
 
 /**
  * Update for the game loop
@@ -231,7 +226,7 @@ Player.prototype.update = function () {
     //}
 
     this.grabPowerups();
-    this.checkForWeaponSwap();
+    //this.checkForWeaponSwap();
 
 
     if (this.throwingGrenade) {
@@ -280,7 +275,6 @@ Player.prototype.checkForWeaponSwap = function () {
         console.log("assault rifle equipped");
         this.weaponShotDelay = 0.15;
         this.currentFiringMode = "full auto";
-
     }
 
     if (Key.isDown(Key.THREE)) {
@@ -288,7 +282,6 @@ Player.prototype.checkForWeaponSwap = function () {
         console.log("shotgun equipped");
         this.weaponShotDelay = 0.8;
         this.currentFiringMode = "spread";
-
     }
 
     if (Key.isDown(Key.FOUR)) {
@@ -298,10 +291,7 @@ Player.prototype.checkForWeaponSwap = function () {
         console.log("sniper equipped");
         this.weaponShotDelay = 1.5;
         this.currentFiringMode = "full auto";
-
     }
-
-
 };
 
 Player.prototype.throwGrenade = function () {
@@ -344,7 +334,6 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_shoot;
         if (this.states.CURRENT_GUN === 'sniper') currAnim = this.animations.snipe_shoot;
         if (this.states.CURRENT_GUN === 'shotgun') currAnim = this.animations.shgun_shoot;
-
     }
 
     currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
@@ -355,11 +344,6 @@ Player.prototype.draw = function (ctx) {
             ctx.fillText("sX: " + Math.round(this.screenX) + " | sY: " + Math.round(this.screenY), this.x, this.y + 20);
             ctx.fillText("wX: " + Math.round(this.worldX) + "  | wY: " + Math.round(this.worldY), this.x, this.y + 30);
         }
-
-        //if (this.state === this.states.RELOADING) {
-        //    this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x + 12, this.y + 17, this.scale);
-        //    this.animations.reloadPistol.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
-        //}
 
         //Check for collisions with zombies
         for (var i = 0; i < this.game.zombies.length; i++) {
@@ -413,12 +397,9 @@ Player.prototype.draw = function (ctx) {
             }
         }
 
-
         if (this.drawLazer) {
             console.log("lazer time");
             lineToMouse(ctx, this.x + this.animations.hgun_idle.width / 2, this.y + this.animations.hgun_idle.height / 2)
-
-
         }
 
         if (globals.debug) this.hitbox.draw(ctx);
@@ -448,6 +429,23 @@ Player.prototype.grabPowerups = function () {
                         this.godlike = true;
                         globals.powerUpTime.godlike += 5;
                         current.audio.src = "./sound/godlike.wav";
+                        break;
+                    case "assault-rifle":
+                        this.states.CURRENT_GUN = 'assault rifle';
+                        this.weaponShotDelay = 0.15;
+                        this.currentFiringMode = "full auto";
+                        break;
+                    case "shotgun":
+                        this.states.CURRENT_GUN = 'shotgun';
+                        this.weaponShotDelay = 0.8;
+                        this.currentFiringMode = "spread";
+                        break;
+                    case "sniper":
+                        this.states.CURRENT_GUN = 'sniper';
+                        this.weaponShotDelay = 1.5;
+                        this.currentFiringMode = "full auto";
+                        break;
+                    default:
                         break;
                 }
 
@@ -501,7 +499,6 @@ Player.prototype.isCollidingWith = function (entity) {
         dirs: collisions
     };
 };
-
 
 function noKeyPressed() {
     return !Key.isDown(Key.RIGHT) && !Key.isDown(Key.LEFT) && !Key.isDown(Key.UP) && !Key.isDown(Key.DOWN)
