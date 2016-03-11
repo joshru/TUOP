@@ -73,6 +73,19 @@ Map.prototype.assignSpawns = function() {
             this.width = 2400;
             this.height = 2400;
 
+            this.spawnPoints.push({x: 117, y: 685});
+            this.spawnPoints.push({x: 2313, y: 709});
+            this.spawnPoints.push({x: 110, y: 2283});
+            this.spawnPoints.push({x: 2307, y: 2291});
+            this.spawnPoints.push({x: 1197, y: 387});
+
+            this.bossSpawns.push({x: 1197, y: 401});
+
+
+
+
+
+
             break;
 
         default:

@@ -232,7 +232,7 @@ Player.prototype.update = function () {
     }
 
     // if (this.game.leftClick) {
-    if (globals.debug) console.log("shooting");
+    //if (globals.debug) console.log("shooting");
 
     //SHOOT DA GUNZ
     if (this.game.firing) {

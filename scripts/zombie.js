@@ -316,6 +316,7 @@ Zombie.prototype.die = function () {
     this.velocity.x = 0;
     this.velocity.y = 0;
 
+    if (globals.debug) console.log("Zombies killed this wave " + globals.zombieDeathCount);
 
 };
 /**
