@@ -36,6 +36,14 @@ function PowerUp(game, other, type) {
         case "godlike":
             this.sprite = ASSET_MANAGER.getAsset("./img/powerups/godlike.png");
             break;
+        case "assault-rifle":
+            break;
+        case "shotgun":
+            break;
+        case "sniper":
+            break;
+        default:
+            break;
     }
 
     var hbX = this.x;
