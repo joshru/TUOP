@@ -59,6 +59,20 @@ function worldDistance(a, b) {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
+function rotatePoint(x, y, angle) {
+    var rotatedPoint = {x: x, y: y};
+    var s = Math.sin(angle);
+    var c = Math.cos(angle);
+
+
+    var newX = rotatedPoint.x * c - rotatedPoint.y * s;
+    var newY = rotatedPoint.x * s + rotatedPoint.y * c;
+
+    rotatedPoint.x = newX;
+    rotatedPoint.y = newY;
+    return rotatedPoint;
+}
+
 
 
 function calculateVelocity(sX, sY, eX, eY) {

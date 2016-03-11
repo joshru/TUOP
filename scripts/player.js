@@ -72,12 +72,27 @@ function Player(game, scale) {
 Player.prototype = new Entity();
 Player.prototype.constructor = Player;
 
+
+
+
 /**
  * creates a bullet and adds it to the game's bullet data structure
  */
 Player.prototype.shoot = function (endX, endY, firingMode) {
+
+
+
     var bulletX = this.x + (this.animations.hgun_idle.frameWidth * this.scale) / 2;
     var bulletY = this.y + (this.animations.hgun_idle.frameWidth * this.scale ) / 2;
+
+
+    //TODO testing, be careful
+   // var rotation = Math.atan2(-(bulletY - globals.mousePosition.y), -(bulletX - globals.mousePosition.x)); //angle
+
+  //  var rotated = rotatePoint(bulletX, bulletY, rotation);
+   // bulletX = rotated.x;
+  //  bulletY = rotated.y;
+
 
     var dx = (endX - bulletX);
     var dy = (endY - bulletY);
