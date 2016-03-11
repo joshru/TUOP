@@ -37,7 +37,6 @@
     </div>
 
     <br><br>
-    <li>Game starts muted now, mute button located just above the canvas.</li>
     <li>VOLUME WARNING!! All our sound effects are quite loud right now, you've been warned...</li>
     <li>Move the player around with W A S D. Shoot with left click. Press H to toggle debug mode.</li>
 </ul>
@@ -48,6 +47,9 @@
 <canvas id="gameWorld" tabindex="1" width="800" height="800" style="width:800px; height:800px;border: 5px solid black;"></canvas>
 
 <audio id="soundFX" style="display: none;"></audio>
+<audio id="bgm" autoplay loop>
+    <source src="./sound/bgm.mp3" type="audio/mpeg" >
+</audio>
 
 <ul>
     <h2><span style="text-decoration: underline;">Controls</span></h2>

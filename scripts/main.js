@@ -9,7 +9,7 @@ var globals = {
     killCount: 0,
     powerUpTime: {godlike: 0},
     zombieDeathCount: 0,
-    mute: true,
+    mute: false,
     debug: false,
     SPAWNER: null,
     STATETRACKER: null,
@@ -289,7 +289,11 @@ window.addEventListener('mousedown', function (event){
 
 
 var muteButton = document.getElementById('muteToggle');
-muteButton.addEventListener('click', function() { globals.mute ^= true });
+muteButton.addEventListener('click', function() {
+    globals.mute ^= true;
+    var bgm = document.getElementById('bgm');
+    bgm.muted = globals.mute;
+});
 
 // the "main" code begins here
 
