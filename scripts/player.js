@@ -28,6 +28,9 @@ function Player(game, scale) {
     this.audio = document.getElementById('soundFX');
 
 
+    this.gunOffset = {x:100, y: 45};
+
+
     this.states = {
         IDLE:         0,
         MOVING:       1,
@@ -87,7 +90,15 @@ Player.prototype.shoot = function (endX, endY, firingMode) {
 
 
     //TODO testing, be careful
-   // var rotation = Math.atan2(-(bulletY - globals.mousePosition.y), -(bulletX - globals.mousePosition.x)); //angle
+
+    var hbX = this.hitbox.x;
+    var hbY = this.hitbox.y;
+
+    var rotation = Math.atan2(-(this.y - globals.mousePosition.y), -(this.x - globals.mousePosition.x)); //angle
+
+    bulletX = hbX + (this.gunOffset.x * this.scale *Math.cos(rotation) - this.gunOffset.y * this.scale * Math.sin(rotation));
+    bulletY = hbY + (this.gunOffset.x * this.scale * Math.sin(rotation) + this.gunOffset.y * this.scale * Math.cos(rotation));
+
 
   //  var rotated = rotatePoint(bulletX, bulletY, rotation);
    // bulletX = rotated.x;
@@ -102,7 +113,7 @@ Player.prototype.shoot = function (endX, endY, firingMode) {
     var xVelocity = (dx / mag); // * 5;
     var yVelocity = (dy / mag); // * 5;
 
-    var rotation = Math.atan2(-(bulletY - globals.clickPosition.y), -(bulletX - globals.clickPosition.x));
+  //  var rotation = Math.atan2(-(bulletY - globals.clickPosition.y), -(bulletX - globals.clickPosition.x));
 
    // this.game.bullets.push(new Bullet(bulletX, bulletY, xVelocity, yVelocity, rotation, this.states.CURRENT_GUN, this.game));
     switch (firingMode) {
@@ -226,7 +237,7 @@ Player.prototype.update = function () {
     //}
 
     this.grabPowerups();
-    //this.checkForWeaponSwap();
+    this.checkForWeaponSwap();
 
 
     if (this.throwingGrenade) {
@@ -268,6 +279,10 @@ Player.prototype.checkForWeaponSwap = function () {
         console.log("pistol equipped");
         this.weaponShotDelay = 0.5;
         this.currentFiringMode = "full auto";
+
+        this.gunOffset = {x:100, y: 45};
+
+
     }
 
     if (Key.isDown(Key.TWO)) {
@@ -275,6 +290,10 @@ Player.prototype.checkForWeaponSwap = function () {
         console.log("assault rifle equipped");
         this.weaponShotDelay = 0.15;
         this.currentFiringMode = "full auto";
+
+        this.gunOffset = {x:180, y: 44};
+
+
     }
 
     if (Key.isDown(Key.THREE)) {
@@ -282,6 +301,10 @@ Player.prototype.checkForWeaponSwap = function () {
         console.log("shotgun equipped");
         this.weaponShotDelay = 0.8;
         this.currentFiringMode = "spread";
+
+        this.gunOffset = {x:170, y: 47};
+
+
     }
 
     if (Key.isDown(Key.FOUR)) {
@@ -291,6 +314,10 @@ Player.prototype.checkForWeaponSwap = function () {
         console.log("sniper equipped");
         this.weaponShotDelay = 1.5;
         this.currentFiringMode = "full auto";
+
+        this.gunOffset = {x:175, y: 36};
+
+
     }
 };
 
@@ -434,16 +461,22 @@ Player.prototype.grabPowerups = function () {
                         this.states.CURRENT_GUN = 'assault rifle';
                         this.weaponShotDelay = 0.15;
                         this.currentFiringMode = "full auto";
+                        this.gunOffset = {x:180, y: 44};
+
                         break;
                     case "shotgun":
                         this.states.CURRENT_GUN = 'shotgun';
                         this.weaponShotDelay = 0.8;
                         this.currentFiringMode = "spread";
+                        this.gunOffset = {x:170, y: 47};
+
                         break;
                     case "sniper":
                         this.states.CURRENT_GUN = 'sniper';
                         this.weaponShotDelay = 1.5;
                         this.currentFiringMode = "full auto";
+                        this.gunOffset = {x:175, y: 36};
+
                         break;
                     default:
                         break;
