@@ -37,10 +37,13 @@ function PowerUp(game, other, type) {
             this.sprite = ASSET_MANAGER.getAsset("./img/powerups/godlike.png");
             break;
         case "assault-rifle":
+            this.sprite = ASSET_MANAGER.getAsset("./img/powerups/ar_drop.png");
             break;
         case "shotgun":
+            this.sprite = ASSET_MANAGER.getAsset("./img/powerups/shotgun_drop.png");
             break;
         case "sniper":
+            this.sprite = ASSET_MANAGER.getAsset("./img/powerups/sniper_drop.png");
             break;
         default:
             break;
@@ -52,7 +55,7 @@ function PowerUp(game, other, type) {
     this.hitbox = new Hitbox(hbX, hbY, this.radius, game);
 
     Entity.call(this, game, this.worldX, this.worldY);
-};
+}
 PowerUp.prototype = new Entity();
 PowerUp.prototype.constructor = PowerUp;
 
