@@ -135,11 +135,7 @@ function circleRectCollision(circle, rect) {
         collide: (dx * dx + dy * dy <= (circle.radius * circle.radius))
     };
 
-
-
-
     return result;
-
 }
 
 
