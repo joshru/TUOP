@@ -395,10 +395,16 @@ function startGame() {
 
     canvas.addEventListener("mousedown", fireUpTheEnginesBoys, false);
 
+
+    ctx.fillStyle = "white";
+    ctx.font = "30px Courier New";
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/welcome-splash800.png"), 0, 0);
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/terrain/terrain_thumbnails/lab_thumb.png"), lab_box.x, lab_box.y);
+    ctx.fillText("Lab", lab_box.x, lab_box.y + lab_box.h + 30);
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/terrain/terrain_thumbnails/lab2_thumb.png"), lab2_box.x, lab2_box.y);
+    ctx.fillText("Toxic", lab2_box.x, lab2_box.y +lab2_box.h + 30);
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/terrain/terrain_thumbnails/bossroom_thumb.png"), bossroom_box.x, bossroom_box.y);
+    ctx.fillText("Boss Room", bossroom_box.x, bossroom_box.y + bossroom_box.h + 30);
 
     function fireUpTheEnginesBoys(event) {
         //console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
@@ -406,18 +412,21 @@ function startGame() {
         var canvas_x = Math.round(event.clientX - rect.left);
         var canvas_y = Math.round(event.clientY - rect.top);
 
+        console.log("canvas_y: " + canvas_y + " lab_box.y + lab_box.h: " + (lab_box.y + lab_box.h));
+        console.log(canvas_y <= lab_box.y - lab_box.h && canvas_y >= lab_box.y);
+
         if (canvas_x >= lab_box.x && canvas_x <= lab_box.x + lab_box.w &&
-            canvas_y >= lab_box.y - lab_box.h && canvas_y <= lab_box.y) {
+            canvas_y >= lab_box.y && canvas_y <= lab_box.y + lab_box.h) {
             startGame('lab');
         }
 
         if (canvas_x >= lab2_box.x && canvas_x <= lab2_box.x + lab2_box.w &&
-            canvas_y >= lab2_box.y - lab2_box.h && canvas_y <= lab2_box.y) {
+            canvas_y >= lab2_box.y && canvas_y <= lab2_box.y + lab2_box.h) {
             startGame('altLab');
         }
 
         if (canvas_x >= bossroom_box.x && canvas_x <= bossroom_box.x + bossroom_box.w &&
-            canvas_y >= bossroom_box.y - bossroom_box.h && canvas_y <= bossroom_box.y) {
+            canvas_y >= bossroom_box.y && canvas_y <= bossroom_box.y + bossroom_box.h) {
             startGame('bossroom');
         }
 

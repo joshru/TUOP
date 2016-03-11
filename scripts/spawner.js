@@ -60,7 +60,6 @@ Spawner.prototype.setCurrentMap = function(map) {
 };
 
 
-
 /** FLAGSHIP SPAWNING FUNCTION
  * Spawns zombies at the currently active spawn points
  * Uses a custom loop function to make sure zombies aren't all
