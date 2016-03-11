@@ -408,6 +408,12 @@ ASSET_MANAGER.queueDownload("./img/player/rifle_flash.png");
 ASSET_MANAGER.queueDownload("./img/player/shgun_idle.png");
 ASSET_MANAGER.queueDownload("./img/player/shgun_flash.png");
 
+ASSET_MANAGER.queueDownload("./img/player/shgun_idle.png");
+ASSET_MANAGER.queueDownload("./img/player/shgun_flash.png");
+
+ASSET_MANAGER.queueDownload("./img/player/snip_idle.png");
+ASSET_MANAGER.queueDownload("./img/player/snip_flash.png");
+
 ASSET_MANAGER.queueDownload("./img/player/moving_feet.png");
 ASSET_MANAGER.queueDownload("./img/player/idle_feet.png");
 ASSET_MANAGER.queueDownload("./img/player/test_foot.png");
@@ -482,7 +488,9 @@ function startGame() {
 
 
             /*change to 'altLab' to change to second map*/
-            setCurrentMap('altLab');
+            setCurrentMap('lab');
+            //setCurrentMap('altLab');
+            //setCurrentMap('bossroom');
 
             globals.SPAWNER.spawnNewWave();
 
