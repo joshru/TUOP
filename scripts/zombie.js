@@ -161,10 +161,17 @@ Zombie.prototype.checkForBulletWounds = function() {
         if (!bullet.spent && this.isCollidingWith(bullet)) {
             this.health -= bullet.damage;
 
-            if (!bullet.penetration) {
+            if (!bullet.penetration ) {
                 bullet.spent = true;
                 bullet.removeFromWorld = true;
             }
+            if (bullet.penetration) {
+                if (--bullet.penetration === 0) {
+                    bullet.spent = true;
+                    bullet.removeFromWorld = true;
+                }
+            }
+
             if (globals.debug) console.log("You shot me!");
         }
     }
@@ -304,6 +311,7 @@ Zombie.prototype.die = function () {
     this.velocity.x = 0;
     this.velocity.y = 0;
 
+    if (globals.debug) console.log("Zombies killed this wave " + globals.zombieDeathCount);
 
 };
 /**

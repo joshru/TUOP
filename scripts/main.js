@@ -436,11 +436,12 @@ function startGame() {
             globals.player = new Player(gameEngine, 0.5);
             globals.background = new Background(gameEngine);
             gameEngine.gameStates.GAMEOVER = false;
-
+            
             lab_box = {x: undefined, y: undefined, w: undefined, h: undefined};
             lab2_box = {x: undefined, y: undefined, w: undefined, h: undefined};
             bossroom_box = {x: undefined, y: undefined, w: undefined, h: undefined};
 
+            globals.SPAWNER.setSpawnPointMode();
             globals.SPAWNER.spawnNewWave();
 
             setCurrentMap(mapName);
