@@ -286,7 +286,10 @@ window.addEventListener('mousedown', function (event){
 
 
 
-
+var bgm = document.getElementById('bgm');
+var sfx = document.getElementById('soundFX');
+bgm.volume = 0.2;
+sfx.volume = 0.2;
 
 var muteButton = document.getElementById('muteToggle');
 muteButton.addEventListener('click', function() {
@@ -416,8 +419,8 @@ function startGame() {
         var canvas_x = Math.round(event.clientX - rect.left);
         var canvas_y = Math.round(event.clientY - rect.top);
 
-        console.log("canvas_y: " + canvas_y + " lab_box.y + lab_box.h: " + (lab_box.y + lab_box.h));
-        console.log(canvas_y <= lab_box.y - lab_box.h && canvas_y >= lab_box.y);
+        //console.log("canvas_y: " + canvas_y + " lab_box.y + lab_box.h: " + (lab_box.y + lab_box.h));
+        //console.log(canvas_y <= lab_box.y - lab_box.h && canvas_y >= lab_box.y);
 
         if (canvas_x >= lab_box.x && canvas_x <= lab_box.x + lab_box.w &&
             canvas_y >= lab_box.y && canvas_y <= lab_box.y + lab_box.h) {
