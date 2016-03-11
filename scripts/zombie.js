@@ -21,8 +21,6 @@ function Zombie(game) {
 
     this.x = randomInt(1200); //hardcoded for prototype zombie
     this.y = randomInt(1200); //TODO come up with a zombie spawning system using timers or something
-    //this.x = 400;
-    //this.y = 400;
 
     var screen = worldToScreen(this.x, this.y);
     var world  = screenToWorld(this.x, this.y);
@@ -30,9 +28,6 @@ function Zombie(game) {
     this.screenY = screen.y;
     this.worldX = world.x;
     this.worldY = world.y;
-
-
-
 
     // TODO create speedScale variable so zombies of different types can have different speeds
     // EX: speedScale = 100 for slow zombies, 200 for slightly faster, etc.

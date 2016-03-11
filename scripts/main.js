@@ -30,8 +30,6 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
     this.reverse = reverse;
 }
 
-
-
 Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy, type) {
     var scaleBy = scaleBy || 1;
     this.elapsedTime += tick;
@@ -157,60 +155,6 @@ Background.prototype.draw = function (ctx) {
 
     ctx.drawImage(this.bg, this.x, this.y);
 
-    //ctx.fillText("Mute me", 10, 80).ondblclick.apply(document.getElementById("soundFX").muted = true);
-
-    ///* Screen get's bloodier */
-    //opacity += 0.3 - (globals.player.health / 100);
-    //ctx.fillStyle = "rgba(195, 0, 0, " + opacity + ")";
-    //ctx.fillRect(0, 0, canvas.width, canvas.height);
-    //ctx.font = "30px Courier New";
-    //ctx.fillStyle = "white";
-    //ctx.fillText("Player Health: " + globals.player.health, 10, 30);
-    //
-    ///* Death Scene */
-    //if (globals.player.health <= 0) {
-    //    ctx.fillStyle = "rgba(195, 0, 0, " + 0.5 + ")";
-    //    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    //    ctx.fillStyle = "white";
-    //    ctx.font = "50px Courier New";
-    //    ctx.fillText("YOU DEAD HOMIE rip", 120, canvas.height / 2 - 50);
-    //    // line below stops updating the game (we can keep this or lose this).
-    //    this.game.gameStates.GAMEOVER = true;
-    //
-    //    /* for replaying */
-    //    var startOrReplay = {
-    //        x: 320,
-    //        y: canvas.height / 2,
-    //        w: 150,
-    //        h: 30
-    //    };
-    //
-    //    canvas.addEventListener("mousedown", restartGame, false);
-    //
-    //    ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
-    //}
-    //
-    //if (globals.waveNumber === 9) {
-    //    this.game.gameStates.GAMEOVER = true;
-    //
-    //    /* for replaying */
-    //    var startOrReplay = {
-    //        x: 320,
-    //        y: canvas.height / 2,
-    //        w: 150,
-    //        h: 30
-    //    };
-    //
-    //    canvas.addEventListener("mousedown", restartGame, false);
-    //
-    //    ctx.fillStyle = "rgba(0, 195, 0, " + 0.5 + ")";
-    //    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    //    ctx.fillStyle = "white";
-    //    ctx.font = "50px Courier New";
-    //    ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
-    //    ctx.fillText("YOU WIN!", startOrReplay.x - 25, startOrReplay.y - 50);
-    //}
-    //
     /* Display Godlike */
     if (globals.player.godlike) {
         ctx.fillStyle = "rgba(255, 255, 58, " + 0.15 + ")";
@@ -219,26 +163,6 @@ Background.prototype.draw = function (ctx) {
         ctx.fillStyle = "white";
         ctx.fillText("GODLIKE: " + globals.powerUpTime.godlike, 10, 90);
     }
-    //
-    ///* Display Wave and Kills */
-    //ctx.font = "30px Courier New";
-    //ctx.fillStyle = "white";
-    //ctx.fillText("Wave: " + (globals.waveNumber + 1), 200, 60);
-    //ctx.fillText("Kills: " + globals.killCount, 10, 60);
-    //
-    //function restartGame(event) {
-    //    console.log("testing");
-    //    var rect = canvas.getBoundingClientRect();
-    //    var canvas_x = Math.round(event.clientX - rect.left);
-    //    var canvas_y = Math.round(event.clientY - rect.top);
-    //
-    //    if (canvas_x >= startOrReplay.x && canvas_x <= startOrReplay.x + startOrReplay.w &&
-    //        canvas_y >= startOrReplay.y - startOrReplay.h && canvas_y <= startOrReplay.y) {
-    //        startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
-    //        // reloads page - restart all states and canvas is much more complicated
-    //        location.reload();
-    //    }
-    //}
 
     Entity.prototype.draw.call(this);
 };
@@ -280,7 +204,6 @@ var Key = {
 
     },
 
-
     //TODO consider getting rid of these,
     //went with a different method
     keyTapped: function(keyCode) {
@@ -294,10 +217,6 @@ var Key = {
     resolveTap: function(keyCode) {
         this._tap[keyCode] = false;
     }
-
-
-
-
 };
 
 /**
@@ -384,10 +303,13 @@ ASSET_MANAGER.queueDownload("./img/terrain/LabMap.png");
 ASSET_MANAGER.queueDownload("./img/terrain/lab2.png");
 ASSET_MANAGER.queueDownload("./img/terrain/bossroom reloaded.png");
 
+// terrain thumbnails
+ASSET_MANAGER.queueDownload("./img/terrain/terrain_thumbnails/lab_thumb.png");
+ASSET_MANAGER.queueDownload("./img/terrain/terrain_thumbnails/lab2_thumb.png");
+ASSET_MANAGER.queueDownload("./img/terrain/terrain_thumbnails/bossroom_thumb.png");
+
 // Enemies
 ASSET_MANAGER.queueDownload("./img/Enemies/bosszombie.png");
-
-
 
 // animations
 ASSET_MANAGER.queueDownload("./img/player/hgun_idle.png");
@@ -452,55 +374,73 @@ function startGame() {
     var ctx = canvas.getContext('2d');
 
     /* for splash screen and start */
-    var startOrReplay = {
-        x: 320,
-        y: canvas.height / 2 - 50,
-        w: 150,
-        h: 30
+    var lab_box = {
+        x: 50,
+        y: canvas.height / 2 - 200,
+        w: 200,
+        h: 200
+    };
+    var lab2_box = {
+        x: 300,
+        y: canvas.height / 2 - 200,
+        w: 200,
+        h: 200
+    };
+    var bossroom_box = {
+        x: 550,
+        y: canvas.height / 2 - 200,
+        w: 200,
+        h: 200
     };
 
     canvas.addEventListener("mousedown", fireUpTheEnginesBoys, false);
 
     ctx.drawImage(ASSET_MANAGER.getAsset("./img/welcome-splash800.png"), 0, 0);
-    ctx.fillStyle = "white";
-    ctx.font = "50px Courier New";
-    ctx.fillText("START", startOrReplay.x, startOrReplay.y);
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/terrain/terrain_thumbnails/lab_thumb.png"), lab_box.x, lab_box.y);
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/terrain/terrain_thumbnails/lab2_thumb.png"), lab2_box.x, lab2_box.y);
+    ctx.drawImage(ASSET_MANAGER.getAsset("./img/terrain/terrain_thumbnails/bossroom_thumb.png"), bossroom_box.x, bossroom_box.y);
 
     function fireUpTheEnginesBoys(event) {
+        //console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
         var rect = canvas.getBoundingClientRect();
         var canvas_x = Math.round(event.clientX - rect.left);
         var canvas_y = Math.round(event.clientY - rect.top);
 
-        //console.log("x=" + canvas_x + " y= " + canvas_y + "startext y: " + startText.y);
-        if (canvas_x >= startOrReplay.x && canvas_x <= startOrReplay.x + startOrReplay.w &&
-            canvas_y >= startOrReplay.y - startOrReplay.h && canvas_y <= startOrReplay.y) {
-            startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
+        if (canvas_x >= lab_box.x && canvas_x <= lab_box.x + lab_box.w &&
+            canvas_y >= lab_box.y - lab_box.h && canvas_y <= lab_box.y) {
+            startGame('lab');
+        }
+
+        if (canvas_x >= lab2_box.x && canvas_x <= lab2_box.x + lab2_box.w &&
+            canvas_y >= lab2_box.y - lab2_box.h && canvas_y <= lab2_box.y) {
+            startGame('altLab');
+        }
+
+        if (canvas_x >= bossroom_box.x && canvas_x <= bossroom_box.x + bossroom_box.w &&
+            canvas_y >= bossroom_box.y - bossroom_box.h && canvas_y <= bossroom_box.y) {
+            startGame('bossroom');
+        }
+
+        function startGame(mapName) {
             var gameEngine = new GameEngine();
-
             globals.SPAWNER = new Spawner(gameEngine, null);
-
             globals.player = new Player(gameEngine, 0.5);
-
             globals.background = new Background(gameEngine);
-
-
             gameEngine.gameStates.GAMEOVER = false;
 
-
-            /*change to 'altLab' to change to second map*/
-            setCurrentMap('lab');
-            //setCurrentMap('altLab');
-            //setCurrentMap('bossroom');
+            lab_box = {x: undefined, y: undefined, w: undefined, h: undefined};
+            lab2_box = {x: undefined, y: undefined, w: undefined, h: undefined};
+            bossroom_box = {x: undefined, y: undefined, w: undefined, h: undefined};
 
             globals.SPAWNER.spawnNewWave();
 
+            setCurrentMap(mapName);
 
             gameEngine.addEntity(globals.background);
 
             gameEngine.addEntity(globals.player);
             var ST = new StatTrack(gameEngine);
             gameEngine.addHUD(ST);
-
 
             gameEngine.init(ctx);
             gameEngine.start();
