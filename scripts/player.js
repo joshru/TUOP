@@ -80,6 +80,8 @@ Player.prototype.constructor = Player;
 
 /**
  * creates a bullet and adds it to the game's bullet data structure
+ *
+ * @shoutout Nick Eaket @from stackoverflow @for bullet rotation
  */
 Player.prototype.shoot = function (endX, endY, firingMode) {
 
