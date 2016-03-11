@@ -363,13 +363,16 @@ ASSET_MANAGER.queueDownload("./img/ammo/bullet.jpg");
 
 ASSET_MANAGER.queueDownload("./img/effects/explosion.png");
 
-
 // splash screen
 ASSET_MANAGER.queueDownload("./img/welcome-splash800.png");
 
 // power ups
 ASSET_MANAGER.queueDownload("./img/powerups/hp-heart.png");
 ASSET_MANAGER.queueDownload("./img/powerups/godlike.png");
+
+ASSET_MANAGER.queueDownload("./img/powerups/ar_drop.png");
+ASSET_MANAGER.queueDownload("./img/powerups/shotgun_drop.png");
+ASSET_MANAGER.queueDownload("./img/powerups/sniper_drop.png");
 
 // sounds
 ASSET_MANAGER.queueDownload("./sound/usp.wav");

@@ -58,8 +58,6 @@ function Zombie(game) {
 Zombie.prototype = new Entity();
 Zombie.prototype.constructor = Zombie;
 
-
-
 Zombie.prototype.setCoordinates = function(x, y) {
     this.x = x;
     this.y = y;
@@ -223,11 +221,6 @@ Zombie.prototype.removeAndReplace = function() {
         else
             this.game.addEntity(new PowerUp(this.game, this, "godlike"));
     }
-
-
-    //this.spawnNewWaveRedux();
-
-
 };
 
 
