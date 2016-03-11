@@ -38,7 +38,7 @@ function Spawner(game, map) {
 Spawner.prototype.spawnZombie = function(x, y) {
     var zombo = new Zombie(this.game);
 
-    zombo.speedScale += globals.waveNumber * 50;
+    zombo.speedScale += globals.waveNumber * 25;
 
     zombo.setCoordinates(x, y);
 

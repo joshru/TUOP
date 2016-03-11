@@ -18,7 +18,7 @@ StatTrack.prototype.update = function() {
 StatTrack.prototype.draw = function(ctx) {
     var canvas = document.getElementById('gameWorld');
     var opacity = 0;
-
+    var that = this;
 
     /* Screen get's bloodier */
     opacity += 0.3 - (globals.player.health / 100);
@@ -51,7 +51,8 @@ StatTrack.prototype.draw = function(ctx) {
         ctx.fillText("REPLAY", startOrReplay.x, startOrReplay.y);
     }
 
-    if (globals.waveNumber === globals.currentLevelInfo.waves.length) {
+    if (globals.waveNumber === globals.currentLevelInfo.waves.length-1
+        && globals.zombieDeathCount === globals.currentLevelInfo.waves[globals.currentLevelInfo.waves.length-1].zombies) {
         //console.log("Final wave reached, game over");
         this.game.gameStates.GAMEOVER = true;
 
@@ -99,7 +100,7 @@ StatTrack.prototype.draw = function(ctx) {
             startOrReplay = {x: undefined, y: undefined, w: undefined, h: undefined};
             // reloads page - restart all states and canvas is much more complicated
             location.reload();
-            this.game.gameStates.GAMEOVER = false;
+            that.game.gameStates.GAMEOVER = false;
         }
     }
 };
