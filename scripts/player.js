@@ -231,17 +231,8 @@ Player.prototype.update = function () {
     //console.log("player x: " + this.x + " | player y: " + this.y);
     if (this.states.CURRENT_GUN !== 'sniper') this.drawLazer = false;
 
-    //if (!Key.keyPressed()) this.state = this.states.IDLE;
-
-
-    //if (this.game.RELOAD) {
-    //    this.state = this.states.RELOADING;
-    //    if (globals.debug) console.log("Starting reload");
-    //}
-
     this.grabPowerups();
-    this.checkForWeaponSwap();
-
+    //this.checkForWeaponSwap();
 
     if (this.throwingGrenade) {
 
