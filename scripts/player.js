@@ -20,6 +20,7 @@ function Player(game, scale) {
     this.drawLazer = false;
     this.throwingGrenade = false;
     this.weaponShotDelay = .5;
+    this.sfx = document.getElementById('gunFX');
     this.pew = false;
 
     this.lastShotFired = Date.now();
@@ -357,8 +358,8 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'pistol' && this.pew) {
             currAnim = this.animations.hgun_shoot;
             if (!globals.mute) {
-                sfx.src = './sound/m9.wav';
-                sfx.play();
+                this.sfx.src = './sound/m9.wav';
+                this.sfx.play();
             }
         } else if (this.states.CURRENT_GUN === 'pistol') {
             currAnim = this.animations.hgun_idle;
@@ -366,9 +367,9 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'assault rifle' && this.pew) {
             currAnim = this.animations.rifle_shoot;
             if (!globals.mute) {
-                sfx.volume = 0.3;
-                sfx.src = './sound/ak.mp3';
-                sfx.play();
+                this.sfx.volume = 0.3;
+                this.sfx.src = './sound/ak.mp3';
+                this.sfx.play();
             }
         } else if (this.states.CURRENT_GUN === 'assault rifle') {
             currAnim = this.animations.rifle_idle;
@@ -376,9 +377,9 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'sniper' && this.pew) {
             currAnim = this.animations.snipe_shoot;
             if (!globals.mute) {
-                sfx.volume = 0.2;
-                sfx.src = './sound/snipe.mp3';
-                sfx.play();
+                this.sfx.volume = 0.2;
+                this.sfx.src = './sound/snipe.mp3';
+                this.sfx.play();
             }
         } else if (this.states.CURRENT_GUN === 'sniper' ) {
             currAnim = this.animations.snipe_idle;
@@ -386,9 +387,9 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'shotgun' && this.pew) {
             currAnim = this.animations.shgun_shoot;
             if (!globals.mute) {
-                sfx.volume = 0.2;
-                sfx.src = './sound/shotty.mp3';
-                sfx.play();
+                this.sfx.volume = 0.2;
+                this.sfx.src = './sound/shotty.mp3';
+                this.sfx.play();
             }
         } else if (this.states.CURRENT_GUN === 'shotgun') {
             currAnim = this.animations.shgun_idle;

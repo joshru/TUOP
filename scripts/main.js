@@ -288,6 +288,8 @@ window.addEventListener('mousedown', function (event){
 
 var bgm = document.getElementById('bgm');
 var sfx = document.getElementById('soundFX');
+var gunSFX = document.getElementById('gunFX');
+var nadeSFX = document.getElementById('nadeFX');
 bgm.volume = 0.2;
 sfx.volume = 0.2;
 
@@ -295,12 +297,14 @@ var muteButton = document.getElementById('muteToggle');
 muteButton.addEventListener('click', function() {
     globals.mute ^= true;
     //var bgm = document.getElementById('bgm');
-    //bgm.muted = globals.mute;
+    sfx.muted = globals.mute;
+    gunSFX.muted = globals.mute;
+    nadeSFX.muted = globals.mute;
+
 });
 var bgmMute = document.getElementById('bgmMuteToggle');
 bgmMute.addEventListener('click', function() {
     globals.bgmMute ^= true;
-    var bgm = document.getElementById('bgm');
     bgm.muted = globals.bgmMute;
 });
 
