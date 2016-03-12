@@ -27,7 +27,7 @@
 
 <ul>
     <div style="text-align: center;">
-    <h2>Features: </h2>
+        <h2>Features: </h2>
         <h4>• Zombies!</h4>
         <h4>• Bullets!</h4>
         <h4>• Health Pickups!</h4>
@@ -37,16 +37,19 @@
     </div>
 
     <br><br>
-    <li>VOLUME WARNING!! All our sound effects are quite loud right now, you've been warned...</li>
+    <li>VOLUME WARNING!! All our sound effects are quite loud, you've been warned...</li>
     <li>Move the player around with W A S D. Shoot with left click. Press H to toggle debug mode.</li>
 </ul>
 <div class="wrapper" style="text-align: center;">
-    <button name="mute" id="muteToggle">Mute</button>
+    <button name="mute" id="muteToggle">Mute Sound Effects</button>
+    <button name="mute" id="bgmMuteToggle">Mute Music</button>
 </div>
 
 <canvas id="gameWorld" tabindex="1" width="800" height="800" style="width:800px; height:800px;border: 5px solid black;"></canvas>
 
 <audio id="soundFX" style="display: none;"></audio>
+<audio id="gunFX" style="display: none;"></audio>
+<audio id="nadeFX" style="display: none;"></audio>
 <audio id="bgm" autoplay loop>
     <source src="./sound/bgm.mp3" type="audio/mpeg" >
 </audio>
@@ -59,16 +62,12 @@
     <p></p>
 
     <h2><span style="text-decoration: underline;">Bugs</span></h2>
-
+    <li>Bullets don't roatate properly</li>
+    <li>Bullet origin from the player still looks a bit off. Works best if your cursor is outside the canvas</li>
 
     <br><br>
     <h2><span style="text-decoration: underline;">Features to come</span></h2>
-    <li>Guns will be dropped as powerups instead of you starting with all of them.</li>
-    <li>More enemy types with more dynamic spawning</li>
-    <li>Better balancing, the game is pretty easy right now.</li>
-    <li>A few more levels to explore and conquer </li>
-    <li>Better item drops.</li>
-    <li>And much more!</li>
+    <li>Some stuff and maybe a few things. I don't know man!</li>
 
     <br><br>
     <div style="text-align: center;">

@@ -13,13 +13,14 @@ function Player(game, scale) {
     this.game = game;
     this.name = "Player";
     this.scale = scale || 1;
-    this.stepDistance = 3;
+    this.stepDistance = 4;
     this.scrollStep = 2;
     this.health = 100;
     this.godlike = false;
     this.drawLazer = false;
     this.throwingGrenade = false;
     this.weaponShotDelay = .5;
+    this.pew = false;
 
     this.lastShotFired = Date.now();
     this.lastHitTaken = Date.now();
@@ -264,8 +265,11 @@ Player.prototype.update = function () {
         var currentTime = Date.now();
 
         if ((currentTime - this.lastShotFired) / CONVERT_TO_SEC > this.weaponShotDelay) {
+            this.pew = true;
             this.shoot(globals.mousePosition.x, globals.mousePosition.y, this.currentFiringMode);
             this.lastShotFired = Date.now();
+        } else {
+            this.pew = false;
         }
 
     }
@@ -359,10 +363,45 @@ Player.prototype.draw = function (ctx) {
     if (this.state === this.states.SHOOTING) {
         if (!noKeyPressed()) this.animations.runFeet.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
         else this.animations.idleFeet.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
-        if (this.states.CURRENT_GUN === 'pistol') currAnim = this.animations.hgun_shoot;
-        if (this.states.CURRENT_GUN === 'assault rifle') currAnim = this.animations.rifle_shoot;
-        if (this.states.CURRENT_GUN === 'sniper') currAnim = this.animations.snipe_shoot;
-        if (this.states.CURRENT_GUN === 'shotgun') currAnim = this.animations.shgun_shoot;
+        if (this.states.CURRENT_GUN === 'pistol' && this.pew) {
+            currAnim = this.animations.hgun_shoot;
+            if (!globals.mute) {
+                sfx.src = './sound/m9.wav';
+                sfx.play();
+            }
+        } else if (this.states.CURRENT_GUN === 'pistol') {
+            currAnim = this.animations.hgun_idle;
+        }
+        if (this.states.CURRENT_GUN === 'assault rifle' && this.pew) {
+            currAnim = this.animations.rifle_shoot;
+            if (!globals.mute) {
+                sfx.volume = 0.3;
+                sfx.src = './sound/ak.mp3';
+                sfx.play();
+            }
+        } else if (this.states.CURRENT_GUN === 'assault rifle') {
+            currAnim = this.animations.rifle_idle;
+        }
+        if (this.states.CURRENT_GUN === 'sniper' && this.pew) {
+            currAnim = this.animations.snipe_shoot;
+            if (!globals.mute) {
+                sfx.volume = 0.2;
+                sfx.src = './sound/snipe.mp3';
+                sfx.play();
+            }
+        } else if (this.states.CURRENT_GUN === 'sniper' ) {
+            currAnim = this.animations.snipe_idle;
+        }
+        if (this.states.CURRENT_GUN === 'shotgun' && this.pew) {
+            currAnim = this.animations.shgun_shoot;
+            if (!globals.mute) {
+                sfx.volume = 0.2;
+                sfx.src = './sound/shotty.mp3';
+                sfx.play();
+            }
+        } else if (this.states.CURRENT_GUN === 'shotgun') {
+            currAnim = this.animations.shgun_idle;
+        }
     }
 
     currAnim.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.scale);
