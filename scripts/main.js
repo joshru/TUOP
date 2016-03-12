@@ -290,6 +290,7 @@ var bgm = document.getElementById('bgm');
 var sfx = document.getElementById('soundFX');
 var gunSFX = document.getElementById('gunFX');
 var nadeSFX = document.getElementById('nadeFX');
+var pickupSFX = document.getElementById('pickupFX');
 bgm.volume = 0.2;
 sfx.volume = 0.2;
 
@@ -300,7 +301,7 @@ muteButton.addEventListener('click', function() {
     sfx.muted = globals.mute;
     gunSFX.muted = globals.mute;
     nadeSFX.muted = globals.mute;
-
+    pickupSFX.muted = globals.mute;
 });
 var bgmMute = document.getElementById('bgmMuteToggle');
 bgmMute.addEventListener('click', function() {
@@ -310,10 +311,11 @@ bgmMute.addEventListener('click', function() {
 
 // the "main" code begins here
 
-
-
-
 var ASSET_MANAGER = new AssetManager();
+
+// splash screen
+ASSET_MANAGER.queueDownload("./img/welcome-splash800.png");
+ASSET_MANAGER.queueDownload("./img/loading-splash.png");
 
 // terrain
 ASSET_MANAGER.queueDownload("./img/terrain/grass.png");
@@ -371,11 +373,7 @@ ASSET_MANAGER.queueDownload("./img/ammo/shell_10.png");
 ASSET_MANAGER.queueDownload("./img/ammo/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/ammo/nade.png");
 
-
 ASSET_MANAGER.queueDownload("./img/effects/explosion.png");
-
-// splash screen
-ASSET_MANAGER.queueDownload("./img/welcome-splash800.png");
 
 // power ups
 ASSET_MANAGER.queueDownload("./img/powerups/hp-heart.png");
@@ -395,7 +393,6 @@ ASSET_MANAGER.downloadAll(function () {
 
 function startGame() {
     var canvas = document.getElementById('gameWorld');
-
     var ctx = canvas.getContext('2d');
 
     /* for splash screen and start */

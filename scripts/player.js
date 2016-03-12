@@ -20,14 +20,15 @@ function Player(game, scale) {
     this.drawLazer = false;
     this.throwingGrenade = false;
     this.weaponShotDelay = .5;
-    this.sfx = document.getElementById('gunFX');
+    this.gunSFX = document.getElementById('gunFX');
     this.pew = false;
 
     this.lastShotFired = Date.now();
     this.lastHitTaken = Date.now();
     this.currentFiringMode = "full auto";
 
-    this.audio = document.getElementById('soundFX');
+    this.playerSFX = document.getElementById('soundFX');
+    this.powerupSFX = document.getElementById('pickupFX');
 
 
     this.gunOffset = {x:100, y: 45};
@@ -358,8 +359,8 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'pistol' && this.pew) {
             currAnim = this.animations.hgun_shoot;
             if (!globals.mute) {
-                this.sfx.src = './sound/m9.wav';
-                this.sfx.play();
+                this.gunSFX.src = './sound/m9.wav';
+                this.gunSFX.play();
             }
         } else if (this.states.CURRENT_GUN === 'pistol') {
             currAnim = this.animations.hgun_idle;
@@ -367,9 +368,9 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'assault rifle' && this.pew) {
             currAnim = this.animations.rifle_shoot;
             if (!globals.mute) {
-                this.sfx.volume = 0.3;
-                this.sfx.src = './sound/ak.mp3';
-                this.sfx.play();
+                this.gunSFX.volume = 0.3;
+                this.gunSFX.src = './sound/ak.mp3';
+                this.gunSFX.play();
             }
         } else if (this.states.CURRENT_GUN === 'assault rifle') {
             currAnim = this.animations.rifle_idle;
@@ -377,9 +378,9 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'sniper' && this.pew) {
             currAnim = this.animations.snipe_shoot;
             if (!globals.mute) {
-                this.sfx.volume = 0.2;
-                this.sfx.src = './sound/snipe.mp3';
-                this.sfx.play();
+                this.gunSFX.volume = 0.2;
+                this.gunSFX.src = './sound/snipe.mp3';
+                this.gunSFX.play();
             }
         } else if (this.states.CURRENT_GUN === 'sniper' ) {
             currAnim = this.animations.snipe_idle;
@@ -387,9 +388,9 @@ Player.prototype.draw = function (ctx) {
         if (this.states.CURRENT_GUN === 'shotgun' && this.pew) {
             currAnim = this.animations.shgun_shoot;
             if (!globals.mute) {
-                this.sfx.volume = 0.2;
-                this.sfx.src = './sound/shotty.mp3';
-                this.sfx.play();
+                this.gunSFX.volume = 0.2;
+                this.gunSFX.src = './sound/shotty.mp3';
+                this.gunSFX.play();
             }
         } else if (this.states.CURRENT_GUN === 'shotgun') {
             currAnim = this.animations.shgun_idle;
@@ -436,8 +437,8 @@ Player.prototype.draw = function (ctx) {
 
                     if ((currentTime - this.lastHitTaken) / CONVERT_TO_SEC > 0.4) {
                         if (!globals.mute) {
-                            if (this.audio.src !== "./sound/pain.wav") this.audio.src = "./sound/pain.wav";
-                            this.audio.play();
+                            if (this.playerSFX.src !== "./sound/pain.wav") this.playerSFX.src = "./sound/pain.wav";
+                            this.playerSFX.play();
                         }
 
                         if (!this.godlike && this.health > 0)
@@ -447,8 +448,8 @@ Player.prototype.draw = function (ctx) {
 
                     if (this.health <= 0) {
                         if (!globals.mute) {
-                            this.audio.src = "./sound/death.wav";
-                            this.audio.play();
+                            this.playerSFX.src = "./sound/death.wav";
+                            this.playerSFX.play();
                         }
                         this.removeFromWorld = true;
                     }
@@ -482,41 +483,41 @@ Player.prototype.grabPowerups = function () {
                                 this.health += 5;
                             else
                                 this.health += 10;
-                                current.audio.src = "./sound/hpup.wav";
+                                this.powerupSFX.src = "./sound/hpup.wav";
                         }
                         break;
                     case "godlike":
                         this.godlike = true;
                         globals.powerUpTime.godlike += 5;
-                        current.audio.src = "./sound/godlike.wav";
+                        this.powerupSFX.src = "./sound/godlike.wav";
                         break;
                     case "assault-rifle":
                         this.states.CURRENT_GUN = 'assault rifle';
                         this.weaponShotDelay = 0.15;
                         this.currentFiringMode = "full auto";
                         this.gunOffset = {x:180, y: 44};
-
+                        this.powerupSFX.src = "./sound/gun-pickup.wav";
                         break;
                     case "shotgun":
                         this.states.CURRENT_GUN = 'shotgun';
                         this.weaponShotDelay = 0.8;
                         this.currentFiringMode = "spread";
                         this.gunOffset = {x:170, y: 47};
-
+                        this.powerupSFX.src = "./sound/gun-pickup.wav";
                         break;
                     case "sniper":
                         this.states.CURRENT_GUN = 'sniper';
                         this.weaponShotDelay = 1.5;
                         this.currentFiringMode = "full auto";
                         this.gunOffset = {x:175, y: 36};
-
+                        this.powerupSFX.src = "./sound/gun-pickup.wav";
                         break;
                     default:
                         break;
                 }
 
                 if (!globals.mute) {
-                    current.audio.play();
+                    this.powerupSFX.play();
                 }
 
                 current.removeFromWorld = true;
