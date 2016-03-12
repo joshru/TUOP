@@ -17,7 +17,7 @@ function PowerUp(game, other, type) {
     this.x = other.x;
     this.y = other.y;
     this.sprite = null;
-    this.audio = document.getElementById('soundFX');
+    this.sfx = document.getElementById('dropFX');
 
     var screen = worldToScreen(this.x, this.y);
     var world  = screenToWorld(this.x, this.y);

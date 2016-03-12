@@ -290,8 +290,8 @@ var bgm = document.getElementById('bgm');
 var sfx = document.getElementById('soundFX');
 var gunSFX = document.getElementById('gunFX');
 var nadeSFX = document.getElementById('nadeFX');
-bgm.volume = 0.2;
-sfx.volume = 0.2;
+var dropSFX = document.getElementById('dropFX');
+setVolume();
 
 var muteButton = document.getElementById('muteToggle');
 muteButton.addEventListener('click', function() {
@@ -300,19 +300,26 @@ muteButton.addEventListener('click', function() {
     sfx.muted = globals.mute;
     gunSFX.muted = globals.mute;
     nadeSFX.muted = globals.mute;
-
+    dropSFX.muted = globals.mute;
+    setVolume();
 });
 var bgmMute = document.getElementById('bgmMuteToggle');
 bgmMute.addEventListener('click', function() {
     globals.bgmMute ^= true;
     bgm.muted = globals.bgmMute;
+    setVolume();
 });
 
+setVolume = function() {
+    bgm.volume = 0.2;
+    sfx.volume = 0.2;
+    gunSFX.volume = 0.2;
+    nadeSFX.volume = 0.2;
+    dropSFX.volume = 0.2;
+};
+
+
 // the "main" code begins here
-
-
-
-
 var ASSET_MANAGER = new AssetManager();
 
 // terrain
