@@ -294,8 +294,14 @@ sfx.volume = 0.2;
 var muteButton = document.getElementById('muteToggle');
 muteButton.addEventListener('click', function() {
     globals.mute ^= true;
+    //var bgm = document.getElementById('bgm');
+    //bgm.muted = globals.mute;
+});
+var bgmMute = document.getElementById('bgmMuteToggle');
+bgmMute.addEventListener('click', function() {
+    globals.bgmMute ^= true;
     var bgm = document.getElementById('bgm');
-    bgm.muted = globals.mute;
+    bgm.muted = globals.bgmMute;
 });
 
 // the "main" code begins here
@@ -353,13 +359,14 @@ ASSET_MANAGER.queueDownload("./img/player/test_foot.png");
 ASSET_MANAGER.queueDownload("./img/player/run_feet_norm.png");
 ASSET_MANAGER.queueDownload("./img/player/idle_feet_norm.png");
 
-ASSET_MANAGER.queueDownload("./img/bullet.jpg");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie.png");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie_move.png");
 ASSET_MANAGER.queueDownload("./img/zombie/zombie_death.png");
 ASSET_MANAGER.queueDownload("./img/ammo/proj_25.png");
 ASSET_MANAGER.queueDownload("./img/ammo/shell_10.png");
 ASSET_MANAGER.queueDownload("./img/ammo/bullet.jpg");
+ASSET_MANAGER.queueDownload("./img/ammo/nade.png");
+
 
 ASSET_MANAGER.queueDownload("./img/effects/explosion.png");
 
@@ -375,8 +382,8 @@ ASSET_MANAGER.queueDownload("./img/powerups/shotgun_drop.png");
 ASSET_MANAGER.queueDownload("./img/powerups/sniper_drop.png");
 
 // sounds
-ASSET_MANAGER.queueDownload("./sound/usp.wav");
-ASSET_MANAGER.queueDownload("./sound/godlike.wav");
+//ASSET_MANAGER.queueDownload("./sound/usp.wav");
+//ASSET_MANAGER.queueDownload("./sound/godlike.wav");
 
 ASSET_MANAGER.downloadAll(function () {
     startGame();

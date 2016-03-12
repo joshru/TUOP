@@ -11,6 +11,8 @@ function Grenade(startX, startY, targetX, targetY, game) {
     this.explosionRadius = 150;
     this.damage = 100;
 
+    this.sfx = document.getElementById('nadeFX');
+
     var screen = worldToScreen(this.x, this.y);
     var world  = screenToWorld(this.x, this.y);
     this.screenX = screen.x;
@@ -75,17 +77,15 @@ Grenade.prototype.updateCoords = function() {
 Grenade.prototype.draw = function(ctx) {
     this.convertToOffScreen();
     if (Math.ceil((Date.now() - this.thrownTime) / 1000) > this.timeToExplode) {
+        if (!globals.mute) {
+            this.sfx.src = "./sound/nade.mp3";
+            this.sfx.play();
+        }
         ctx.clearRect(this.screenX, this.screenY, this.radius, this.radius);
-        this.animation.explode.drawFrame(this.game.clockTick, ctx, this.screenX - 64, this.screenY - 64, 2);
+        this.animation.explode.drawFrame(this.game.clockTick, ctx, this.screenX - 64, this.screenY - 64, 2.5);
         this.removeFromWorld = true;
     } else {
-        ctx.save();
-        ctx.beginPath();
-        ctx.fillStyle = "#979748";
-        ctx.arc(this.screenX, this.screenY, this.radius, 0, Math.PI * 2, false);
-        ctx.fill();
-        ctx.closePath();
-        ctx.restore();
+        ctx.drawImage(ASSET_MANAGER.getAsset("./img/ammo/nade.png"), this.screenX, this.screenY);
     }
 };
 

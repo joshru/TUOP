@@ -49,10 +49,11 @@ StatTrack.prototype.draw = function(ctx) {
 
         canvas.addEventListener("mousedown", restartGame, false);
 
-        ctx.fillText("Return to menu", startOrReplay.x, startOrReplay.y);
+        ctx.fillText("Return to menu", startOrReplay.x - 130, startOrReplay.y);
     }
 
     if (globals.waveNumber === globals.currentLevelInfo.waves.length-1
+        && this.game.zombies.length === 0
         && globals.zombieDeathCount >= globals.currentLevelInfo.waves[globals.currentLevelInfo.waves.length-1].zombies) {
         //console.log("Final wave reached, game over");
         this.game.gameStates.GAMEOVER = true;
